@@ -1,6 +1,7 @@
 export interface PropsBaseLayout {
-	children: any;
+	children: React.ReactNode;
 	title: string;
+	isAction?: boolean;
 }
 
 export interface TContextBaseLayout {

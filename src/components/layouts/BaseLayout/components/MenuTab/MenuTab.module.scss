@@ -110,36 +110,16 @@
 	}
 }
 
-@media (min-width: $widthMobile) and (max-width: $widthTablet) {
-	.header {
-		.box_logo {
-			display: none;
-		}
-
-		.box_logo_mobile {
-			display: block;
-			width: 40px;
-			height: 40px;
-		}
-	}
-
+@media (max-width: $widthTablet) {
 	.itemMenu {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		.textMenu {
-			display: none;
-		}
-
 		// Small
 		&.small {
 			display: flex;
-			justify-content: center;
 			align-items: center;
+			justify-content: flex-start;
 
 			.textMenu {
-				display: none;
+				display: block;
 			}
 		}
 	}

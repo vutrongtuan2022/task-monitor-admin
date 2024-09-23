@@ -1,12 +1,18 @@
 @import '../../../../../styles/variables';
 
+$width-tab: 256px;
+
 .container {
-	height: 100%;
+	height: fit-content;
 	width: 100%;
 	padding: 16px 32px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+
+	&.isAction {
+		align-items: flex-start;
+	}
 }
 
 .top {
@@ -15,7 +21,8 @@
 	gap: 12px;
 }
 
-.box_icon {
+.box_icon,
+.box_icon_mobile {
 	cursor: pointer;
 	user-select: none;
 	width: 18px;
@@ -25,6 +32,10 @@
 	&:active {
 		transform: scale(0.9);
 	}
+}
+
+.box_icon_mobile {
+	display: none;
 }
 
 .icon {
@@ -61,5 +72,142 @@
 		color: #fff;
 		font-size: 14px;
 		font-weight: 400;
+	}
+}
+
+.right {
+	display: flex;
+	align-items: center;
+	gap: 32px;
+}
+
+.box_noti {
+	cursor: pointer;
+	user-select: none;
+	position: relative;
+	width: fit-content;
+	height: fit-content;
+	transition: 0.3s;
+
+	&:active {
+		transform: scale(0.9);
+	}
+
+	.box_count {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background-color: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.count {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background-color: #16bea0;
+	}
+}
+
+.box_avatar {
+	position: relative;
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	cursor: pointer;
+	user-select: none;
+	transition: 0.3s;
+
+	&:active {
+		transform: scale(0.9);
+	}
+}
+
+// Responsive mobile
+.main_mobile {
+	width: $width-tab;
+	z-index: 100;
+	position: fixed;
+	background-color: #fff;
+	top: 0;
+	left: -100%;
+	bottom: 0;
+	transition: 0.3s;
+
+	&.active {
+		left: -100%;
+	}
+}
+
+.overlay {
+	opacity: 0;
+	visibility: hidden;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(53, 53, 53, 0.5);
+	backdrop-filter: blur(3.5px);
+	transition: 0.3s;
+	z-index: 100;
+}
+
+@media (max-width: $widthTablet) {
+	.container {
+		padding: 12px 24px;
+	}
+
+	.box_icon {
+		display: none;
+	}
+
+	.box_icon_mobile {
+		display: block;
+	}
+
+	.right {
+		gap: 28px;
+	}
+
+	.box_avatar {
+		width: 48px;
+		height: 48px;
+	}
+
+	.main_mobile {
+		&.active {
+			left: 0;
+		}
+	}
+
+	.overlay {
+		opacity: 1;
+		visibility: initial;
+
+		&.close {
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
+}
+
+@media (max-width: $widthMobile) {
+	.container {
+		padding: 8px 16px;
+	}
+
+	.right {
+		gap: 20px;
+	}
+
+	.box_avatar {
+		width: 42px;
+		height: 42px;
 	}
 }

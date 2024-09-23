@@ -6,33 +6,87 @@ import {TContextBaseLayout} from '../../interfaces';
 import styles from './Header.module.scss';
 import ImageFill from '~/components/common/ImageFill';
 import icons from '~/constants/images/icons';
-import {useContext} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import Image from 'next/image';
+import {useRouter} from 'next/router';
+import clsx from 'clsx';
+import MenuTab from '../MenuTab';
+import BoxMenuProfile from '../BoxMenuProfile';
 
-function Header({title}: PropsHeader) {
+function Header({isAction, title}: PropsHeader) {
+	const router = useRouter();
+
 	const context = useContext<TContextBaseLayout>(ContextBaseLayout);
 
+	const [open, setOpen] = useState<boolean>(false);
+	const [openProfile, setOpenProfile] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (open) {
+			document.body.style.overflowY = 'hidden';
+		} else {
+			document.body.style.overflowY = 'overlay';
+		}
+	}, [open]);
+
+	useEffect(() => {
+		if (open) {
+			setOpen(false);
+		}
+	}, [router]);
+
 	return (
-		<div className={styles.container}>
+		<div className={clsx(styles.container, {[styles.isAction]: isAction})}>
 			<div className={styles.left}>
 				<div className={styles.top}>
 					<div className={styles.box_icon} onClick={() => context?.setShowFull!(!context?.showFull)}>
 						<ImageFill src={icons.iconHum} alt='icon show hide' className={styles.icon} />
 					</div>
+					<div className={styles.box_icon_mobile} onClick={() => setOpen(true)}>
+						<ImageFill src={icons.iconHum} alt='icon show hide' className={styles.icon} />
+					</div>
 					<h4 className={styles.title}>{title}</h4>
 				</div>
-				<div className={styles.main_action}>
-					<div className={styles.btn}>
-						<Image src={icons.iconAdd} alt='icon add' width={20} height={20} />
-						<p>Nhập file</p>
+				{isAction && (
+					<div className={styles.main_action}>
+						<div className={styles.btn}>
+							<Image src={icons.iconAdd} alt='icon add' width={20} height={20} />
+							<p>Nhập file</p>
+						</div>
+						<div className={styles.btn}>
+							<Image src={icons.iconDown} alt='icon down' width={20} height={20} />
+							<p>Xuất file</p>
+						</div>
 					</div>
-					<div className={styles.btn}>
-						<Image src={icons.iconDown} alt='icon down' width={20} height={20} />
-						<p>Xuất file</p>
+				)}
+			</div>
+			<div className={styles.right}>
+				<div className={styles.box_noti}>
+					<Image src={icons.bell} alt='icon bell' width={24} height={24} />
+					<div className={styles.box_count}>
+						<div className={styles.count}></div>
 					</div>
 				</div>
+
+				<TippyHeadless
+					maxWidth={'100%'}
+					interactive
+					visible={openProfile}
+					onClickOutside={() => setOpenProfile(false)}
+					placement='bottom-end'
+					render={(attrs: any) => <BoxMenuProfile onClose={() => setOpenProfile(false)} />}
+				>
+					<div className={styles.box_avatar} onClick={() => setOpenProfile(!openProfile)}>
+						<Image src={icons.avatar} alt='avatar default' className={styles.avatar} layout='fill' />
+					</div>
+				</TippyHeadless>
 			</div>
-			<div className={styles.right}></div>
+
+			{/* Responsive mobile */}
+			<div className={clsx(styles.overlay, {[styles.close]: !open})} onClick={() => setOpen(false)}></div>
+			<div className={clsx(styles.main_mobile, {[styles.active]: open})}>
+				<MenuTab />
+			</div>
 		</div>
 	);
 }

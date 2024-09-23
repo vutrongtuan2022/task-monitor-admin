@@ -6,19 +6,19 @@ export default function Home() {
 	return (
 		<Fragment>
 			<Head>
-				<title>Trang chủ</title>
-				<meta name='description' content='Trang chủ' />
+				<title>Quản lý nhà thầu</title>
+				<meta name='description' content='Quản lý nhà thầu' />
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<div>Trang chủ</div>
+			<div>Quản lý nhà thầu</div>
 		</Fragment>
 	);
 }
 
 Home.getLayout = function (Page: ReactElement) {
 	return (
-		<BaseLayout isAction={false} title='Trang chủ'>
+		<BaseLayout isAction={false} title='Quản lý nhà thầu'>
 			{Page}
 		</BaseLayout>
 	);

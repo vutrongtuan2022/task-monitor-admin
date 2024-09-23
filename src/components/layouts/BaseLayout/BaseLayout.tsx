@@ -9,7 +9,7 @@ import styles from './BaseLayout.module.scss';
 
 export const ContextBaseLayout = createContext<TContextBaseLayout>({});
 
-function BaseLayout({children, title}: PropsBaseLayout) {
+function BaseLayout({children, title, isAction}: PropsBaseLayout) {
 	const [showFull, setShowFull] = useState(true);
 
 	return (
@@ -19,11 +19,10 @@ function BaseLayout({children, title}: PropsBaseLayout) {
 				<div className={clsx(styles.tab)}>
 					<MenuTab />
 				</div>
-				<div className={styles.header}>
-					<Header title={title} />
+				<div className={styles.wrapper}>
+					<Header isAction={isAction} title={title} />
+					<div className={styles.main}>{children}</div>
 				</div>
-				{/* 
-				<div className={styles.main}>{children}</div> */}
 			</div>
 		</ContextBaseLayout.Provider>
 		// </RequireAuth>
