@@ -12,7 +12,6 @@ import {Menu, PATH} from '~/constants/config';
 import ImageFill from '~/components/common/ImageFill';
 import icons from '~/constants/images/icons';
 import clsx from 'clsx';
-import {MdOutlineKeyboardDoubleArrowRight} from 'react-icons/md';
 
 function MenuTab({}: PropsMenuTab) {
 	const router = useRouter();

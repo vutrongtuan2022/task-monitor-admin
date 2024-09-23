@@ -149,16 +149,6 @@ function RangeDatePicker({onClose, onSetValue, value, open, onSubmit}: PropsRang
 			}}
 		>
 			<div className={styles.container}>
-				<div className={styles.showDate}>
-					<span className={clsx(styles.value, {[styles.active]: !!datePicker.from})}>
-						{datePicker.from ? `${convertDate(datePicker.from).getDateFormat()}` : 'Ngày bắt đầu'}
-					</span>
-					<ArrowRight size='24' color='#23262F' />
-					<span className={clsx(styles.value, {[styles.active]: !!datePicker.to})}>
-						{datePicker.to ? `${convertDate(datePicker.to).getDateFormat()}` : 'Ngày kết thúc'}
-					</span>
-				</div>
-
 				<div className={styles.groupCalendar}>
 					<div className={styles.main}>
 						<div className={styles.displayTitle}>
@@ -196,6 +186,7 @@ function RangeDatePicker({onClose, onSetValue, value, open, onSubmit}: PropsRang
 							year={yearTableLeft}
 						/>
 					</div>
+
 					<div className={styles.main}>
 						<div className={styles.displayTitle}>
 							<div
@@ -233,14 +224,24 @@ function RangeDatePicker({onClose, onSetValue, value, open, onSubmit}: PropsRang
 						/>
 					</div>
 				</div>
-
-				<div className={styles.groupBtn}>
-					<Button p_8_24 grey_outline bold rounded_6 onClick={onClose}>
-						Hủy bỏ
-					</Button>
-					<Button p_8_24 primary bold rounded_6 onClick={handleSubmit} disable={!datePicker.from || !datePicker.to}>
-						Áp dụng
-					</Button>
+				<div className={styles.group_bottom}>
+					<div className={styles.showDate}>
+						<span className={clsx(styles.value, {[styles.active]: !!datePicker.from})}>
+							{datePicker.from ? `${convertDate(datePicker.from).getDateFormat()}` : 'Ngày bắt đầu'}
+						</span>
+						đến
+						<span className={clsx(styles.value, {[styles.active]: !!datePicker.to})}>
+							{datePicker.to ? `${convertDate(datePicker.to).getDateFormat()}` : 'Ngày kết thúc'}
+						</span>
+					</div>
+					<div className={styles.groupBtn}>
+						<Button white_outline p_8_24 rounded_6 onClick={onClose}>
+							Hủy bỏ
+						</Button>
+						<Button p_8_24 primary rounded_6 onClick={handleSubmit} disable={!datePicker.from || !datePicker.to}>
+							Thiết lập
+						</Button>
+					</div>
 				</div>
 			</div>
 		</ContextCalendar.Provider>

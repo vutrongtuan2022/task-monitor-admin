@@ -1,10 +1,10 @@
 $bg-color: var(--light);
-$bg-acitve: var(--bg-grey);
-$bg-hover: var(--bg-grey);
+$bg-acitve: var(--hover);
+$bg-hover: var(--hover);
 $bg-disabled: #f0eeee;
 
 $color-text: var(--text-color);
-$color-active: var(--primary);
+$color-active: var(--primary-btn);
 
 $border-color: var(--border-color);
 $border-hover: var(--primary);
@@ -26,23 +26,33 @@ $border-radius: 2px;
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	border-bottom: 1px solid $border-color;
 
 	.value {
 		user-select: none;
-		color: var(--grey-3);
+		color: $color-text;
 		font-size: 14px;
 		font-weight: 500;
+		padding: 6px 9px;
+		border-radius: 3px;
+		border: 1px solid #ececed;
+		background: rgba(45, 116, 255, 0.02);
 
 		&.active {
 			color: $color-text;
-			font-weight: 600;
+			font-weight: 500;
 		}
 	}
 }
 
 .groupCalendar {
 	display: flex;
+	border-bottom: 1px solid $border-color;
+}
+
+.group_bottom {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	align-items: center;
 }
 
 .main {
@@ -56,11 +66,23 @@ $border-radius: 2px;
 	align-items: center;
 	margin-bottom: 12px;
 	user-select: none;
-	padding-bottom: 12px;
-	border-bottom: 1px solid $border-color;
+	// border-bottom: 1px solid $border-color;
 
 	.arrow {
+		display: flex;
+		width: 30px;
+		height: 30px;
+		padding: 8.25px;
+		justify-content: center;
+		align-items: center;
+		flex-shrink: 0;
+		border-radius: 6px;
+		border: 0.75px solid #ececed;
 		cursor: pointer;
+
+		&:hover {
+			background: $bg-hover;
+		}
 
 		&.disable {
 			pointer-events: none;
@@ -69,8 +91,8 @@ $border-radius: 2px;
 	}
 
 	p {
-		font-size: 16px;
-		font-weight: 600;
+		font-size: 14px;
+		font-weight: 500;
 		color: $color-text;
 		cursor: pointer;
 		user-select: none;
@@ -89,7 +111,7 @@ $border-radius: 2px;
 .day {
 	color: $color-text;
 	font-size: 14px;
-	font-weight: 600;
+	font-weight: 500;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -114,6 +136,7 @@ $border-radius: 2px;
 		border-radius: 0;
 		border-top: 1px solid $color-active;
 		border-bottom: 1px solid $color-active;
+		background-color: #2d74ff1a;
 		border-left: 0;
 		border-right: 0;
 	}
@@ -132,6 +155,7 @@ $border-radius: 2px;
 		border-top: 1px solid $color-active;
 		border-bottom: 1px solid $color-active;
 		border-right: 1px solid $color-active;
+		background-color: #2d74ff1a;
 		opacity: 1 !important;
 		border-left: 0;
 	}
@@ -153,9 +177,8 @@ $border-radius: 2px;
 	}
 
 	&.inActive {
-		background-color: #f4f4f4;
+		background-color: #2d74ff1a;
 		border-radius: 0;
-		border: 1px solid #f4f4f4;
 	}
 
 	&.disable {
@@ -174,7 +197,6 @@ $border-radius: 2px;
 
 .groupBtn {
 	padding: 12px;
-	padding-top: 0;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 12px;

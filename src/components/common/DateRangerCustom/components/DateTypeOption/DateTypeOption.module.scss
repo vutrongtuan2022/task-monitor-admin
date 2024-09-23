@@ -1,6 +1,6 @@
 $bg-color: var(--light);
-$bg-acitve: var(--bg-grey);
-$bg-hover: var(--bg-grey);
+$bg-acitve: var(--primary-btn);
+$bg-hover: var(--primary-btn);
 $bg-disabled: #f0eeee;
 
 $color-text: var(--dark-2);
@@ -41,6 +41,7 @@ $border-radius: 2px;
 
 	&:hover {
 		background-color: $bg-hover;
+		color: $bg-color;
 	}
 
 	& + & {
@@ -49,5 +50,6 @@ $border-radius: 2px;
 
 	&.option_active {
 		background-color: $bg-hover;
+		color: $bg-color;
 	}
 }
