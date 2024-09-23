@@ -22,8 +22,8 @@ function BaseLayout({children, title}: PropsBaseLayout) {
 				<div className={styles.header}>
 					<Header title={title} />
 				</div>
-				{/* 
-				<div className={styles.main}>{children}</div> */}
+
+				<div className={styles.main}>{children}</div>
 			</div>
 		</ContextBaseLayout.Provider>
 		// </RequireAuth>
