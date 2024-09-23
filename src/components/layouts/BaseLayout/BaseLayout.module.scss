@@ -1,0 +1,80 @@
+@import '../../../styles/color';
+@import '../../../styles/variables';
+
+// $height-header: 74px;
+$width-tab: 256px;
+$width-tab-hidden: 80px;
+$duration: 0.1s;
+
+.container {
+	min-height: 100vh;
+	background-image: url('../../../../public/static/images/background.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.tab {
+	position: fixed;
+	width: $width-tab;
+	height: 100%;
+	top: 0;
+	left: 0;
+	transition: width $duration ease-in-out;
+	z-index: 11;
+	background-color: var(--light);
+}
+
+.header {
+	// height: $height-header;
+	position: fixed;
+	width: calc(100% - $width-tab);
+	top: 0;
+	right: 0;
+	left: calc($width-tab);
+	transition: width $duration ease-in-out, left $duration ease-in-out;
+	z-index: 100;
+	background-color: transparent;
+}
+
+.hidden {
+	.tab {
+		width: $width-tab-hidden;
+	}
+
+	.header {
+		width: calc(100% - $width-tab-hidden);
+		left: calc($width-tab-hidden);
+	}
+}
+
+@media (max-width: $widthTablet) {
+	.tab {
+		position: fixed;
+		max-height: 100vh;
+		left: -100%;
+		top: 0;
+		bottom: 0;
+		transition: 0.3s;
+	}
+
+	.header {
+		width: calc(100%);
+		left: 0;
+	}
+
+	.hidden {
+		.tab {
+			position: fixed;
+			max-height: 100vh;
+			left: -100%;
+			top: 0;
+			bottom: 0;
+			transition: 0.3s;
+		}
+
+		.header {
+			width: calc(100%);
+			left: 0;
+		}
+	}
+}
