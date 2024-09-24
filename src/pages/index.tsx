@@ -15,6 +15,8 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import DateRangerCustom from '~/components/common/DateRangerCustom';
 import Search from '~/components/common/Search';
 import Select, {Option} from '~/components/common/Select';
+import IconCustom from '~/components/common/IconCustom';
+import {TickCircle} from 'iconsax-react';
 
 export default function Home() {
 	const listTown = [
@@ -154,6 +156,15 @@ export default function Home() {
 								{
 									title: 'Email',
 									render: (data: any) => <>{data?.email || '---'}</>,
+								},
+								{
+									title: 'Tác vụ',
+									fixedRight: true,
+									render: (data: any) => (
+										<>
+											<IconCustom type='edit' icon={<TickCircle size='23' />} tooltip='Đã cấp tài khoản' />
+										</>
+									),
 								},
 							]}
 						/>
