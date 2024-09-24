@@ -122,11 +122,11 @@
 
 	thead {
 		box-sizing: border-box;
-		background: inherit;
+		background: var(--light);
 
 		.fixedLeft,
 		.fixedRight {
-			background: var(--primary);
+			background: var(--light);
 		}
 
 		.fixedLeft {
@@ -155,7 +155,7 @@
 	tbody {
 		.fixedLeft,
 		.fixedRight {
-			background: #fff;
+			background: #f5f9fb;
 		}
 
 		.fixedLeft {
@@ -190,14 +190,14 @@
 }
 
 .fixedRight {
-	position: sticky;
+	position: sticky !important;
 	right: 0;
 	z-index: 10;
 	box-shadow: inset 0px 2px 8px rgba(99, 99, 99, 0.2);
 }
 
 .fixedLeft {
-	position: sticky;
+	position: sticky !important;
 	left: 0;
 	z-index: 10;
 }
