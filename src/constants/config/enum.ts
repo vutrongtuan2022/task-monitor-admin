@@ -12,3 +12,9 @@ export enum TYPE_DATE {
 	LAST_7_DAYS = 8,
 	LUA_CHON = 9,
 }
+
+export enum TYPE_ACCOUNT {
+	USER = 1,
+	MANAGER,
+	ADMIN,
+}

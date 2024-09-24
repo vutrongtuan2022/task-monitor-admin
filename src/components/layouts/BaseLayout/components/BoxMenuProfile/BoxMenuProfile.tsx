@@ -12,6 +12,9 @@ import {logout} from '~/redux/reducer/auth';
 import {setInfoUser} from '~/redux/reducer/user';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
+import {useMutation} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
+import authServices from '~/services/authServices';
 
 function BoxMenuProfile({onClose}: PropsBoxMenuProfile) {
 	const router = useRouter();
@@ -26,10 +29,24 @@ function BoxMenuProfile({onClose}: PropsBoxMenuProfile) {
 		[router]
 	);
 
+	const fucnLogout = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: false,
+				http: authServices.logout({}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				store.dispatch(logout());
+				store.dispatch(setInfoUser(null));
+				router.push(PATH.Login);
+			}
+		},
+	});
+
 	const handleLogout = () => {
-		store.dispatch(logout());
-		store.dispatch(setInfoUser(null));
-		router.push('/auth/login');
+		return fucnLogout.mutate();
 	};
 
 	return (
