@@ -13,8 +13,8 @@
 		transition: background-color 0.2s ease;
 
 		&:checked {
-			background-color: #5b70b3;
-			border-color: #5b70b3;
+			background-color: #06d7a0;
+			border-color: #06d7a0;
 		}
 
 		&:checked::before {
@@ -30,12 +30,12 @@
 		}
 
 		&:hover {
-			border-color: #5b70b3;
+			border-color: #06d7a0;
 		}
 	}
 
 	&.fixedHeader {
-		max-height: calc(100% - 48px); // height 100% - height Pagination
+		max-height: calc(100% - 48px);
 
 		thead {
 			position: sticky;
@@ -80,8 +80,8 @@
 
 	th {
 		color: var(--text-color);
-		font-size: 13px;
-		font-weight: 500;
+		font-size: 14px;
+		font-weight: 600;
 		white-space: nowrap;
 		padding-right: 24px;
 
