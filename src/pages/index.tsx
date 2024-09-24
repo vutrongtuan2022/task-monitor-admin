@@ -11,15 +11,12 @@ export default function Home() {
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
+
 			<div>Trang chủ</div>
 		</Fragment>
 	);
 }
 
 Home.getLayout = function (Page: ReactElement) {
-	return (
-		<BaseLayout isAction={false} title='Trang chủ'>
-			{Page}
-		</BaseLayout>
-	);
+	return <BaseLayout title='Trang chủ'>{Page}</BaseLayout>;
 };

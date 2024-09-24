@@ -23,6 +23,8 @@ function BaseLayout({children, title, isAction}: PropsBaseLayout) {
 					<Header isAction={isAction} title={title} />
 					<div className={styles.main}>{children}</div>
 				</div>
+
+				<div className={styles.main}>{children}</div>
 			</div>
 		</ContextBaseLayout.Provider>
 		// </RequireAuth>

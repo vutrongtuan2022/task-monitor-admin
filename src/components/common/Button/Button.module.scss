@@ -101,9 +101,10 @@
 	color: var(--light);
 }
 
-.blue {
-	background: var(--blue);
-	color: var(--light);
+.white_outline {
+	background-color: var(--light);
+	border: 1px solid #ececed;
+	color: var(--dark);
 }
 
 //**********************
