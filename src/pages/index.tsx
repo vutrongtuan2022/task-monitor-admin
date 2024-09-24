@@ -17,6 +17,7 @@ import Search from '~/components/common/Search';
 import Select, {Option} from '~/components/common/Select';
 import IconCustom from '~/components/common/IconCustom';
 import {TickCircle} from 'iconsax-react';
+import {TYPE_DATE} from '~/constants/config/enum';
 
 export default function Home() {
 	const listTown = [
