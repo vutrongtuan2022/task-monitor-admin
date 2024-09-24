@@ -7,7 +7,7 @@ $color-active: var(--primary);
 
 $border-color: var(--border-color);
 $border-hover: var(--primary);
-$border-active: var(--primary);
+$border-active: var(--primary-btn);
 $border-disabled: #999999;
 
 $border-radius: 8px;
@@ -51,7 +51,7 @@ $border-radius: 8px;
 	flex: 1;
 	color: var(--dark);
 	font-size: 14px;
-	font-weight: 600;
+	font-weight: 500;
 	margin-left: 8px;
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
@@ -73,8 +73,10 @@ $border-radius: 8px;
 	justify-content: center;
 	align-items: center;
 	transition: 0.3s;
+	color: var(--text-color-secondary-3);
 
 	&.active_icon {
 		transform: rotate(-180deg);
+		color: $border-active;
 	}
 }
