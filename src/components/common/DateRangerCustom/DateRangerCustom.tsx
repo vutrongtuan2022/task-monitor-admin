@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 
 import styles from './DateRangerCustom.module.scss';
-import {ArrowDown2} from 'iconsax-react';
 import {useEffect, useState} from 'react';
 import TippyHeadless from '@tippyjs/react/headless';
 import DateTypeOption from './components/DateTypeOption';
@@ -10,8 +9,9 @@ import {useRouter} from 'next/router';
 import {PropsDateRangerCustom} from './interfaces';
 import {getDateRange, getTextDateRange} from '~/common/funcs/selectDate';
 import {timeSubmit} from '~/common/funcs/optionConvert';
-import {RiCalendarScheduleLine, RiCalendarTodoLine} from 'react-icons/ri';
+import {RiCalendarTodoLine} from 'react-icons/ri';
 import Moment from 'react-moment';
+import {IoIosArrowDown} from 'react-icons/io';
 
 function DateRangerCustom({titleTime, keyTypeDate = '_typeDate', keyDateForm = '_dateFrom', keyDateTo = '_dateTo'}: PropsDateRangerCustom) {
 	const router = useRouter();
@@ -95,7 +95,7 @@ function DateRangerCustom({titleTime, keyTypeDate = '_typeDate', keyDateForm = '
 				</span>
 
 				<div className={clsx(styles.icon_arrow, {[styles.active_icon]: show})}>
-					<ArrowDown2 size={16} />
+					<IoIosArrowDown size={16} />
 				</div>
 			</div>
 		</TippyHeadless>

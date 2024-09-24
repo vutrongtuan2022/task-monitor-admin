@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import TippyHeadless from '@tippyjs/react/headless';
 import {useRouter} from 'next/router';
 import {IoChevronBackOutline, IoChevronForwardOutline} from 'react-icons/io5';
-import {IoIosArrowDown} from 'react-icons/io';
+import {MdArrowDropDown} from 'react-icons/md';
 
 function Pagination({total, pageSize, currentPage, onSetPage, onSetpageSize, dependencies = []}: PropsPagination) {
 	const router = useRouter();
@@ -212,7 +212,7 @@ function Pagination({total, pageSize, currentPage, onSetPage, onSetpageSize, dep
 							>
 								<span>{pageSize}</span>
 								<div className={styles.icon_arrow}>
-									<IoIosArrowDown size={20} color='#005994' />
+									<MdArrowDropDown size={20} />
 								</div>
 							</div>
 						</TippyHeadless>
