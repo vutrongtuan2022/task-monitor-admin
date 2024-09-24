@@ -128,14 +128,17 @@
 	width: 30px;
 	font-size: 16px;
 	font-weight: 600;
-	color: var(--light);
+	color: #364152;
 	outline: none;
 	border-radius: 4px;
-	border: solid 1px var(--glaucous);
-	background-color: var(--glaucous);
+	border: solid 1px #efefef;
+	background-color: var(--light);
 	&:hover {
 		cursor: pointer;
-		opacity: 0.7;
+		background-color: var(--glaucous);
+		.icon {
+			color: var(--light);
+		}
 	}
 }
 .btn.left {

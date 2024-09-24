@@ -14,8 +14,23 @@ import Table from '~/components/common/Table';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import DateRangerCustom from '~/components/common/DateRangerCustom';
 import Search from '~/components/common/Search';
+import Select, {Option} from '~/components/common/Select';
 
 export default function Home() {
+	const listTown = [
+		{
+			xaid: 1,
+			name: 'Town 1',
+		},
+		{
+			xaid: 2,
+			name: 'Town 2',
+		},
+		{
+			xaid: 3,
+			name: 'Town 3',
+		},
+	];
 	return (
 		<Fragment>
 			<Head>
@@ -48,6 +63,7 @@ export default function Home() {
 								]}
 							/>
 						</div>
+
 						<div className={styles.filter}>
 							<DateRangerCustom titleTime='Thời gian' />
 						</div>
@@ -64,7 +80,21 @@ export default function Home() {
 						</Button>
 					</div>
 				</div>
-
+				<Select
+					isSearch
+					name='townId'
+					value={''}
+					placeholder='Chọn xã/phường'
+					label={
+						<span>
+							Xã/phường<span style={{color: 'red'}}>*</span>
+						</span>
+					}
+				>
+					{listTown?.map((v: any) => (
+						<Option key={v?.xaid} value={v?.xaid} title={v?.name} />
+					))}
+				</Select>
 				<FullColumnFlex>
 					<DataWrapper
 						data={[
@@ -107,6 +137,7 @@ export default function Home() {
 							]}
 							column={[
 								{
+									checkBox: true,
 									title: 'STT',
 									render: (data: any, index: number) => <>{index + 1}</>,
 								},
@@ -127,7 +158,7 @@ export default function Home() {
 							]}
 						/>
 					</DataWrapper>
-					<Pagination currentPage={1} total={120} pageSize={20} dependencies={[]} />
+					<Pagination currentPage={2} total={120} pageSize={20} dependencies={[]} />
 				</FullColumnFlex>
 			</FlexLayout>
 		</Fragment>
