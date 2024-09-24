@@ -12,7 +12,7 @@ function FormSusses({}: PropsFormSusses) {
 			<ShieldTick size='72' color='#51BC2B' variant='Bold' />
 			<h4 className={styles.title}>Đổi mật khẩu thành công</h4>
 			<div>
-				<Button bold rounded_8 p_12_32 href={PATH.Login}>
+				<Button primaryLinear bold rounded_8 p_12_32 href={PATH.Login}>
 					Đăng nhập
 				</Button>
 			</div>

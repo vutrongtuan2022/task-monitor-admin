@@ -91,6 +91,17 @@
 	height: 100%;
 }
 
+.grey {
+	background: var(--grey);
+	color: var(--title-color);
+	border: 1px solid var(--border-color-btn);
+}
+
+.primaryLinear {
+	background: var(--gradient-blue-red);
+	color: var(--light);
+}
+
 .primary {
 	background: var(--primary-btn);
 	color: var(--light);
@@ -98,6 +109,11 @@
 
 .error {
 	background: var(--error);
+	color: var(--light);
+}
+
+.warning {
+	background: var(--orange);
 	color: var(--light);
 }
 

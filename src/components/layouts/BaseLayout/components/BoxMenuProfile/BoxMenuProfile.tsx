@@ -10,6 +10,8 @@ import {useRouter} from 'next/router';
 import {store} from '~/redux/store';
 import {logout} from '~/redux/reducer/auth';
 import {setInfoUser} from '~/redux/reducer/user';
+import Dialog from '~/components/common/Dialog';
+import icons from '~/constants/images/icons';
 
 function BoxMenuProfile({onClose}: PropsBoxMenuProfile) {
 	const router = useRouter();
@@ -27,6 +29,7 @@ function BoxMenuProfile({onClose}: PropsBoxMenuProfile) {
 	const handleLogout = () => {
 		store.dispatch(logout());
 		store.dispatch(setInfoUser(null));
+		router.push('/auth/login');
 	};
 
 	return (
@@ -64,6 +67,18 @@ function BoxMenuProfile({onClose}: PropsBoxMenuProfile) {
 					<p>Đăng xuất khỏi hệ thống</p>
 				</div>
 			</div>
+
+			<Dialog
+				open={openLogout}
+				onClose={() => setOpenLogout(false)}
+				onSubmit={handleLogout}
+				title='Đăng xuất'
+				note='Bạn có muốn đăng xuất khỏi hệ thống không?'
+				icon={icons.question}
+				titleCancel='Không'
+				titleSubmit='Đăng xuất'
+				type='error'
+			/>
 		</div>
 	);
 }
