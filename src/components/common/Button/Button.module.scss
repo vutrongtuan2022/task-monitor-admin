@@ -1,6 +1,7 @@
 @import '../../../styles/variables';
 
 .container {
+	height: 40px;
 	outline: none;
 	border: none;
 	width: 100%;
@@ -43,7 +44,7 @@
 	}
 
 	&:hover {
-		opacity: 0.8;
+		opacity: 0.9;
 		cursor: pointer;
 	}
 
@@ -121,6 +122,12 @@
 	background-color: var(--light);
 	border: 1px solid #ececed;
 	color: var(--dark);
+}
+
+.light-blue {
+	background: var(--light-blue);
+	color: var(--light);
+	border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 //**********************
@@ -208,6 +215,10 @@
 
 .p_12_32 {
 	padding: 12px 32px;
+}
+
+.p_14_23 {
+	padding: 14px 23px;
 }
 
 .p_8_16 {

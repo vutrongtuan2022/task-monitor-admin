@@ -1,4 +1,3 @@
-import {ArrowDown2} from 'iconsax-react';
 import {BiCheck} from 'react-icons/bi';
 import {PropsFilterCustom} from './interfaces';
 import TippyHeadless from '@tippyjs/react/headless';
@@ -7,6 +6,8 @@ import styles from './FilterCustom.module.scss';
 import {useRouter} from 'next/router';
 import {useState} from 'react';
 import {removeVietnameseTones} from '~/common/funcs/optionConvert';
+import {GrSearch} from 'react-icons/gr';
+import {IoIosArrowDown} from 'react-icons/io';
 
 function FilterCustom({listFilter, name, query, isSearch, disabled = false}: PropsFilterCustom) {
 	const router = useRouter();
@@ -30,12 +31,12 @@ function FilterCustom({listFilter, name, query, isSearch, disabled = false}: Pro
 			render={(attrs: any) => (
 				<div className={styles.mainOption}>
 					{isSearch ? (
-						<input
-							placeholder='Tìm kiếm...'
-							className={styles.inputSearch}
-							value={keyword}
-							onChange={(e) => setKeyword(e.target.value)}
-						/>
+						<div className={clsx(styles.container)}>
+							<div className={styles.icon}>
+								<GrSearch color='#005994' size={20} />
+							</div>
+							<input placeholder='Tìm kiếm...' value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+						</div>
 					) : null}
 					<div className={styles.overflow}>
 						<div
@@ -60,7 +61,7 @@ function FilterCustom({listFilter, name, query, isSearch, disabled = false}: Pro
 							<p>{'Tất cả'}</p>
 							{!queryStr && (
 								<div className={styles.icon_check}>
-									<BiCheck fontSize={18} color='#5755FF' fontWeight={600} />
+									<BiCheck fontSize={18} fontWeight={600} />
 								</div>
 							)}
 						</div>
@@ -115,7 +116,7 @@ function FilterCustom({listFilter, name, query, isSearch, disabled = false}: Pro
 					<p className={styles.text}>{getNameMethod(listFilter, queryStr as string)}</p>
 				</div>
 				<div className={styles.icon_arrow}>
-					<ArrowDown2 size={16} />
+					<IoIosArrowDown size={16} />
 				</div>
 			</div>
 		</TippyHeadless>

@@ -7,6 +7,7 @@ import styles from './RangeDatePicker.module.scss';
 import {ArrowLeft2, ArrowRight, ArrowRight2} from 'iconsax-react';
 import Button from '../Button';
 import convertDate from '~/common/funcs/convertDate';
+import {IoIosArrowBack, IoIosArrowForward} from 'react-icons/io';
 
 const daysOfWeek = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
@@ -153,7 +154,7 @@ function RangeDatePicker({onClose, onSetValue, value, open, onSubmit}: PropsRang
 					<div className={styles.main}>
 						<div className={styles.displayTitle}>
 							<div className={clsx('btn', styles.arrow)} onClick={() => handlePrev(false)}>
-								<ArrowLeft2 size={20} />
+								<IoIosArrowBack size={20} />
 							</div>
 							<p onClick={() => handleChangeType(setTypeCalendarLeft, typeCalendarLeft)}>
 								{titleMonthYear(dateLeft, typeCalendarLeft, yearTableLeft)}
@@ -166,7 +167,7 @@ function RangeDatePicker({onClose, onSetValue, value, open, onSubmit}: PropsRang
 								})}
 								onClick={() => handleNext(false)}
 							>
-								<ArrowRight2 size={20} />
+								<IoIosArrowForward size={20} />
 							</div>
 						</div>
 						{typeCalendarLeft == 0 ? (
@@ -197,13 +198,13 @@ function RangeDatePicker({onClose, onSetValue, value, open, onSubmit}: PropsRang
 								})}
 								onClick={() => handlePrev(true)}
 							>
-								<ArrowLeft2 size={20} />
+								<IoIosArrowBack size={20} />
 							</div>
 							<p onClick={() => handleChangeType(setTypeCalendarRight, typeCalendarRight)}>
 								{titleMonthYear(dateRight, typeCalendarRight, yearTableRight)}
 							</p>
 							<div className={clsx('btn', styles.arrow)} onClick={() => handleNext(true)}>
-								<ArrowRight2 size={20} />
+								<IoIosArrowForward size={20} />
 							</div>
 						</div>
 						{typeCalendarRight == 0 ? (
