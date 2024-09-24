@@ -22,7 +22,6 @@ $border-radius: 8px;
 	align-items: center;
 	gap: 4px;
 	user-select: none;
-	transition: 0.2s;
 	border-radius: $border-radius;
 	background-color: $bg-color;
 	display: flex;
@@ -48,6 +47,7 @@ $border-radius: 8px;
 		border: none;
 		background-color: transparent;
 		padding-left: 4px;
+
 		&::placeholder {
 			color: #9ea5c0;
 			opacity: 1;
@@ -123,7 +123,7 @@ $border-radius: 8px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	transition: 0.3s;
+	transition: all 0.3s;
 }
 
 // mainOption
