@@ -4,6 +4,7 @@
 
 :root {
 	--toastify-toast-min-height: 56px;
+	--toastify-toast-width: 400px;
 }
 
 html,
@@ -171,6 +172,7 @@ input:-internal-autofill-selected {
 
 .toastify-custom {
 	color: var(--light);
+	width: 500px;
 	text-align: center;
 	padding: 6px;
 	line-height: 24px;
@@ -179,17 +181,29 @@ input:-internal-autofill-selected {
 }
 
 .toastify-custom-success {
-	color: var(--light);
+	color: var(--dark);
 	text-align: center;
 	padding: 6px;
 	line-height: 24px;
-	background-color: rgba(19, 199, 2, 0.7);
-	border-radius: 4px;
+	background-color: var(--light);
+	border-radius: 60px;
+	margin: 10px;
 
 	.Toastify__close-button {
+		min-width: 30px;
+		min-height: 30px;
 		opacity: 1;
 		z-index: 1000;
-		color: var(--light);
+		color: var(--dark);
+		align-self: center;
+		margin-left: 10px;
+	}
+	.Toastify__toast-icon {
+		width: 50px;
+	}
+	.Toastify__toast-body {
+		padding: 0;
+		text-align: left;
 	}
 }
 

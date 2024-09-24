@@ -18,6 +18,8 @@ import Select, {Option} from '~/components/common/Select';
 import IconCustom from '~/components/common/IconCustom';
 import {TickCircle} from 'iconsax-react';
 import {TYPE_DATE} from '~/constants/config/enum';
+import {toast} from 'react-toastify';
+import {toastSuccess} from '~/common/funcs/toast';
 
 export default function Home() {
 	const listTown = [
@@ -77,6 +79,9 @@ export default function Home() {
 							rounded_8
 							light-blue
 							href={''}
+							onClick={() => {
+								toastSuccess({msg: 'Thêm mới dự án thành công'});
+							}}
 							icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 						>
 							Thêm mới dự án
