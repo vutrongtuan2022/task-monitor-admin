@@ -35,8 +35,6 @@
 	}
 
 	&.fixedHeader {
-		max-height: calc(100% - 48px);
-
 		thead {
 			position: sticky;
 			top: 0;

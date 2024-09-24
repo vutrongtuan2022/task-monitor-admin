@@ -1,25 +1,6 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import {Fragment, ReactElement} from 'react';
-import Button from '~/components/common/Button';
 import BaseLayout from '~/components/layouts/BaseLayout';
-import icons from '~/constants/images/icons';
-import styles from './index.module.scss';
-import FilterCustom from '~/components/common/FilterCustom';
-import FlexLayout from '~/components/layouts/FlexLayout';
-import FullColumnFlex from '~/components/layouts/FlexLayout/components/FullColumnFlex';
-import Pagination from '~/components/common/Pagination';
-import DataWrapper from '~/components/common/DataWrapper';
-import Table from '~/components/common/Table';
-import Noti from '~/components/common/DataWrapper/components/Noti';
-import DateRangerCustom from '~/components/common/DateRangerCustom';
-import Search from '~/components/common/Search';
-import Select, {Option} from '~/components/common/Select';
-import IconCustom from '~/components/common/IconCustom';
-import {TickCircle} from 'iconsax-react';
-import {TYPE_DATE} from '~/constants/config/enum';
-import {toast} from 'react-toastify';
-import {toastSuccess} from '~/common/funcs/toast';
 
 export default function Home() {
 	const listTown = [
@@ -45,7 +26,9 @@ export default function Home() {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<FlexLayout>
+			<div>Trang chu</div>
+
+			{/* <FlexLayout>
 				<div className={styles.header}>
 					<div className={styles.main_search}>
 						<div className={styles.search}>
@@ -196,7 +179,7 @@ export default function Home() {
 					</DataWrapper>
 					<Pagination currentPage={2} total={120} pageSize={20} dependencies={[]} />
 				</FullColumnFlex>
-			</FlexLayout>
+			</FlexLayout> */}
 		</Fragment>
 	);
 }
