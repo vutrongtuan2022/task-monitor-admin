@@ -60,7 +60,7 @@ function FormLogin({}: PropsFormLogin) {
 					<div className={styles.btn}>
 						<FormContext.Consumer>
 							{({isDone}) => (
-								<Button primary bold rounded_8 disable={!isDone}>
+								<Button primaryLinear bold rounded_8 disable={!isDone}>
 									Đăng nhập
 								</Button>
 							)}

@@ -40,7 +40,7 @@ function FormEmail({}: PropsFormEmail) {
 					<div className={styles.btn}>
 						<FormContext.Consumer>
 							{({isDone}) => (
-								<Button primary bold rounded_8 disable={!isDone}>
+								<Button primaryLinear bold rounded_8 disable={!isDone}>
 									Lấy lại mật khẩu
 								</Button>
 							)}

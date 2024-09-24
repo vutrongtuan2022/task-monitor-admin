@@ -51,7 +51,7 @@ function FormOTP({}: PropsFormOTP) {
 					)}
 				</p>
 				<div className={styles.btn}>
-					<Button primary bold rounded_8 disable={context?.form?.otp?.length! < 6} onClick={handleSubmit}>
+					<Button primaryLinear bold rounded_8 disable={context?.form?.otp?.length! < 6} onClick={handleSubmit}>
 						Xác thực Email
 					</Button>
 				</div>

@@ -55,7 +55,7 @@ function FormPassword({}: PropsFormPassword) {
 					<div className={styles.btn}>
 						<FormContext.Consumer>
 							{({isDone}) => (
-								<Button primary bold rounded_8 disable={!isDone}>
+								<Button primaryLinear bold rounded_8 disable={!isDone}>
 									Lưu mật khẩu
 								</Button>
 							)}

@@ -3,7 +3,6 @@ import {createContext, useState} from 'react';
 
 import Header from './components/Header';
 import MenuTab from './components/MenuTab';
-import RequireAuth from '~/components/protected/RequiredAuth';
 import clsx from 'clsx';
 import styles from './BaseLayout.module.scss';
 
@@ -23,8 +22,6 @@ function BaseLayout({children, title, isAction}: PropsBaseLayout) {
 					<Header isAction={isAction} title={title} />
 					<div className={styles.main}>{children}</div>
 				</div>
-
-				<div className={styles.main}>{children}</div>
 			</div>
 		</ContextBaseLayout.Provider>
 		// </RequireAuth>
