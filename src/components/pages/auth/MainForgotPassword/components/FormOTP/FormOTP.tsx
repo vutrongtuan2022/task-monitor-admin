@@ -8,6 +8,11 @@ import fancyTimeFormat from '~/common/funcs/fancyTimeFormat';
 import Button from '~/components/common/Button';
 import {TYPE_FORGOT_PASWORD} from '../../MainForgotPassword';
 import {IoClose} from 'react-icons/io5';
+import {useMutation} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
+import accountServices from '~/services/accountServices';
+import Loading from '~/components/common/Loading';
+import {obfuscateEmail} from '~/common/funcs/optionConvert';
 
 function FormOTP({}: PropsFormOTP) {
 	const TIME_OTP = 60;
@@ -25,8 +30,49 @@ function FormOTP({}: PropsFormOTP) {
 		}
 	}, [countDown]);
 
+	//Gửi lại OTP
+	const funcSendOTP = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'OTP đã được gửi về email của bạn!',
+				http: accountServices.sendOTP({email: context?.form?.email!}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setCoutDown(TIME_OTP);
+			}
+		},
+	});
+
+	//fuc submit otp
+	const funcSubmitOTP = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xác thực OTP thành công!',
+				http: accountServices.enterOTP({
+					email: context?.form?.email!,
+					otp: context?.form?.otp!,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				context.setType(TYPE_FORGOT_PASWORD.PASSWORD);
+			}
+		},
+	});
+
 	const handleSubmit = () => {
-		context.setType(TYPE_FORGOT_PASWORD.PASSWORD);
+		return funcSubmitOTP.mutate();
+	};
+
+	const handleSendcode = () => {
+		return funcSendOTP.mutate();
 	};
 
 	const handleClose = () => {
@@ -35,8 +81,11 @@ function FormOTP({}: PropsFormOTP) {
 
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcSendOTP.isLoading || funcSubmitOTP.isLoading} />
 			<h4 className={styles.title}>Xác thực mã OTP</h4>
-			<p className={styles.des}>Một mã xác thực đã được gửi cho bạn qua địa chỉ email: Thaihu...68@gmail.com</p>
+			<p className={styles.des}>
+				Một mã xác thực đã được gửi cho bạn qua địa chỉ email: <span>{obfuscateEmail(context?.form?.email!)}</span>
+			</p>
 			<div className={styles.form}>
 				<p className={styles.text_otp}>Nhập mã OTP</p>
 				<div className={styles.box_code}>
@@ -47,7 +96,9 @@ function FormOTP({}: PropsFormOTP) {
 					{countDown > 0 ? (
 						<span className={styles.textGreen}>Gửi lại OTP ({fancyTimeFormat(countDown)})</span>
 					) : (
-						<span className={styles.textGreen}>Gửi lại OTP</span>
+						<span className={styles.textGreen} onClick={handleSendcode}>
+							Gửi lại OTP
+						</span>
 					)}
 				</p>
 				<div className={styles.btn}>

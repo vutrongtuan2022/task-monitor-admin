@@ -8,12 +8,35 @@ import Button from '~/components/common/Button';
 import Link from 'next/link';
 import {PATH} from '~/constants/config';
 import {TYPE_FORGOT_PASWORD} from '../../MainForgotPassword';
+import {useMutation} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
+import accountServices from '~/services/accountServices';
+import Loading from '~/components/common/Loading';
+import Popup from '~/components/common/Popup';
 
 function FormEmail({}: PropsFormEmail) {
 	const context = useContext<IContextForgotPassword>(ContextForgotPassword);
 
+	const funcSendOTP = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'OTP đã được gửi về email của bạn!',
+				http: accountServices.sendOTP({
+					email: context?.form?.email!,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				context.setType(TYPE_FORGOT_PASWORD.OTP);
+			}
+		},
+	});
+
 	const handleSendEmail = () => {
-		return context.setType(TYPE_FORGOT_PASWORD.OTP);
+		return funcSendOTP.mutate();
 	};
 
 	return (
@@ -21,6 +44,7 @@ function FormEmail({}: PropsFormEmail) {
 			<h4 className={styles.title}>QUÊN MẬT KHẨU</h4>
 			<p className={styles.des}>Nhập địa chỉ email liên kết với tài khoản của bạn để lấy lại mật khẩu!</p>
 			<div className={styles.form}>
+				<Loading loading={funcSendOTP.isLoading} />
 				<Form form={context.form} setForm={context.setForm} onSubmit={handleSendEmail}>
 					<Input
 						type='text'
