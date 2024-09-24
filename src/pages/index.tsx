@@ -100,49 +100,68 @@ export default function Home() {
 				</Select>
 				<FullColumnFlex>
 					<DataWrapper
-						data={[
-							{
-								regencyUu: {name: 'Quản lý'},
-								phoneNumber: '0987654321',
-								email: 'quanly@example.com',
-							},
-							{
-								regencyUu: {name: 'Nhân viên'},
-								phoneNumber: '0912345678',
-								email: 'nhanvien@example.com',
-							},
-							{
-								regencyUu: {name: 'Thực tập sinh'},
-								phoneNumber: '0934567890',
-								email: 'thuctapsinh@example.com',
-							},
-						]}
+						data={[1, 1, 1, 1, , 11, 11, 1, 1, 1, 1, 1, , 1, 1, 1, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
 						noti={<Noti titleButton='Thêm mới' onClick={() => {}} des='Hiện tại chưa có dữ liệu nào, thêm ngay?' />}
 					>
 						<Table
 							fixedHeader={true}
 							data={[
-								{
-									regencyUu: {name: 'Quản lý'},
-									phoneNumber: '0987654321',
-									email: 'quanly@example.com',
-								},
-								{
-									regencyUu: {name: 'Nhân viên'},
-									phoneNumber: '0912345678',
-									email: 'nhanvien@example.com',
-								},
-								{
-									regencyUu: {name: 'Thực tập sinh'},
-									phoneNumber: '0934567890',
-									email: 'thuctapsinh@example.com',
-								},
+								1,
+								1,
+								1,
+								1,
+								,
+								11,
+								11,
+								1,
+								1,
+								1,
+								1,
+								1,
+								,
+								1,
+								1,
+								1,
+								1,
+								1,
+								11,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
+								1,
 							]}
 							column={[
 								{
 									checkBox: true,
 									title: 'STT',
 									render: (data: any, index: number) => <>{index + 1}</>,
+								},
+								{
+									title: 'Chức vụ',
+									fixedLeft: true,
+									render: (data: any) => (
+										<span style={{color: 'var(--primary-btn)'}}>{data?.regencyUu?.name || '---'}</span>
+									),
+								},
+								{
+									title: 'Số điện thoại',
+									render: (data: any) => <>{data?.phoneNumber || '---'}</>,
+								},
+								{
+									title: 'Email',
+									render: (data: any) => <>{data?.email || '---'}</>,
 								},
 								{
 									title: 'Chức vụ',
