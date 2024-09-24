@@ -5,7 +5,7 @@ import styles from './Pagination.module.scss';
 import clsx from 'clsx';
 import TippyHeadless from '@tippyjs/react/headless';
 import {useRouter} from 'next/router';
-import {IoChevronBackOutline, IoChevronForwardOutline} from 'react-icons/io5';
+import {IoArrowBackOutline, IoArrowForwardOutline} from 'react-icons/io5';
 import {MdArrowDropDown} from 'react-icons/md';
 
 function Pagination({total, pageSize, currentPage, onSetPage, onSetpageSize, dependencies = []}: PropsPagination) {
@@ -223,13 +223,17 @@ function Pagination({total, pageSize, currentPage, onSetPage, onSetpageSize, dep
 					<div className={styles.pages}>
 						{currentPage > 1 && (
 							<button className={clsx([styles.btn, styles.left])} onClick={handlePrev}>
-								<IoChevronBackOutline />
+								<span className={styles.icon}>
+									<IoArrowBackOutline />
+								</span>
 							</button>
 						)}
 						{items}
 						{currentPage < Math.ceil(total / Number(pageSize)) && (
 							<button className={clsx([styles.btn, styles.right])} onClick={handleNext}>
-								<IoChevronForwardOutline />
+								<span className={styles.icon}>
+									<IoArrowForwardOutline />
+								</span>
 							</button>
 						)}
 					</div>
