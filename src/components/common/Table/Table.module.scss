@@ -119,6 +119,9 @@
 		width: 1px;
 		background-color: #cdd5df;
 	}
+	.th_title:last-child::after {
+		content: none;
+	}
 
 	thead {
 		box-sizing: border-box;
