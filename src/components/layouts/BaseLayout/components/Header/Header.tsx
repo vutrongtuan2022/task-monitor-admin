@@ -6,16 +6,19 @@ import {TContextBaseLayout} from '../../interfaces';
 import styles from './Header.module.scss';
 import ImageFill from '~/components/common/ImageFill';
 import icons from '~/constants/images/icons';
-import {useContext, useEffect, useState} from 'react';
+import {use, useContext, useEffect, useState} from 'react';
 import Image from 'next/image';
 import {useRouter} from 'next/router';
 import clsx from 'clsx';
 import MenuTab from '../MenuTab';
 import BoxMenuProfile from '../BoxMenuProfile';
+import {useSelector} from 'react-redux';
+import {RootState} from '~/redux/store';
 
 function Header({isAction, title}: PropsHeader) {
 	const router = useRouter();
 
+	const {infoUser} = useSelector((state: RootState) => state.user);
 	const context = useContext<TContextBaseLayout>(ContextBaseLayout);
 
 	const [open, setOpen] = useState<boolean>(false);
@@ -76,8 +79,11 @@ function Header({isAction, title}: PropsHeader) {
 					placement='bottom-end'
 					render={(attrs: any) => <BoxMenuProfile onClose={() => setOpenProfile(false)} />}
 				>
-					<div className={styles.box_avatar} onClick={() => setOpenProfile(!openProfile)}>
-						<Image src={icons.avatar} alt='avatar default' className={styles.avatar} layout='fill' />
+					<div className={styles.box_infor} onClick={() => setOpenProfile(!openProfile)}>
+						<p className={styles.name}>{infoUser?.fullname}</p>
+						<div className={styles.box_avatar}>
+							<Image src={icons.avatar} alt='avatar default' className={styles.avatar} layout='fill' />
+						</div>
 					</div>
 				</TippyHeadless>
 			</div>

@@ -114,18 +114,31 @@ $width-tab: 256px;
 	}
 }
 
-.box_avatar {
-	position: relative;
-	width: 56px;
-	height: 56px;
-	border-radius: 50%;
+.box_infor {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 	cursor: pointer;
 	user-select: none;
 	transition: 0.3s;
 
 	&:active {
-		transform: scale(0.9);
+		transform: scale(0.95);
 	}
+
+	.name {
+		color: var(--light);
+		font-size: 18px;
+		font-weight: 500;
+		user-select: none;
+	}
+}
+
+.box_avatar {
+	position: relative;
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
 }
 
 // Responsive mobile
@@ -175,6 +188,12 @@ $width-tab: 256px;
 		gap: 28px;
 	}
 
+	.box_infor {
+		.name {
+			font-size: 16px;
+		}
+	}
+
 	.box_avatar {
 		width: 48px;
 		height: 48px;
@@ -204,6 +223,12 @@ $width-tab: 256px;
 
 	.right {
 		gap: 20px;
+	}
+
+	.box_infor {
+		.name {
+			display: none;
+		}
 	}
 
 	.box_avatar {
