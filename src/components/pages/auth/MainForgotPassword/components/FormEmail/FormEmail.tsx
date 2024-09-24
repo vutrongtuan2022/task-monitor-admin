@@ -13,10 +13,12 @@ import {useMutation} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import accountServices from '~/services/accountServices';
 import Loading from '~/components/common/Loading';
+import Popup from '~/components/common/Popup';
+import FormOTP from '../FormOTP';
 
 function FormEmail({}: PropsFormEmail) {
 	const router = useRouter();
-const {open,...rest}=router.query
+	const {open, ...rest} = router.query;
 	const context = useContext<IContextForgotPassword>(ContextForgotPassword);
 
 	const funcSendOTP = useMutation({
@@ -45,8 +47,8 @@ const {open,...rest}=router.query
 	console.log(funcSendOTP);
 
 	const handleSendEmail = () => {
-		return funcSendOTP mutate()
-		// return context.setType(TYPE_FORGOT_PASWORD.OTP);
+		// return funcSendOTP mutate()
+		return context.setType(TYPE_FORGOT_PASWORD.OTP);
 	};
 
 	return (

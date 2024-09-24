@@ -9,6 +9,7 @@
 	margin-bottom: 3px;
 	font-weight: 500;
 	z-index: 10;
+	transition: 0.3s;
 
 	&.active {
 		background-color: var(--primary-btn);

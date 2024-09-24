@@ -120,12 +120,12 @@ $font-size: 16px;
 	}
 
 	&.active {
-		border: 1px solid $color-focus;
 		background-color: $bg-focus;
 
 		.icon {
 			color: $color-focus;
 			transform: rotate(180deg);
+			transition: all 0.3s;
 		}
 	}
 
