@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {IGroupContractor, PropsMainGroupContractor} from './interfaces';
 import styles from './MainGroupContractor.module.scss';
@@ -16,16 +16,22 @@ import {Edit, Trash} from 'iconsax-react';
 import {useRouter} from 'next/router';
 import PositionContainer from '~/components/common/PositionContainer';
 import CreateGroupContractor from '../CreateGroupContractor';
-import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY} from '~/constants/config/enum';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractorcatServices from '~/services/contractorcatServices';
+import {toastWarn} from '~/common/funcs/toast';
+import Loading from '~/components/common/Loading';
+import Dialog from '~/components/common/Dialog';
+import UpdateGroupContractor from '../UpdateGroupContractor';
 
 function MainGroupContractor({}: PropsMainGroupContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, action} = router.query;
+	const {_page, _pageSize, _keyword, action, _uuidGroupContractor} = router.query;
+
+	const [uuidDelete, setUuidDelete] = useState<string>('');
 
 	const listContractorCat = useQuery([QUERY_KEY.table_group_contractor, _page, _pageSize, _keyword], {
 		queryFn: () =>
@@ -34,6 +40,7 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
+					status: STATUS_CONFIG.ACTIVE,
 				}),
 			}),
 		select(data) {
@@ -41,10 +48,36 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 		},
 	});
 
-	console.log(listContractorCat.data);
+	const funcDeleteGroupContractor = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa nhóm nhà thầu thành công!',
+				http: contractorcatServices.updateStatusContractorCat({
+					uuid: uuidDelete,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setUuidDelete('');
+				queryClient.invalidateQueries([QUERY_KEY.table_group_contractor]);
+			}
+		},
+	});
+
+	const handleDeleteGroupContractor = () => {
+		if (!uuidDelete) {
+			return toastWarn({msg: 'Không tìm thấy nhóm nhà thầu!'});
+		}
+
+		return funcDeleteGroupContractor.mutate();
+	};
 
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcDeleteGroupContractor.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
@@ -132,14 +165,22 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
-											onClick={() => {}}
+											onClick={() => {
+												router.replace({
+													pathname: router.pathname,
+													query: {
+														...router.query,
+														_uuidGroupContractor: data?.uuid,
+													},
+												});
+											}}
 										/>
 
 										<IconCustom
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
-											onClick={() => {}}
+											onClick={() => setUuidDelete(data?.uuid)}
 										/>
 									</div>
 								),
@@ -181,6 +222,41 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 					}}
 				/>
 			</PositionContainer>
+
+			<PositionContainer
+				open={!!_uuidGroupContractor}
+				onClose={() => {
+					const {_uuidGroupContractor, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<UpdateGroupContractor
+					onClose={() => {
+						const {_uuidGroupContractor, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			<Dialog
+				open={!!uuidDelete}
+				onClose={() => setUuidDelete('')}
+				title={'Xác nhận xóa'}
+				note={'Bạn có chắc chắn muốn xóa nhân viên này?'}
+				onSubmit={handleDeleteGroupContractor}
+			/>
 		</div>
 	);
 }
