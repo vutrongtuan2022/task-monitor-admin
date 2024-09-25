@@ -13,4 +13,10 @@ export interface IContractor {
 	code: string;
 	name: string;
 	uuid: string;
+
+	qh: any;
+	tp: any;
+	xa: any;
+	address: string;
+	note: string;
 }

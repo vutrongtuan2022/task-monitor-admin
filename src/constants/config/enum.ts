@@ -12,6 +12,7 @@ export enum QUERY_KEY {
 	dropdown_district,
 	dropdown_town,
 
+	detail_contractor,
 	detail_user,
 }
 
