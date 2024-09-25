@@ -171,13 +171,30 @@ input:-internal-autofill-selected {
 }
 
 .toastify-custom {
-	color: var(--light);
-	width: 500px;
+	color: var(--dark);
 	text-align: center;
 	padding: 6px;
 	line-height: 24px;
-	background-color: rgba(0, 0, 0, 0.6);
-	border-radius: 4px;
+	background-color: var(--light);
+	border-radius: 60px;
+	margin: 10px;
+
+	.Toastify__close-button {
+		min-width: 30px;
+		min-height: 30px;
+		opacity: 1;
+		z-index: 1000;
+		color: var(--dark);
+		align-self: center;
+		margin-left: 10px;
+	}
+	.Toastify__toast-icon {
+		width: 50px;
+	}
+	.Toastify__toast-body {
+		padding: 0;
+		text-align: left;
+	}
 }
 
 .toastify-custom-success {
@@ -208,46 +225,82 @@ input:-internal-autofill-selected {
 }
 
 .toastify-custom-info {
-	color: var(--light);
+	color: var(--dark);
 	text-align: center;
 	padding: 6px;
 	line-height: 24px;
-	background-color: rgba(0, 117, 226, 0.7);
-	border-radius: 4px;
+	background-color: var(--light);
+	border-radius: 60px;
+	margin: 10px;
 
 	.Toastify__close-button {
+		min-width: 30px;
+		min-height: 30px;
 		opacity: 1;
 		z-index: 1000;
-		color: var(--light);
+		color: var(--dark);
+		align-self: center;
+		margin-left: 10px;
+	}
+	.Toastify__toast-icon {
+		width: 50px;
+	}
+	.Toastify__toast-body {
+		padding: 0;
+		text-align: left;
 	}
 }
 
 .toastify-custom-error {
-	color: var(--light);
+	color: var(--dark);
 	text-align: center;
 	padding: 6px;
 	line-height: 24px;
-	background-color: rgba(255, 0, 0, 0.7);
-	border-radius: 4px;
+	background-color: var(--light);
+	border-radius: 60px;
+	margin: 10px;
 
 	.Toastify__close-button {
+		min-width: 30px;
+		min-height: 30px;
 		opacity: 1;
 		z-index: 1000;
-		color: var(--light);
+		color: var(--dark);
+		align-self: center;
+		margin-left: 10px;
+	}
+	.Toastify__toast-icon {
+		width: 50px;
+	}
+	.Toastify__toast-body {
+		padding: 0;
+		text-align: left;
 	}
 }
 
 .toastify-custom-warn {
-	color: var(--light);
+	color: var(--dark);
 	text-align: center;
 	padding: 6px;
 	line-height: 24px;
-	background-color: rgba(255, 191, 0, 0.7);
-	border-radius: 4px;
+	background-color: var(--light);
+	border-radius: 60px;
+	margin: 10px;
 
 	.Toastify__close-button {
+		min-width: 30px;
+		min-height: 30px;
 		opacity: 1;
 		z-index: 1000;
-		color: var(--light);
+		color: var(--dark);
+		align-self: center;
+		margin-left: 10px;
+	}
+	.Toastify__toast-icon {
+		width: 50px;
+	}
+	.Toastify__toast-body {
+		padding: 0;
+		text-align: left;
 	}
 }

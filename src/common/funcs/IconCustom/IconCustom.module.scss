@@ -10,11 +10,16 @@
 		background-color: #06d7a0;
 		color: #06d7a0;
 	}
-	&.edit {
+
+	&.info {
 		background-color: #4bc9f0;
 		color: #4bc9f0;
 	}
-	&.delete {
+	&.warn {
+		background-color: #ffd167;
+		color: #ffd167;
+	}
+	&.error {
 		background-color: #ee464c;
 		color: #ee464c;
 	}

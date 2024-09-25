@@ -1,5 +1,7 @@
 import Head from 'next/head';
 import {Fragment, ReactElement} from 'react';
+import {toastError, toastInfo, toastSuccess, toastText, toastWarn} from '~/common/funcs/toast';
+import Button from '~/components/common/Button';
 import BaseLayout from '~/components/layouts/BaseLayout';
 
 export default function Home() {
@@ -27,6 +29,18 @@ export default function Home() {
 			</Head>
 
 			<div>Trang chu</div>
+
+			<Button
+				p_14_23
+				rounded_8
+				light-blue
+				href={''}
+				onClick={() => {
+					toastError({msg: 'Thêm mới dự án thành công'});
+				}}
+			>
+				Thêm mới dự án
+			</Button>
 
 			{/* <FlexLayout>
 				<div className={styles.header}>
@@ -57,18 +71,7 @@ export default function Home() {
 						</div>
 					</div>
 					<div className={styles.btn}>
-						<Button
-							p_14_23
-							rounded_8
-							light-blue
-							href={''}
-							onClick={() => {
-								toastSuccess({msg: 'Thêm mới dự án thành công'});
-							}}
-							icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
-						>
-							Thêm mới dự án
-						</Button>
+						
 					</div>
 				</div>
 				<Select

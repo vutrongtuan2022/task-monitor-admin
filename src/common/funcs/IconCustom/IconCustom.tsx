@@ -2,14 +2,18 @@ import styles from './IconCustom.module.scss';
 import {FaCheckCircle} from 'react-icons/fa';
 import clsx from 'clsx';
 import {MdOutlineVerified} from 'react-icons/md';
+import {PiWarningCircle} from 'react-icons/pi';
 
-function IconCustom(type: string) {
-	console.log('msg from custom icon', type);
-
+function IconCustom(type: 'success' | 'info' | 'warn' | 'error') {
 	return (
 		<div
 			className={clsx(
-				{[styles.success]: type == 'success', [styles.delete]: type == 'delete', [styles.edit]: type == 'edit'},
+				{
+					[styles.success]: type == 'success',
+					[styles.info]: type == 'info',
+					[styles.warn]: type == 'warn',
+					[styles.error]: type == 'error',
+				},
 				styles.icon
 			)}
 		>
@@ -18,12 +22,17 @@ function IconCustom(type: string) {
 					<FaCheckCircle size='20' color='#fff' />
 				</div>
 			)}
-			{type == 'edit' && (
+			{type == 'info' && (
 				<div>
 					<FaCheckCircle size='20' color='#fff' />
 				</div>
 			)}
-			{type == 'delete' && (
+			{type == 'warn' && (
+				<div>
+					<PiWarningCircle size='20' color='#fff' />
+				</div>
+			)}
+			{type == 'error' && (
 				<div>
 					<MdOutlineVerified size='20' color='#fff' />
 				</div>
