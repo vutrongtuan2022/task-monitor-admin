@@ -1,5 +1,7 @@
 export enum QUERY_KEY {
 	table_list_user,
+
+	table_role,
 }
 
 export enum TYPE_DATE {
@@ -19,4 +21,16 @@ export enum TYPE_ACCOUNT {
 	USER = 1,
 	MANAGER,
 	ADMIN,
+}
+
+// USER
+
+export enum CONFIG_STATUS {
+	HOAT_DONG = 1,
+	BI_KHOA,
+}
+
+export enum ACCOUNT_STATUS {
+	NOT_HAVE = 0,
+	HAVE = 1,
 }

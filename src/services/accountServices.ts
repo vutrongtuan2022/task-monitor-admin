@@ -1,3 +1,4 @@
+import {register} from 'module';
 import axiosClient from '.';
 const accountServices = {
 	sendOTP: (
@@ -17,6 +18,19 @@ const accountServices = {
 	},
 	changePassForget: (data: {email: string; otp: string; newPass: string}, tokenAxios?: any) => {
 		return axiosClient.post(`/Account/change-pass-forget`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	register: (
+		data: {
+			username: string;
+			password: string;
+			userUuid: string;
+			roleUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Account/register`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
