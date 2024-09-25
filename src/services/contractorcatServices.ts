@@ -46,5 +46,15 @@ const contractorcatServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	categoryCat: (
+		data: {
+			keyword: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractorCat/category-contractor-cat`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractorcatServices;

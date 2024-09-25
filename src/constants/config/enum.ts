@@ -2,10 +2,12 @@ export enum QUERY_KEY {
 	detail_group_contractor,
 
 	table_group_contractor,
+	table_contractor,
 	table_list_user,
 	table_role,
 
 	dropdown_role,
+	dropdown_category_group_contractor,
 	dropdown_province,
 	dropdown_district,
 	dropdown_town,
