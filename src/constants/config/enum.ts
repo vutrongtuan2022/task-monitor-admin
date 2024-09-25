@@ -1,9 +1,11 @@
 export enum QUERY_KEY {
 	table_group_contractor,
+	table_contractor,
 	table_list_user,
 	table_role,
 
 	dropdown_role,
+	dropdown_category_group_contractor,
 }
 
 export enum TYPE_DATE {
@@ -24,8 +26,6 @@ export enum TYPE_ACCOUNT {
 	MANAGER,
 	ADMIN,
 }
-
-// USER
 
 export enum STATUS_ACCOUNT {
 	NOT_HAVE = 0,

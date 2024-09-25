@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {PropsMainPageContractor} from './interfaces';
+import {IContractor, PropsMainPageContractor} from './interfaces';
 import styles from './MainPageContractor.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -14,7 +14,45 @@ import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
+import {useRouter} from 'next/router';
+import {useQuery} from '@tanstack/react-query';
+import {QUERY_KEY} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
+import contractorServices from '~/services/contractorServices';
+import contractorcatServices from '~/services/contractorcatServices';
+
 function MainPageContractor({}: PropsMainPageContractor) {
+	const router = useRouter();
+
+	const {_page, _pageSize, _keyword, _type} = router.query;
+
+	const listContractor = useQuery([QUERY_KEY.table_contractor, _page, _pageSize, _keyword, _type], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorServices.listContractor({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 20,
+					keyword: (_keyword as string) || '',
+					type: Number(_type) || null,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	const listGroupContractor = useQuery([QUERY_KEY.dropdown_category_group_contractor], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorcatServices.categoryCat({
+					keyword: '',
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.head}>
@@ -26,17 +64,11 @@ function MainPageContractor({}: PropsMainPageContractor) {
 						<FilterCustom
 							isSearch
 							name='Nhóm nhà thầu'
-							query='_contractor'
-							listFilter={[
-								{
-									id: 1,
-									name: 'Nhà thầu 1',
-								},
-								{
-									id: 2,
-									name: 'Nhà thầu 2',
-								},
-							]}
+							query='_type'
+							listFilter={listGroupContractor.data?.map((v: any) => ({
+								id: v?.id,
+								name: v?.name,
+							}))}
 						/>
 					</div>
 				</div>
@@ -55,8 +87,8 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={[1]}
-					loading={false}
+					data={listContractor?.data?.items || []}
+					loading={listContractor.isLoading}
 					noti={
 						<Noti
 							button={
@@ -75,34 +107,34 @@ function MainPageContractor({}: PropsMainPageContractor) {
 				>
 					<Table
 						fixedHeader={true}
-						data={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+						data={listContractor?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
 								fixedLeft: true,
-								render: (data: any, index: number) => <>{index + 1}</>,
+								render: (data: IContractor, index: number) => <>{index + 1}</>,
 							},
 							{
 								title: 'Tên nhà thầu',
-								render: (data: any) => <span>nhà thầu 01</span>,
+								render: (data: IContractor) => <span>{data?.contractorCat?.name}</span>,
 							},
 							{
 								title: 'Nhóm nhà thầu',
-								render: (data: any) => <>thiết kế</>,
+								render: (data: IContractor) => <>{}</>,
 							},
 							{
 								title: 'Địa chỉ',
-								render: (data: any) => <>Số 82 Dịch Vọng, Cầu Giấy, Hà Nội</>,
+								render: (data: IContractor) => <>Số 82 Dịch Vọng, Cầu Giấy, Hà Nội</>,
 							},
 							{
 								title: 'Mô tả',
-								render: (data: any) => <span>---</span>,
+								render: (data: IContractor) => <span>---</span>,
 							},
 
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: any) => (
+								render: (data: IContractor) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
@@ -122,7 +154,12 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							},
 						]}
 					/>
-					<Pagination pageSize={1} currentPage={1} total={10} />
+					<Pagination
+						currentPage={Number(_page) || 1}
+						pageSize={Number(_pageSize) || 20}
+						total={listContractor?.data?.pagination?.totalCount}
+						dependencies={[_pageSize, _keyword]}
+					/>
 				</DataWrapper>
 			</WrapperScrollbar>
 		</div>
