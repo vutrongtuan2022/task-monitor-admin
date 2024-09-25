@@ -1,4 +1,5 @@
 export enum QUERY_KEY {
+	table_group_contractor,
 	table_list_user,
 
 	table_role,
