@@ -12,7 +12,7 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Search from '~/components/common/Search';
 import IconCustom from '~/components/common/IconCustom';
-import {Edit, Lock1, TickCircle, Trash, Unlock, UserAdd} from 'iconsax-react';
+import {Edit, TickCircle, Trash, UserAdd} from 'iconsax-react';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import StateActive from '~/components/common/StateActive';
@@ -25,15 +25,17 @@ import FormCreateAccount from '../FormCreateAccount';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
 import FilterCustom from '~/components/common/FilterCustom';
+import PositionContainer from '~/components/common/PositionContainer';
+import CreateUser from '../CreateUser';
 
 function MainPageUser({}: PropsMainPageUser) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const [dataStatus, setDataStatus] = useState<IUser | null>(null);
+	const [deleteUser, setDeleteUser] = useState<IUser | null>(null);
 	const [dataCreateAccount, setDataCreateAccount] = useState<IUser | null>(null);
 
-	const {_page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc} = router.query;
+	const {_page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc, action} = router.query;
 
 	const listUser = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc], {
 		queryFn: () =>
@@ -44,7 +46,6 @@ function MainPageUser({}: PropsMainPageUser) {
 					keyword: (_keyword as string) || '',
 					status: 1,
 					isHaveAcc: !!_isHaveAcc ? Number(_isHaveAcc) : null,
-					roleUuid: _roleUuid as string,
 				}),
 			}),
 		select(data) {
@@ -52,20 +53,20 @@ function MainPageUser({}: PropsMainPageUser) {
 		},
 	});
 
-	const funcChangeStatus = useMutation({
+	const funcDeleteUser = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Xóa nhân viên thành công',
 				http: userServices.updateStatus({
-					uuid: dataStatus?.uuid!,
+					uuid: deleteUser?.uuid!,
 				}),
 			});
 		},
 		onSuccess(data) {
 			if (data) {
-				setDataStatus(null);
+				setDeleteUser(null);
 				queryClient.invalidateQueries([QUERY_KEY.table_list_user]);
 			}
 		},
@@ -73,12 +74,13 @@ function MainPageUser({}: PropsMainPageUser) {
 
 	return (
 		<div className={styles.container}>
-			<Loading loading={funcChangeStatus.isLoading} />
+			<Loading loading={funcDeleteUser.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
 						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên nhân viên, ID' />
 					</div>
+
 					<div className={styles.filter}>
 						<FilterCustom
 							isSearch
@@ -104,6 +106,15 @@ function MainPageUser({}: PropsMainPageUser) {
 						rounded_8
 						light-blue
 						href={''}
+						onClick={() => {
+							router.replace({
+								pathname: router.pathname,
+								query: {
+									...router.query,
+									action: 'create',
+								},
+							});
+						}}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 					>
 						Thêm mới nhân viên
@@ -123,6 +134,15 @@ function MainPageUser({}: PropsMainPageUser) {
 									light-blue
 									href={''}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												action: 'create',
+											},
+										});
+									}}
 								>
 									Thêm mới nhân viên
 								</Button>
@@ -157,7 +177,7 @@ function MainPageUser({}: PropsMainPageUser) {
 							},
 							{
 								title: 'Email',
-								render: (data: IUser) => <span style={{color: 'var(--primary-btn)'}}>{data?.email || '---'}</span>,
+								render: (data: IUser) => <span>{data?.email || '---'}</span>,
 							},
 							{
 								title: 'Tình trạng tài khoản',
@@ -212,7 +232,7 @@ function MainPageUser({}: PropsMainPageUser) {
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
 											onClick={() => {
-												setDataStatus(data);
+												setDeleteUser(data);
 											}}
 										/>
 									</div>
@@ -228,15 +248,42 @@ function MainPageUser({}: PropsMainPageUser) {
 					/>
 				</DataWrapper>
 			</WrapperScrollbar>
+
+			<PositionContainer
+				open={action == 'create'}
+				onClose={() => {
+					const {action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<CreateUser
+					onClose={() => {
+						const {action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
 			<Popup open={!!dataCreateAccount} onClose={() => setDataCreateAccount(null)}>
 				<FormCreateAccount dataCreateAccount={dataCreateAccount} onClose={() => setDataCreateAccount(null)} />
 			</Popup>
 			<Dialog
-				open={!!dataStatus}
-				onClose={() => setDataStatus(null)}
+				open={!!deleteUser}
+				onClose={() => setDeleteUser(null)}
 				title={'Xác nhận xóa'}
 				note={'Bạn có chắc chắn muốn xóa nhân viên này?'}
-				onSubmit={funcChangeStatus.mutate}
+				onSubmit={funcDeleteUser.mutate}
 			/>
 		</div>
 	);

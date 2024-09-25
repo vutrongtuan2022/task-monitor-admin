@@ -6,6 +6,9 @@ export enum QUERY_KEY {
 	table_role,
 
 	dropdown_role,
+	dropdown_province,
+	dropdown_district,
+	dropdown_town,
 }
 
 export enum TYPE_DATE {
