@@ -14,6 +14,9 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import PositionContainer from '~/components/common/PositionContainer';
 import {useRouter} from 'next/router';
 import StateActive from '~/components/common/StateActive';
+import IconCustom from '~/components/common/IconCustom';
+import {Edit, Trash} from 'iconsax-react';
+import Progress from '~/components/common/Progress';
 
 function MainPageProject({}: PropsMainPageProject) {
 	const router = useRouter();
@@ -72,120 +75,78 @@ function MainPageProject({}: PropsMainPageProject) {
 						column={[
 							{
 								title: 'STT',
-								fixedLeft: true,
 								render: (data: any, index: number) => <>{index + 1}</>,
 							},
 							{
-								title: 'Chức vụ',
-								render: (data: any) => <span style={{color: 'var(--primary-btn)'}}>{data?.regencyUu?.name || '---'}</span>,
+								title: 'ID dự án',
+								fixedLeft: true,
+								render: (data: any) => <>123456</>,
 							},
 							{
-								title: 'Số điện thoại',
-								render: (data: any) => <>{data?.phoneNumber || '---'}</>,
+								title: 'Tên dự án',
+								render: (data: any) => <>Dự án Xây Dựng số 3A</>,
 							},
 							{
-								title: 'Email',
-								render: (data: any) => <>{data?.email || '---'}</>,
+								title: 'Lãnh đạo phục trách',
+								render: (data: any) => <>Dương Minh Anh</>,
 							},
 							{
-								title: 'Chức vụ',
-								render: (data: any) => <span style={{color: 'var(--primary-btn)'}}>{data?.regencyUu?.name || '---'}</span>,
+								title: 'Kế hoạch vốn 2024 (triệu đồng)',
+								render: (data: any) => <>1.000</>,
 							},
 							{
-								title: 'Số điện thoại',
-								render: (data: any) => <>{data?.phoneNumber || '---'}</>,
+								title: 'Tổng mức đầu tư (triệu đồng)',
+								render: (data: any) => <>400</>,
 							},
 							{
-								title: 'Email',
-								render: (data: any) => <>{data?.email || '---'}</>,
+								title: 'Tổng dự toán (triệu đồng)',
+								render: (data: any) => <>200</>,
 							},
 							{
-								title: 'Chức vụ',
-								render: (data: any) => <span style={{color: 'var(--primary-btn)'}}>{data?.regencyUu?.name || '---'}</span>,
+								title: 'Trạng thái giải ngân',
+								render: (data: any) => <Progress percent={50} width={80} />,
 							},
 							{
-								title: 'Số điện thoại',
-								render: (data: any) => <>{data?.phoneNumber || '---'}</>,
-							},
-							{
-								title: 'Email',
-								render: (data: any) => <>{data?.email || '---'}</>,
-							},
-							{
-								title: 'Chức vụ',
-								render: (data: any) => <span style={{color: 'var(--primary-btn)'}}>{data?.regencyUu?.name || '---'}</span>,
-							},
-							{
-								title: 'Số điện thoại',
-								render: (data: any) => <>{data?.phoneNumber || '---'}</>,
-							},
-							{
-								title: 'Email',
-								render: (data: any) => <>{data?.email || '---'}</>,
-							},
-							{
-								title: 'Chức vụ',
-								render: (data: any) => <span style={{color: 'var(--primary-btn)'}}>{data?.regencyUu?.name || '---'}</span>,
-							},
-							{
-								title: 'Số điện thoại',
-								render: (data: any) => <>{data?.phoneNumber || '---'}</>,
-							},
-							{
-								title: 'Email',
-								render: (data: any) => <>{data?.email || '---'}</>,
-							},
-							{
-								title: 'Chức vụ',
-								render: (data: any) => <span style={{color: 'var(--primary-btn)'}}>{data?.regencyUu?.name || '---'}</span>,
-							},
-							{
-								title: 'Số điện thoại',
+								title: 'Trạng thái dự án',
 								render: (data: any) => (
 									<StateActive
-										stateActive={3}
+										stateActive={1}
 										listState={[
 											{
 												state: 1,
-												text: 'Hoạt động',
+												text: 'Hoàn thành',
 												textColor: '#fff',
 												backgroundColor: '#06D7A0',
 											},
 											{
 												state: 2,
-												text: 'Đang khóa',
+												text: 'Chưa hoàn thành',
 												textColor: '#fff',
 												backgroundColor: '#F37277',
-											},
-											{
-												state: 3,
-												text: 'Chưa có dữ liệu',
-												textColor: '#fff',
-												backgroundColor: '#FDAD73',
 											},
 										]}
 									/>
 								),
 							},
 							{
-								title: 'Email',
+								title: 'Hành động',
 								fixedRight: true,
 								render: (data: any) => (
-									<StateActive
-										stateActive={2}
-										listState={[
-											{
-												state: 1,
-												text: 'Đã cấp tài khoản',
-												backgroundColor: '#6CD1F2',
-											},
-											{
-												state: 2,
-												text: 'Chưa cấp tài khoản',
-												backgroundColor: '#FD9599',
-											},
-										]}
-									/>
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										<IconCustom
+											type='edit'
+											icon={<Edit fontSize={20} fontWeight={600} />}
+											tooltip='Chỉnh sửa'
+											onClick={() => {}}
+										/>
+
+										<IconCustom
+											type='delete'
+											icon={<Trash fontSize={20} fontWeight={600} />}
+											tooltip='Xóa bỏ'
+											onClick={() => {}}
+										/>
+									</div>
 								),
 							},
 						]}
