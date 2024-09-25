@@ -27,6 +27,7 @@ import Loading from '~/components/common/Loading';
 import FilterCustom from '~/components/common/FilterCustom';
 import PositionContainer from '~/components/common/PositionContainer';
 import CreateUser from '../CreateUser';
+import UpdateUser from '../UpdateUser';
 
 function MainPageUser({}: PropsMainPageUser) {
 	const router = useRouter();
@@ -35,7 +36,7 @@ function MainPageUser({}: PropsMainPageUser) {
 	const [deleteUser, setDeleteUser] = useState<IUser | null>(null);
 	const [dataCreateAccount, setDataCreateAccount] = useState<IUser | null>(null);
 
-	const {_page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc, action} = router.query;
+	const {_page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc, action, _uuidUser} = router.query;
 
 	const listUser = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc], {
 		queryFn: () =>
@@ -224,7 +225,15 @@ function MainPageUser({}: PropsMainPageUser) {
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
-											onClick={() => {}}
+											onClick={() => {
+												router.replace({
+													pathname: router.pathname,
+													query: {
+														...router.query,
+														_uuidUser: data?.uuid,
+													},
+												});
+											}}
 										/>
 
 										<IconCustom
@@ -275,10 +284,39 @@ function MainPageUser({}: PropsMainPageUser) {
 					}}
 				/>
 			</PositionContainer>
+
+			<PositionContainer
+				open={!!_uuidUser}
+				onClose={() => {
+					const {_uuidUser, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<UpdateUser
+					onClose={() => {
+						const {_uuidUser, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
 			<Popup open={!!dataCreateAccount} onClose={() => setDataCreateAccount(null)}>
 				<FormCreateAccount dataCreateAccount={dataCreateAccount} onClose={() => setDataCreateAccount(null)} />
 			</Popup>
 			<Dialog
+				type='error'
 				open={!!deleteUser}
 				onClose={() => setDeleteUser(null)}
 				title={'Xác nhận xóa'}

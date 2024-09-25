@@ -4,7 +4,6 @@ export interface PropsCreateUser {
 
 export interface ICreateUser {
 	uuid: string;
-	code: string;
 	fullName: string;
 	email: string;
 	gender: number;
@@ -14,4 +13,5 @@ export interface ICreateUser {
 	matp: string;
 	maqh: string;
 	xaid: string;
+	note: string;
 }

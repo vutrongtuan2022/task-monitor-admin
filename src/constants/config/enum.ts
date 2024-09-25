@@ -11,6 +11,8 @@ export enum QUERY_KEY {
 	dropdown_province,
 	dropdown_district,
 	dropdown_town,
+
+	detail_user,
 }
 
 export enum TYPE_DATE {
@@ -40,4 +42,10 @@ export enum STATUS_ACCOUNT {
 export enum STATUS_CONFIG {
 	NOT_ACTIVE,
 	ACTIVE,
+}
+
+export enum TYPE_GENDER {
+	MALE,
+	FEMALE,
+	OTHER,
 }
