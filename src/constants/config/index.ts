@@ -1,4 +1,4 @@
-import {Buildings2, Data, DocumentText1, ElementEqual, ReceiptItem, UserOctagon} from 'iconsax-react';
+import {Buildings2, Data, DocumentText1, ElementEqual, Receipt21, ReceiptItem, UserOctagon} from 'iconsax-react';
 import icons from '../images/icons';
 import {TYPE_DATE} from './enum';
 
@@ -25,8 +25,8 @@ export enum PATH {
 	Project = '/project',
 	Task = '/task',
 	Contractor = '/contractor',
+	GroupContractor = '/group-contractor',
 	User = '/user',
-	Account = '/accout',
 }
 
 export const Menu: {
@@ -54,22 +54,22 @@ export const Menu: {
 		icon: ReceiptItem,
 	},
 	{
+		title: 'Quản lý nhóm nhà thầu',
+		path: PATH.GroupContractor,
+		pathActive: PATH.GroupContractor,
+		icon: Buildings2,
+	},
+	{
 		title: 'Quản lý nhà thầu',
 		path: PATH.Contractor,
 		pathActive: PATH.Contractor,
-		icon: Buildings2,
+		icon: Receipt21,
 	},
 	{
 		title: 'Quản lý nhân viên',
 		path: PATH.User,
 		pathActive: PATH.User,
 		icon: UserOctagon,
-	},
-	{
-		title: 'Quản lý tài khoản',
-		path: PATH.Account,
-		pathActive: PATH.Account,
-		icon: Data,
 	},
 ];
 
