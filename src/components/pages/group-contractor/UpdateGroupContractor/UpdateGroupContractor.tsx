@@ -1,34 +1,56 @@
 import React, {useState} from 'react';
 
-import {PropsCreateGroupContractor} from './interfaces';
-import styles from './CreateGroupContractor.module.scss';
+import {PropsUpdateGroupContractor} from './interfaces';
+import styles from './UpdateGroupContractor.module.scss';
 import {IoClose} from 'react-icons/io5';
 import Button from '~/components/common/Button';
 import {FolderOpen} from 'iconsax-react';
 import Form, {FormContext, Input} from '~/components/common/Form';
 import TextArea from '~/components/common/Form/components/TextArea';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import contractorcatServices from '~/services/contractorcatServices';
 import {QUERY_KEY} from '~/constants/config/enum';
 import Loading from '~/components/common/Loading';
+import {useRouter} from 'next/router';
 
-function CreateGroupContractor({onClose}: PropsCreateGroupContractor) {
+function UpdateGroupContractor({onClose}: PropsUpdateGroupContractor) {
+	const router = useRouter();
 	const queryClient = useQueryClient();
+
+	const {_uuidGroupContractor} = router.query;
 
 	const [form, setForm] = useState<{name: string; note: string}>({
 		name: '',
 		note: '',
 	});
 
-	const funcCreateGroupContractor = useMutation({
+	useQuery([QUERY_KEY.detail_group_contractor, _uuidGroupContractor], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorcatServices.detailContractorCat({
+					uuid: _uuidGroupContractor as string,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setForm({
+					name: data?.name || '',
+					note: data?.note || '',
+				});
+			}
+		},
+		enabled: !!_uuidGroupContractor,
+	});
+
+	const funcUpdateGroupContractor = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Thêm nhóm nhà thầu thành công!',
+				msgSuccess: 'Cập nhật nhóm nhà thầu thành công!',
 				http: contractorcatServices.upsertContractorCat({
-					uuid: '',
+					uuid: _uuidGroupContractor as string,
 					name: form.name,
 					note: form.note,
 				}),
@@ -47,10 +69,10 @@ function CreateGroupContractor({onClose}: PropsCreateGroupContractor) {
 	});
 
 	return (
-		<Form form={form} setForm={setForm} onSubmit={funcCreateGroupContractor.mutate}>
-			<Loading loading={funcCreateGroupContractor.isLoading} />
+		<Form form={form} setForm={setForm} onSubmit={funcUpdateGroupContractor.mutate}>
+			<Loading loading={funcUpdateGroupContractor.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Thêm mới nhóm nhà thầu</h4>
+				<h4 className={styles.title}>Chỉnh sửa nhóm nhà thầu</h4>
 				<div className={styles.form}>
 					<Input
 						placeholder='Nhập tên nhóm nhà thầu'
@@ -92,4 +114,4 @@ function CreateGroupContractor({onClose}: PropsCreateGroupContractor) {
 	);
 }
 
-export default CreateGroupContractor;
+export default UpdateGroupContractor;

@@ -1,4 +1,6 @@
 export enum QUERY_KEY {
+	detail_group_contractor,
+
 	table_group_contractor,
 	table_list_user,
 	table_role,
@@ -25,9 +27,12 @@ export enum TYPE_ACCOUNT {
 	ADMIN,
 }
 
-// USER
-
 export enum STATUS_ACCOUNT {
 	NOT_HAVE = 0,
 	HAVE = 1,
+}
+
+export enum STATUS_CONFIG {
+	NOT_ACTIVE,
+	ACTIVE,
 }
