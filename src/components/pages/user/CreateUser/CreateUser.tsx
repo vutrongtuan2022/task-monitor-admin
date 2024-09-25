@@ -11,7 +11,8 @@ import {IoClose} from 'react-icons/io5';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
-import {QUERY_KEY} from '~/constants/config/enum';
+import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
+
 import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
 
@@ -20,7 +21,6 @@ function CreateUser({onClose}: PropsCreateUser) {
 
 	const [form, setForm] = useState<ICreateUser>({
 		uuid: '',
-		code: '',
 		fullName: '',
 		email: '',
 		gender: 0,
@@ -30,6 +30,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 		matp: '',
 		maqh: '',
 		xaid: '',
+		note: '',
 	});
 
 	const funcCreateUser = useMutation({
@@ -40,7 +41,6 @@ function CreateUser({onClose}: PropsCreateUser) {
 				msgSuccess: 'Thêm nhân viên thành công!',
 				http: userServices.upsertUser({
 					uuid: form.uuid,
-					code: form.code,
 					fullName: form.fullName,
 					email: form.email,
 					gender: form.gender,
@@ -50,15 +50,16 @@ function CreateUser({onClose}: PropsCreateUser) {
 					matp: form.matp,
 					maqh: form.maqh,
 					xaid: form.xaid,
+					note: form.note,
 				}),
 			});
 		},
+
 		onSuccess(data) {
 			if (data) {
 				onClose();
 				setForm({
 					uuid: '',
-					code: '',
 					fullName: '',
 					email: '',
 					gender: 0,
@@ -68,6 +69,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 					matp: '',
 					maqh: '',
 					xaid: '',
+					note: '',
 				});
 				queryClient.invalidateQueries([QUERY_KEY.table_list_user]);
 			}
@@ -136,10 +138,12 @@ function CreateUser({onClose}: PropsCreateUser) {
 							</span>
 						}
 					/>
+
 					<Input
 						placeholder='Nhập số điện thoại'
 						name='phone'
-						type='text'
+						type='number'
+						isPhone
 						value={form.phone}
 						isRequired
 						label={
@@ -148,11 +152,57 @@ function CreateUser({onClose}: PropsCreateUser) {
 							</span>
 						}
 					/>
-					<Input placeholder='Nhập email' name='email' type='text' value={form.email} label={<span>Email</span>} />
+
+					<Input placeholder='Nhập email' isEmail name='email' type='text' value={form.email} label={<span>Email</span>} />
 
 					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
 
-					<Input placeholder='Nhập địa chỉ' name='address' type='text' value={form.address} label={<span>Địa chỉ</span>} />
+					<div className={styles.gennder}>
+						<label style={{fontSize: '16px', fontWeight: '500'}}>
+							Giới tính<span style={{color: 'red'}}>*</span>
+						</label>
+						<div className={styles.group_radio}>
+							<div className={styles.item_radio}>
+								<input
+									id='male'
+									className={styles.input_radio}
+									type='radio'
+									name='gender'
+									value={form.gender}
+									checked={form.gender == TYPE_GENDER.MALE}
+									onChange={(e) =>
+										setForm((prev: any) => ({
+											...prev,
+											gender: TYPE_GENDER.MALE,
+										}))
+									}
+								/>
+								<label className={styles.input_lable} htmlFor='male'>
+									Nam
+								</label>
+							</div>
+
+							<div className={styles.item_radio}>
+								<input
+									id='female'
+									className={styles.input_radio}
+									type='radio'
+									name='gender'
+									value={form.gender}
+									checked={form.gender == TYPE_GENDER.FEMALE}
+									onChange={(e) =>
+										setForm((prev: any) => ({
+											...prev,
+											gender: TYPE_GENDER.FEMALE,
+										}))
+									}
+								/>
+								<label className={styles.input_lable} htmlFor='female'>
+									Nữ
+								</label>
+							</div>
+						</div>
+					</div>
 
 					<div className={styles.mt}>
 						<Select
@@ -213,9 +263,19 @@ function CreateUser({onClose}: PropsCreateUser) {
 						</Select>
 					</div>
 
-					{/* <div className={styles.note}>
+					<div className={styles.mt}>
+						<Input
+							placeholder='Nhập địa chỉ chi tiết'
+							name='address'
+							type='text'
+							value={form.address}
+							label={<span>Địa chỉ chi tiết</span>}
+						/>
+					</div>
+
+					<div className={styles.mt}>
 						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
-					</div> */}
+					</div>
 				</div>
 				<div className={styles.group_button}>
 					<div>

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-import {IFormCreateContractor, PropsCreateContractor} from './interfaces';
-import styles from './CreateContractor.module.scss';
+import {IFormUpdateContractor, PropsUpdateContractor} from './interfaces';
+import styles from './UpdateContractor.module.scss';
 import {IoClose} from 'react-icons/io5';
 import Button from '~/components/common/Button';
 import {FolderOpen} from 'iconsax-react';
@@ -9,25 +9,52 @@ import Form, {FormContext, Input} from '~/components/common/Form';
 import TextArea from '~/components/common/Form/components/TextArea';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
-import contractorcatServices from '~/services/contractorcatServices';
 import {QUERY_KEY} from '~/constants/config/enum';
 import Loading from '~/components/common/Loading';
+import {useRouter} from 'next/router';
 import contractorServices from '~/services/contractorServices';
 import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
+import contractorcatServices from '~/services/contractorcatServices';
 import {toastWarn} from '~/common/funcs/toast';
 
-function CreateContractor({onClose}: PropsCreateContractor) {
+function UpdateContractor({onClose}: PropsUpdateContractor) {
+	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const [form, setForm] = useState<IFormCreateContractor>({
+	const {_uuidContractor} = router.query;
+
+	const [form, setForm] = useState<IFormUpdateContractor>({
 		name: '',
-		type: null,
 		note: '',
+		type: null,
 		matp: '',
 		maqh: '',
 		xaid: '',
 		address: '',
+	});
+
+	useQuery([QUERY_KEY.detail_contractor, _uuidContractor], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorServices.detailContractor({
+					uuid: _uuidContractor as string,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setForm({
+					name: data?.name || '',
+					note: data?.note || '',
+					type: data?.contractorCat?.id || null,
+					matp: data?.tp?.uuid || '',
+					maqh: data?.qh?.uuid || '',
+					xaid: data?.xa?.uuid || '',
+					address: data?.address || '',
+				});
+			}
+		},
+		enabled: !!_uuidContractor,
 	});
 
 	const listGroupContractor = useQuery([QUERY_KEY.dropdown_category_group_contractor], {
@@ -82,14 +109,14 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 		enabled: !!form?.maqh,
 	});
 
-	const funcCreateContractor = useMutation({
+	const funcUpdateContractor = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Thêm nhà thầu thành công!',
+				msgSuccess: 'Cập nhật nhà thầu thành công!',
 				http: contractorServices.upsertContractor({
-					uuid: '',
+					uuid: _uuidContractor as string,
 					name: form.name,
 					type: form.type,
 					note: form.note,
@@ -105,8 +132,8 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 				onClose();
 				setForm({
 					name: '',
-					type: null,
 					note: '',
+					type: null,
 					matp: '',
 					maqh: '',
 					xaid: '',
@@ -122,14 +149,14 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 			return toastWarn({msg: 'Vui lòng chọn nhóm nhà thầu!'});
 		}
 
-		return funcCreateContractor.mutate();
+		return funcUpdateContractor.mutate();
 	};
 
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
-			<Loading loading={funcCreateContractor.isLoading} />
+			<Loading loading={funcUpdateContractor.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Thêm mới nhà thầu</h4>
+				<h4 className={styles.title}>Chỉnh sửa nhà thầu</h4>
 				<div className={styles.form}>
 					<Input
 						placeholder='Nhập tên nhóm nhà thầu'
@@ -257,4 +284,4 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 	);
 }
 
-export default CreateContractor;
+export default UpdateContractor;

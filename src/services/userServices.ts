@@ -29,7 +29,6 @@ const userServices = {
 	upsertUser: (
 		data: {
 			uuid: string;
-			code: string;
 			fullName: string;
 			email: string;
 			gender: number;
@@ -39,6 +38,7 @@ const userServices = {
 			matp: string;
 			maqh: string;
 			xaid: string;
+			note: string;
 		},
 		tokenAxios?: any
 	) => {
