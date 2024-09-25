@@ -25,7 +25,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 		uuid: '',
 		fullName: '',
 		email: '',
-		gender: 0,
+		gender: TYPE_GENDER.MALE,
 		phone: '',
 		birthday: '',
 		address: '',
@@ -49,12 +49,12 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 				email: data?.email,
 				gender: data?.gender,
 				phone: data?.phone,
-				birthday: data?.birthday,
-				address: data?.address,
-				matp: data?.tp?.uuid,
-				maqh: data?.qh?.uuid,
-				xaid: data?.xa?.uuid,
-				note: data?.note,
+				birthday: data?.birthday || '',
+				address: data?.address || '',
+				matp: data?.tp?.uuid || '',
+				maqh: data?.qh?.uuid || '',
+				xaid: data?.xa?.uuid || '',
+				note: data?.note || '',
 			});
 		},
 		select(data) {
@@ -234,13 +234,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 					</div>
 
 					<div className={styles.mt}>
-						<Select
-							isSearch
-							name='matp'
-							value={form.matp}
-							placeholder='Chọn tỉnh/thành phố'
-							label={<span>Tỉnh/Thành phố</span>}
-						>
+						<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
 							{listProvince?.data?.map((v: any) => (
 								<Option
 									key={v?.matp}
@@ -258,7 +252,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 							))}
 						</Select>
 
-						<Select isSearch name='maqh' value={form.maqh} placeholder='Chọn quận/ Huyện' label={<span>Quận/ Huyện</span>}>
+						<Select isSearch name='maqh' value={form.maqh} placeholder='Lựa chọn' label={<span>Quận/ Huyện</span>}>
 							{listDistrict?.data?.map((v: any) => (
 								<Option
 									key={v?.maqh}
@@ -275,7 +269,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 							))}
 						</Select>
 
-						<Select isSearch name='xaid' value={form.xaid} placeholder='Chọn xã/ Phường' label={<span>Xã/ Phường</span>}>
+						<Select isSearch name='xaid' value={form.xaid} placeholder='Lựa chọn' label={<span>Thị trấn/ Xã </span>}>
 							{listTown?.data?.map((v: any) => (
 								<Option
 									key={v?.xaid}
