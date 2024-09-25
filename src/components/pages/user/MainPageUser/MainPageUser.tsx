@@ -16,7 +16,7 @@ import {Edit, Lock1, TickCircle, Trash, Unlock, UserAdd} from 'iconsax-react';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import StateActive from '~/components/common/StateActive';
-import {ACCOUNT_STATUS, CONFIG_STATUS, QUERY_KEY} from '~/constants/config/enum';
+import {ACCOUNT_STATUS, QUERY_KEY} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
 import Link from 'next/link';
