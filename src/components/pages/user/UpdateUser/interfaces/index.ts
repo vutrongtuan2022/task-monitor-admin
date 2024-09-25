@@ -4,7 +4,6 @@ export interface PropsUpdateUser {
 
 export interface IUpdateUser {
 	uuid: string;
-	code: string;
 	fullName: string;
 	email: string;
 	gender: number;
@@ -14,4 +13,5 @@ export interface IUpdateUser {
 	matp: string;
 	maqh: string;
 	xaid: string;
+	note: string;
 }
