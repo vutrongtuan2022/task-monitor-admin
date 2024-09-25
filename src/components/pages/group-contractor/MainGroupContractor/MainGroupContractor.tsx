@@ -253,6 +253,7 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 			<Dialog
 				open={!!uuidDelete}
 				onClose={() => setUuidDelete('')}
+				type='error'
 				title={'Xác nhận xóa'}
 				note={'Bạn có chắc chắn muốn xóa nhân viên này?'}
 				onSubmit={handleDeleteGroupContractor}
