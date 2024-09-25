@@ -1,8 +1,8 @@
-export interface PropsCreateUser {
+export interface PropsUpdateUser {
 	onClose: () => void;
 }
 
-export interface ICreateUser {
+export interface IUpdateUser {
 	uuid: string;
 	code: string;
 	fullName: string;

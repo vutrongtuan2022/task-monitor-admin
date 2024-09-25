@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {PropsCreateUser} from './interfaces';
+import {ICreateUser, PropsCreateUser} from './interfaces';
 import styles from './CreateUser.module.scss';
 import Form, {FormContext, Input} from '~/components/common/Form';
 import Loading from '~/components/common/Loading';
@@ -18,19 +18,7 @@ import provineServices from '~/services/provineServices';
 function CreateUser({onClose}: PropsCreateUser) {
 	const queryClient = useQueryClient();
 
-	const [form, setForm] = useState<{
-		uuid: string;
-		code: string;
-		fullName: string;
-		email: string;
-		gender: number;
-		phone: string;
-		birthday: string;
-		address: string;
-		matp: string;
-		maqh: string;
-		xaid: string;
-	}>({
+	const [form, setForm] = useState<ICreateUser>({
 		uuid: '',
 		code: '',
 		fullName: '',
@@ -44,7 +32,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 		xaid: '',
 	});
 
-	const funcCreateGroupContractor = useMutation({
+	const funcCreateUser = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
@@ -126,33 +114,25 @@ function CreateUser({onClose}: PropsCreateUser) {
 		enabled: !!form?.maqh,
 	});
 
+	const handleSubmit = async () => {
+		return funcCreateUser.mutate();
+	};
+
 	return (
-		<Form form={form} setForm={setForm} onSubmit={funcCreateGroupContractor.mutate}>
-			<Loading loading={funcCreateGroupContractor.isLoading} />
+		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
+			<Loading loading={funcCreateUser.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Thêm mới nhóm nhà thầu</h4>
+				<h4 className={styles.title}>Thêm mới nhân viên</h4>
 				<div className={styles.form}>
 					<Input
 						placeholder='Nhập họ và tên'
-						name='name'
+						name='fullName'
 						type='text'
 						value={form.fullName}
 						isRequired
 						label={
 							<span>
 								Họ và tên <span style={{color: 'red'}}>*</span>
-							</span>
-						}
-					/>
-					<Input
-						placeholder='Nhập email'
-						name='email'
-						type='text'
-						value={form.email}
-						isRequired
-						label={
-							<span>
-								Email <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
@@ -168,34 +148,16 @@ function CreateUser({onClose}: PropsCreateUser) {
 							</span>
 						}
 					/>
-					<Input
-						placeholder='Nhập ngày sinh'
-						name='birthday'
-						type='date'
-						value={form.birthday}
-						isRequired
-						label={
-							<span>
-								Ngày sinh <span style={{color: 'red'}}>*</span>
-							</span>
-						}
-					/>
-					<Input
-						placeholder='Nhập địa chỉ'
-						name='address'
-						type='text'
-						value={form.address}
-						isRequired
-						label={
-							<span>
-								Địa chỉ <span style={{color: 'red'}}>*</span>
-							</span>
-						}
-					/>
-					<div className={styles.select}>
+					<Input placeholder='Nhập email' name='email' type='text' value={form.email} label={<span>Email</span>} />
+
+					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
+
+					<Input placeholder='Nhập địa chỉ' name='address' type='text' value={form.address} label={<span>Địa chỉ</span>} />
+
+					<div className={styles.mt}>
 						<Select
 							isSearch
-							name='provinceId'
+							name='matp'
 							value={form.matp}
 							placeholder='Chọn tỉnh/thành phố'
 							label={<span>Tỉnh/Thành phố</span>}
@@ -208,22 +170,16 @@ function CreateUser({onClose}: PropsCreateUser) {
 									onClick={() =>
 										setForm((prev: any) => ({
 											...prev,
-											provinceId: v?.matp,
-											districtId: '',
-											townId: '',
+											matp: v?.matp,
+											maqh: '',
+											xaid: '',
 										}))
 									}
 								/>
 							))}
 						</Select>
 
-						<Select
-							isSearch
-							name='provinceId'
-							value={form.matp}
-							placeholder='Chọn quận/ Huyện'
-							label={<span>Quận/ Huyện</span>}
-						>
+						<Select isSearch name='maqh' value={form.maqh} placeholder='Chọn quận/ Huyện' label={<span>Quận/ Huyện</span>}>
 							{listDistrict?.data?.map((v: any) => (
 								<Option
 									key={v?.maqh}
@@ -232,15 +188,15 @@ function CreateUser({onClose}: PropsCreateUser) {
 									onClick={() =>
 										setForm((prev: any) => ({
 											...prev,
-											districtId: v?.maqh,
-											townId: '',
+											maqh: v?.maqh,
+											xaid: '',
 										}))
 									}
 								/>
 							))}
 						</Select>
 
-						<Select isSearch name='provinceId' value={form.matp} placeholder='Chọn xã/ Phường' label={<span>Xã/ Phường</span>}>
+						<Select isSearch name='xaid' value={form.xaid} placeholder='Chọn xã/ Phường' label={<span>Xã/ Phường</span>}>
 							{listTown?.data?.map((v: any) => (
 								<Option
 									key={v?.xaid}
@@ -249,7 +205,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 									onClick={() =>
 										setForm((prev: any) => ({
 											...prev,
-											townId: v?.xaid,
+											xaid: v?.xaid,
 										}))
 									}
 								/>
@@ -257,9 +213,9 @@ function CreateUser({onClose}: PropsCreateUser) {
 						</Select>
 					</div>
 
-					<div className={styles.note}>
+					{/* <div className={styles.note}>
 						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
-					</div>
+					</div> */}
 				</div>
 				<div className={styles.group_button}>
 					<div>

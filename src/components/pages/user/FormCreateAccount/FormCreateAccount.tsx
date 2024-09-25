@@ -81,6 +81,7 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 				<div className={styles.form}>
 					<Input
 						name='username'
+						isRequired
 						placeholder='Nhập tên đăng nhập'
 						label={
 							<span>
@@ -91,6 +92,7 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 					/>
 					<Input
 						name='password'
+						isRequired
 						placeholder='Nhập mật khẩu'
 						label={
 							<span>
