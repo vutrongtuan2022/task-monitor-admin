@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import {Fragment, ReactElement} from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
+import MainPageUser from '~/components/pages/user/MainPageUser';
 
 export default function Home() {
 	return (
@@ -11,7 +12,8 @@ export default function Home() {
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<div>Quản lý nhân viên</div>
+
+			<MainPageUser />
 		</Fragment>
 	);
 }
