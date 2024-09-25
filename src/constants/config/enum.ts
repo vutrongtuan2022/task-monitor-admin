@@ -27,12 +27,7 @@ export enum TYPE_ACCOUNT {
 
 // USER
 
-export enum CONFIG_STATUS {
-	HOAT_DONG = 1,
-	BI_KHOA,
-}
-
-export enum ACCOUNT_STATUS {
+export enum STATUS_ACCOUNT {
 	NOT_HAVE = 0,
 	HAVE = 1,
 }

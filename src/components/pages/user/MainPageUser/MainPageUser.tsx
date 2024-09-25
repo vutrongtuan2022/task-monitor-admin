@@ -16,7 +16,7 @@ import {Edit, Lock1, TickCircle, Trash, Unlock, UserAdd} from 'iconsax-react';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import StateActive from '~/components/common/StateActive';
-import {ACCOUNT_STATUS, CONFIG_STATUS, QUERY_KEY} from '~/constants/config/enum';
+import {STATUS_ACCOUNT, QUERY_KEY} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
 import Link from 'next/link';
@@ -86,11 +86,11 @@ function MainPageUser({}: PropsMainPageUser) {
 							query='_isHaveAcc'
 							listFilter={[
 								{
-									id: ACCOUNT_STATUS.HAVE,
+									id: STATUS_ACCOUNT.HAVE,
 									name: 'Đã cấp tài khoản',
 								},
 								{
-									id: ACCOUNT_STATUS.NOT_HAVE,
+									id: STATUS_ACCOUNT.NOT_HAVE,
 									name: 'Chưa cấp tài khoản',
 								},
 							]}
@@ -166,13 +166,13 @@ function MainPageUser({}: PropsMainPageUser) {
 										stateActive={data?.isHaveAcc}
 										listState={[
 											{
-												state: ACCOUNT_STATUS.HAVE,
+												state: STATUS_ACCOUNT.HAVE,
 												text: 'Đã cấp tài khoản',
 												textColor: '#fff',
 												backgroundColor: '#06D7A0',
 											},
 											{
-												state: ACCOUNT_STATUS.NOT_HAVE,
+												state: STATUS_ACCOUNT.NOT_HAVE,
 												text: 'Chưa cấp tài khoản',
 												textColor: '#fff',
 												backgroundColor: '#F37277',
@@ -187,7 +187,7 @@ function MainPageUser({}: PropsMainPageUser) {
 								fixedRight: true,
 								render: (data: IUser) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										{data?.isHaveAcc == ACCOUNT_STATUS.NOT_HAVE ? (
+										{data?.isHaveAcc == STATUS_ACCOUNT.NOT_HAVE ? (
 											<IconCustom
 												icon={<UserAdd fontSize={20} fontWeight={600} />}
 												tooltip='Cấp tài khoản'
