@@ -7,7 +7,6 @@ const userServices = {
 			page: number;
 			keyword: string;
 			status: number | null;
-			roleUuid: string;
 			isHaveAcc: number | null;
 		},
 		tokenAxios?: any

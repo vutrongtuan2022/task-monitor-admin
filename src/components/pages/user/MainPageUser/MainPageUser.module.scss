@@ -34,3 +34,14 @@
 	border-radius: 8px;
 	background: #fff;
 }
+
+.link {
+	font-weight: 600;
+	color: var(--primary-btn);
+	transition: 0.3s;
+
+	&:hover {
+		opacity: 0.8;
+		text-decoration: underline;
+	}
+}
