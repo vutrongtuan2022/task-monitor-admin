@@ -5,8 +5,9 @@ $bg-disabled: #f0eeee;
 $color-text: var(--dark);
 $color-active: var(--primary-btn);
 
+$border-focus: var(--primary-btn);
 $border-color: var(--border-color);
-$border-hover: var(--primary);
+$border-hover: var(--primary-btn);
 $border-active: var(--primary-btn);
 $border-disabled: #999999;
 
@@ -31,14 +32,13 @@ $border-radius: 8px;
 	margin-bottom: 12px;
 	background-color: #f4f6fa;
 
-	// &.focus {
-	// 	border: 1px solid $border-focus;
-	// 	background: $bg-focus;
-	// }
+	&.focus {
+		border: 1px solid $border-focus;
+	}
 
-	// &:hover {
-	// 	border: 1px solid $border-hover;
-	// }
+	&:hover {
+		border: 1px solid $border-hover;
+	}
 
 	input {
 		display: block;
