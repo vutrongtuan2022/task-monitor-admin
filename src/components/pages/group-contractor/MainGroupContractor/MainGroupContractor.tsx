@@ -13,7 +13,15 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
+import {useRouter} from 'next/router';
+import PositionContainer from '~/components/common/PositionContainer';
+import CreateGroupContractor from '../CreateGroupContractor';
+
 function MainGroupContractor({}: PropsMainGroupContractor) {
+	const router = useRouter();
+
+	const {action} = router.query;
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.head}>
@@ -28,7 +36,15 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 						p_14_23
 						rounded_8
 						light-blue
-						href={''}
+						onClick={() => {
+							router.replace({
+								pathname: router.pathname,
+								query: {
+									...router.query,
+									action: 'create',
+								},
+							});
+						}}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 					>
 						Thêm mới nhà thầu
@@ -46,7 +62,15 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 									p_14_23
 									rounded_8
 									light-blue
-									href={''}
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												action: 'create',
+											},
+										});
+									}}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 								>
 									Thêm mới nhà thầu
@@ -104,6 +128,22 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 					<Pagination pageSize={1} currentPage={1} total={10} />
 				</DataWrapper>
 			</WrapperScrollbar>
+
+			<PositionContainer
+				open={action == 'create'}
+				onClose={() => {
+					const {action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<CreateGroupContractor />
+			</PositionContainer>
 		</div>
 	);
 }
