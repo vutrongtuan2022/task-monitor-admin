@@ -1,25 +1,25 @@
 import Head from 'next/head';
 import {Fragment, ReactElement} from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
-import MainPageTask from '~/components/pages/task/MainPageTask';
+import MainGroupContractor from '~/components/pages/group-contractor/MainGroupContractor';
 
 export default function Home() {
 	return (
 		<Fragment>
 			<Head>
-				<title>Quản lý quy trình</title>
-				<meta name='description' content='Quản lý quy trình' />
+				<title>Quản lý nhóm nhà thầu</title>
+				<meta name='description' content='Quản lý nhóm nhà thầu' />
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<MainPageTask />
+			<MainGroupContractor />
 		</Fragment>
 	);
 }
 
 Home.getLayout = function (Page: ReactElement) {
 	return (
-		<BaseLayout isAction={false} title='Quản lý quy trình'>
+		<BaseLayout isAction={false} title='Quản lý nhóm nhà thầu'>
 			{Page}
 		</BaseLayout>
 	);

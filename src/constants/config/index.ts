@@ -24,6 +24,7 @@ export enum PATH {
 	Home = '/',
 	Project = '/project',
 	Task = '/task',
+	Branch = '/branch',
 	Contractor = '/contractor',
 	GroupContractor = '/group-contractor',
 	User = '/user',
@@ -52,6 +53,12 @@ export const Menu: {
 		path: PATH.Task,
 		pathActive: PATH.Task,
 		icon: ReceiptItem,
+	},
+	{
+		title: 'Quản lý chi nhánh',
+		path: PATH.Branch,
+		pathActive: PATH.Branch,
+		icon: Data,
 	},
 	{
 		title: 'Quản lý nhóm nhà thầu',
