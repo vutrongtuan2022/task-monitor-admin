@@ -11,6 +11,8 @@ export enum QUERY_KEY {
 	dropdown_province,
 	dropdown_district,
 	dropdown_town,
+
+	detail_contractor,
 }
 
 export enum TYPE_DATE {

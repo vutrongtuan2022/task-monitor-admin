@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {IContractor, PropsMainPageContractor} from './interfaces';
 import styles from './MainPageContractor.module.scss';
@@ -15,18 +15,25 @@ import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
 import {useRouter} from 'next/router';
-import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY} from '~/constants/config/enum';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
 import PositionContainer from '~/components/common/PositionContainer';
 import CreateContractor from '../CreateContractor';
+import Dialog from '~/components/common/Dialog';
+import {toastWarn} from '~/common/funcs/toast';
+import Loading from '~/components/common/Loading';
+import UpdateContractor from '../UpdateContractor';
 
 function MainPageContractor({}: PropsMainPageContractor) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _type, action} = router.query;
+	const {_page, _pageSize, _keyword, _type, action, _uuidContractor} = router.query;
+
+	const [uuidDelete, setUuidDelete] = useState<string>('');
 
 	const listContractor = useQuery([QUERY_KEY.table_contractor, _page, _pageSize, _keyword, _type], {
 		queryFn: () =>
@@ -36,6 +43,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
 					type: Number(_type) || null,
+					status: STATUS_CONFIG.ACTIVE,
 				}),
 			}),
 		select(data) {
@@ -54,9 +62,35 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			return data;
 		},
 	});
+	const funcDeleteContractor = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa nhà thầu thành công!',
+				http: contractorServices.updateStatusContractor({
+					uuid: uuidDelete,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setUuidDelete('');
+				queryClient.invalidateQueries([QUERY_KEY.table_contractor]);
+			}
+		},
+	});
+	const handleDeleteContractor = () => {
+		if (!uuidDelete) {
+			return toastWarn({msg: 'Không tìm thấy nhà thầu!'});
+		}
 
+		return funcDeleteContractor.mutate();
+	};
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcDeleteContractor.isLoading} />
+
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
@@ -134,19 +168,19 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							},
 							{
 								title: 'Tên nhà thầu',
-								render: (data: IContractor) => <span>{data?.contractorCat?.name}</span>,
+								render: (data: IContractor) => <span>{data?.name}</span>,
 							},
 							{
 								title: 'Nhóm nhà thầu',
-								render: (data: IContractor) => <>{data?.name}</>,
+								render: (data: IContractor) => <>{data?.contractorCat?.name || '---'}</>,
 							},
 							{
 								title: 'Địa chỉ',
-								render: (data: IContractor) => <>Số 82 Dịch Vọng, Cầu Giấy, Hà Nội</>,
+								render: (data: IContractor) => <>{data?.address || '---'}</>,
 							},
 							{
 								title: 'Mô tả',
-								render: (data: IContractor) => <span>---</span>,
+								render: (data: IContractor) => <>{data?.note || '---'}</>,
 							},
 
 							{
@@ -158,14 +192,22 @@ function MainPageContractor({}: PropsMainPageContractor) {
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
-											onClick={() => {}}
+											onClick={() => {
+												router.replace({
+													pathname: router.pathname,
+													query: {
+														...router.query,
+														_uuidContractor: data?.uuid,
+													},
+												});
+											}}
 										/>
 
 										<IconCustom
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
-											onClick={() => {}}
+											onClick={() => setUuidDelete(data?.uuid)}
 										/>
 									</div>
 								),
@@ -180,6 +222,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					/>
 				</DataWrapper>
 			</WrapperScrollbar>
+
 			<PositionContainer
 				open={action == 'create'}
 				onClose={() => {
@@ -206,6 +249,42 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					}}
 				/>
 			</PositionContainer>
+
+			<PositionContainer
+				open={!!_uuidContractor}
+				onClose={() => {
+					const {_uuidContractor, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<UpdateContractor
+					onClose={() => {
+						const {_uuidContractor, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			<Dialog
+				type='error'
+				open={!!uuidDelete}
+				onClose={() => setUuidDelete('')}
+				title={'Xóa nhà thầu'}
+				note={'Bạn có chắc chắn muốn xóa nhà thầu này?'}
+				onSubmit={handleDeleteContractor}
+			/>
 		</div>
 	);
 }

@@ -7,6 +7,7 @@ const contractorServices = {
 			page: number;
 			keyword: string;
 			type: number | null;
+			status: number | null;
 		},
 		tokenAxios?: any
 	) => {
@@ -14,10 +15,32 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+
+	detailContractor: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/detail-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+
+	updateStatusContractor: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/update-status-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+
 	upsertContractor: (
 		data: {
 			uuid: string;
-			code: string;
 			name: string;
 			type: number | null;
 			note: string;

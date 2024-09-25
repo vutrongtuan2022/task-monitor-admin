@@ -1,8 +1,7 @@
-export interface PropsCreateContractor {
+export interface PropsUpdateContractor {
 	onClose: () => void;
 }
-
-export interface IFormCreateContractor {
+export interface IFormUpdateContractor {
 	name: string;
 	type: number | null;
 	note: string;
