@@ -25,16 +25,16 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					<div className={styles.filter}>
 						<FilterCustom
 							isSearch
-							name='nhóm nhà thầu'
-							query='_contraactor'
+							name='Nhóm nhà thầu'
+							query='_contractor'
 							listFilter={[
 								{
 									id: 1,
-									name: 'công ty 1',
+									name: 'Nhà thầu 1',
 								},
 								{
 									id: 2,
-									name: 'công ty 2',
+									name: 'Nhà thầu 2',
 								},
 							]}
 						/>
