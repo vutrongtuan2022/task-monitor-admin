@@ -62,6 +62,9 @@ export default function Home() {
 							rounded_8
 							light-blue
 							href={''}
+							onClick={() => {
+								toastSuccess({msg: 'Thêm mới dự án thành công'});
+							}}
 							icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 						>
 							Thêm mới dự án
