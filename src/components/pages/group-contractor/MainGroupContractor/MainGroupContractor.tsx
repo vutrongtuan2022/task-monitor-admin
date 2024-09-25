@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {PropsMainGroupContractor} from './interfaces';
+import {IGroupContractor, PropsMainGroupContractor} from './interfaces';
 import styles from './MainGroupContractor.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -16,11 +16,32 @@ import {Edit, Trash} from 'iconsax-react';
 import {useRouter} from 'next/router';
 import PositionContainer from '~/components/common/PositionContainer';
 import CreateGroupContractor from '../CreateGroupContractor';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
+import contractorcatServices from '~/services/contractorcatServices';
 
 function MainGroupContractor({}: PropsMainGroupContractor) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
-	const {action} = router.query;
+	const {_page, _pageSize, _keyword, action} = router.query;
+
+	const listContractorCat = useQuery([QUERY_KEY.table_group_contractor, _page, _pageSize, _keyword], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorcatServices.getListContractorCat({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 20,
+					keyword: (_keyword as string) || '',
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	console.log(listContractorCat.data);
 
 	return (
 		<div className={styles.container}>
@@ -53,8 +74,8 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={[1]}
-					loading={false}
+					data={listContractorCat?.data?.items || []}
+					loading={listContractorCat.isLoading}
 					noti={
 						<Noti
 							button={
@@ -81,31 +102,31 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 				>
 					<Table
 						fixedHeader={true}
-						data={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+						data={listContractorCat?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
 								fixedLeft: true,
-								render: (data: any, index: number) => <>{index + 1}</>,
+								render: (data: IGroupContractor, index: number) => <>{index + 1}</>,
 							},
 
 							{
 								title: 'Mã nhóm nhà thầu',
-								render: (data: any) => <>NNT04422</>,
+								render: (data: IGroupContractor) => <>{data?.code}</>,
 							},
 							{
 								title: 'Tên nhóm nhà thầu',
-								render: (data: any) => <>Nhóm nhà thầu số 3</>,
+								render: (data: IGroupContractor) => <>{data?.name}</>,
 							},
 							{
 								title: 'Mô tả',
-								render: (data: any) => <span>---</span>,
+								render: (data: IGroupContractor) => <span>{data?.note || '---'}</span>,
 							},
 
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: any) => (
+								render: (data: IGroupContractor) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
@@ -125,7 +146,12 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 							},
 						]}
 					/>
-					<Pagination pageSize={1} currentPage={1} total={10} />
+					<Pagination
+						currentPage={Number(_page) || 1}
+						pageSize={Number(_pageSize) || 20}
+						total={listContractorCat?.data?.pagination?.totalCount}
+						dependencies={[_pageSize, _keyword]}
+					/>
 				</DataWrapper>
 			</WrapperScrollbar>
 
