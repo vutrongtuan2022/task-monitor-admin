@@ -7,22 +7,18 @@ import Select, {Option} from '~/components/common/Select';
 import Button from '~/components/common/Button';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {toastWarn} from '~/common/funcs/toast';
-import Image from 'next/image';
-import icons from '~/constants/images/icons';
 import {RiCloseFill} from 'react-icons/ri';
 import {httpRequest} from '~/services';
 import {QUERY_KEY} from '~/constants/config/enum';
 import Loading from '~/components/common/Loading';
 import roleServices from '~/services/roleServices';
-import {useRouter} from 'next/router';
 import accountServices from '~/services/accountServices';
 import md5 from 'md5';
+import {FolderOpen} from 'iconsax-react';
 
 function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount) {
-	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword} = router.query;
 	const [form, setForm] = useState<{
 		userUuid: string;
 		username: string;
@@ -30,13 +26,11 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 		roleUuid: string;
 	}>({userUuid: '', username: '', roleUuid: '', password: ''});
 
-	const listRole = useQuery([QUERY_KEY.table_role, _page, _pageSize, _keyword], {
+	const listRole = useQuery([QUERY_KEY.dropdown_role], {
 		queryFn: () =>
 			httpRequest({
-				http: roleServices.listRole({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
-					keyword: (_keyword as string) || '',
+				http: roleServices.categoryRole({
+					keyword: '',
 				}),
 			}),
 		select(data) {
@@ -59,8 +53,8 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 			}),
 		onSuccess(data) {
 			if (data) {
-				queryClient.invalidateQueries([QUERY_KEY.table_list_user]);
 				onClose();
+				queryClient.invalidateQueries([QUERY_KEY.table_list_user]);
 			}
 		},
 	});
@@ -138,16 +132,9 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 							</div>
 
 							<FormContext.Consumer>
-								{({onSubmit}) => (
+								{({isDone}) => (
 									<div className={styles.btn}>
-										<Button
-											icon={<Image alt='icon add' src={icons.folder_open} width={20} height={20} />}
-											p_12_20
-											primary
-											rounded_8
-											maxContent
-											onClick={handleSubmit}
-										>
+										<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
 											Lưu lại
 										</Button>
 									</div>

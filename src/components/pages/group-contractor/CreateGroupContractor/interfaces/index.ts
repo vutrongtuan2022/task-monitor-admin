@@ -1,1 +1,3 @@
-export interface PropsCreateGroupContractor {}
+export interface PropsCreateGroupContractor {
+	onClose: () => void;
+}
