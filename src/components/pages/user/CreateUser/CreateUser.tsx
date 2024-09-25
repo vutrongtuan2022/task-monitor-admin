@@ -23,7 +23,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 		uuid: '',
 		fullName: '',
 		email: '',
-		gender: 0,
+		gender: TYPE_GENDER.MALE,
 		phone: '',
 		birthday: '',
 		address: '',
