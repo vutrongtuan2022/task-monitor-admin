@@ -14,5 +14,23 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	upsertContractor: (
+		data: {
+			uuid: string;
+			code: string;
+			name: string;
+			type: number | null;
+			note: string;
+			matp: string;
+			maqh: string;
+			xaid: string;
+			address: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/upsert-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractorServices;

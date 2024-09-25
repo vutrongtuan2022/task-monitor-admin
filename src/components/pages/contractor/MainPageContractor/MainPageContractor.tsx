@@ -20,11 +20,13 @@ import {QUERY_KEY} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
+import PositionContainer from '~/components/common/PositionContainer';
+import CreateContractor from '../CreateContractor';
 
 function MainPageContractor({}: PropsMainPageContractor) {
 	const router = useRouter();
 
-	const {_page, _pageSize, _keyword, _type} = router.query;
+	const {_page, _pageSize, _keyword, _type, action} = router.query;
 
 	const listContractor = useQuery([QUERY_KEY.table_contractor, _page, _pageSize, _keyword, _type], {
 		queryFn: () =>
@@ -78,8 +80,16 @@ function MainPageContractor({}: PropsMainPageContractor) {
 						p_14_23
 						rounded_8
 						light-blue
-						href={''}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+						onClick={() => {
+							router.replace({
+								pathname: router.pathname,
+								query: {
+									...router.query,
+									action: 'create',
+								},
+							});
+						}}
 					>
 						Thêm mới nhà thầu
 					</Button>
@@ -96,8 +106,16 @@ function MainPageContractor({}: PropsMainPageContractor) {
 									p_14_23
 									rounded_8
 									light-blue
-									href={''}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												action: 'create',
+											},
+										});
+									}}
 								>
 									Thêm mới nhà thầu
 								</Button>
@@ -120,7 +138,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							},
 							{
 								title: 'Nhóm nhà thầu',
-								render: (data: IContractor) => <>{}</>,
+								render: (data: IContractor) => <>{data?.name}</>,
 							},
 							{
 								title: 'Địa chỉ',
@@ -162,6 +180,32 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					/>
 				</DataWrapper>
 			</WrapperScrollbar>
+			<PositionContainer
+				open={action == 'create'}
+				onClose={() => {
+					const {action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<CreateContractor
+					onClose={() => {
+						const {action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
 		</div>
 	);
 }
