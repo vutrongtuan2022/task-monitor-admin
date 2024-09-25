@@ -1,3 +1,5 @@
+@import '../../../../styles/variables';
+
 .container {
 	position: relative;
 	width: 640px;
@@ -48,5 +50,34 @@
 				display: flex;
 			}
 		}
+	}
+}
+
+@media (max-width: $widthMobile) {
+	.container {
+		width: 95vw;
+		.header {
+			padding: 4px 10px;
+		}
+	}
+
+	.title {
+		padding: 16px;
+	}
+
+	.form {
+		padding: 20px 32px 15px 32px !important;
+
+		.group_button {
+			margin-top: 8px !important;
+		}
+	}
+
+	.note {
+		margin-top: 16px;
+	}
+
+	.group_button {
+		padding: 16px;
 	}
 }
