@@ -11,7 +11,7 @@ import {IoClose} from 'react-icons/io5';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
-import {QUERY_KEY, STATUS_GENDER} from '~/constants/config/enum';
+import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
 
 import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
@@ -169,11 +169,11 @@ function CreateUser({onClose}: PropsCreateUser) {
 									type='radio'
 									name='gender'
 									value={form.gender}
-									checked={form.gender == STATUS_GENDER.MALE}
+									checked={form.gender == TYPE_GENDER.MALE}
 									onChange={(e) =>
 										setForm((prev: any) => ({
 											...prev,
-											gender: STATUS_GENDER.MALE,
+											gender: TYPE_GENDER.MALE,
 										}))
 									}
 								/>
@@ -189,11 +189,11 @@ function CreateUser({onClose}: PropsCreateUser) {
 									type='radio'
 									name='gender'
 									value={form.gender}
-									checked={form.gender == STATUS_GENDER.FEMALE}
+									checked={form.gender == TYPE_GENDER.FEMALE}
 									onChange={(e) =>
 										setForm((prev: any) => ({
 											...prev,
-											gender: STATUS_GENDER.FEMALE,
+											gender: TYPE_GENDER.FEMALE,
 										}))
 									}
 								/>

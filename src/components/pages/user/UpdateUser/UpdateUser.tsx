@@ -8,7 +8,7 @@ import Select, {Option} from '~/components/common/Select';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
-import {QUERY_KEY, STATUS_GENDER} from '~/constants/config/enum';
+import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
 import provineServices from '~/services/provineServices';
 import Loading from '~/components/common/Loading';
 import {FolderOpen} from 'iconsax-react';
@@ -198,11 +198,11 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 									type='radio'
 									name='gender'
 									value={form.gender}
-									checked={form.gender == STATUS_GENDER.MALE}
+									checked={form.gender == TYPE_GENDER.MALE}
 									onChange={(e) =>
 										setForm((prev: any) => ({
 											...prev,
-											gender: STATUS_GENDER.MALE,
+											gender: TYPE_GENDER.MALE,
 										}))
 									}
 								/>
@@ -218,11 +218,11 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 									type='radio'
 									name='gender'
 									value={form.gender}
-									checked={form.gender == STATUS_GENDER.FEMALE}
+									checked={form.gender == TYPE_GENDER.FEMALE}
 									onChange={(e) =>
 										setForm((prev: any) => ({
 											...prev,
-											gender: STATUS_GENDER.FEMALE,
+											gender: TYPE_GENDER.FEMALE,
 										}))
 									}
 								/>

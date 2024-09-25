@@ -44,7 +44,7 @@ export enum STATUS_CONFIG {
 	ACTIVE,
 }
 
-export enum STATUS_GENDER {
+export enum TYPE_GENDER {
 	MALE,
 	FEMALE,
 	OTHER,
