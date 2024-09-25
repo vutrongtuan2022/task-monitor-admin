@@ -74,7 +74,7 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 				<h3 className={styles.title}>Cấp tài khoản</h3>
 			</div>
 			<div className={styles.btn_close}>
-				<RiCloseFill size={30} onClick={onClose} />
+				<RiCloseFill size={28} color='#8492A6' onClick={onClose} />
 			</div>
 
 			<Form form={form} setForm={setForm} onSubmit={handleSubmit}>

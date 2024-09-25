@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {PropsCreateContractor} from './interfaces';
+import {IFormCreateContractor, PropsCreateContractor} from './interfaces';
 import styles from './CreateContractor.module.scss';
 import {IoClose} from 'react-icons/io5';
 import Button from '~/components/common/Button';
@@ -14,20 +14,12 @@ import {QUERY_KEY} from '~/constants/config/enum';
 import Loading from '~/components/common/Loading';
 import contractorServices from '~/services/contractorServices';
 import Select, {Option} from '~/components/common/Select';
+import provineServices from '~/services/provineServices';
 
 function CreateContractor({onClose}: PropsCreateContractor) {
 	const queryClient = useQueryClient();
 
-	const [form, setForm] = useState<{
-		code: string;
-		name: string;
-		type: number | null;
-		note: string;
-		matp: string;
-		maqh: string;
-		xaid: string;
-		address: string;
-	}>({
+	const [form, setForm] = useState<IFormCreateContractor>({
 		code: '',
 		name: '',
 		type: null,
@@ -50,11 +42,86 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 		},
 	});
 
-	console.log(form.type);
+	const listProvince = useQuery([QUERY_KEY.dropdown_province], {
+		queryFn: () =>
+			httpRequest({
+				http: provineServices.listProvine({
+					keyword: '',
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	const listDistrict = useQuery([QUERY_KEY.dropdown_district, form.matp], {
+		queryFn: () =>
+			httpRequest({
+				http: provineServices.listDistrict({
+					keyword: '',
+					idParent: form.matp,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!form?.matp,
+	});
+
+	const listTown = useQuery([QUERY_KEY.dropdown_town, form.maqh], {
+		queryFn: () =>
+			httpRequest({
+				http: provineServices.listTown({
+					keyword: '',
+					idParent: form.maqh,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!form?.maqh,
+	});
+
+	const funcCreateContractor = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Thêm nhóm nhà thầu thành công!',
+				http: contractorServices.upsertContractor({
+					uuid: '',
+					code: form.code,
+					name: form.name,
+					type: form.type,
+					note: form.note,
+					matp: form.matp,
+					maqh: form.maqh,
+					xaid: form.xaid,
+					address: form.address,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				onClose();
+				setForm({
+					code: '',
+					name: '',
+					type: null,
+					note: '',
+					matp: '',
+					maqh: '',
+					xaid: '',
+					address: '',
+				});
+				queryClient.invalidateQueries([QUERY_KEY.table_contractor]);
+			}
+		},
+	});
 
 	return (
-		<Form form={form} setForm={setForm}>
-			{/* <Loading loading={funcCreateContractor.isLoading} /> */}
+		<Form form={form} setForm={setForm} onSubmit={funcCreateContractor.mutate}>
+			<Loading loading={funcCreateContractor.isLoading} />
 			<div className={styles.container}>
 				<h4 className={styles.title}>Thêm mới nhà thầu</h4>
 				<div className={styles.form}>
@@ -71,7 +138,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 						}
 					/>
 
-					<div className={styles.select}>
+					<div className={styles.mt}>
 						<Select
 							isSearch
 							name='type'
@@ -90,12 +157,73 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 							}
 						>
 							{listGroupContractor?.data?.map((v: any) => (
-								<Option key={v?.uuid} title={v?.name} value={v?.uuid} />
+								<Option key={v?.id} title={v?.name} value={v?.id} />
+							))}
+						</Select>
+
+						<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
+							{listProvince?.data?.map((v: any) => (
+								<Option
+									key={v?.matp}
+									value={v?.matp}
+									title={v?.name}
+									onClick={() =>
+										setForm((prev: any) => ({
+											...prev,
+											matp: v?.matp,
+											maqh: '',
+											xaid: '',
+										}))
+									}
+								/>
+							))}
+						</Select>
+
+						<Select isSearch name='maqh' value={form.maqh} placeholder='Lựa chọn' label={<span>Quận/ Huyện</span>}>
+							{listDistrict?.data?.map((v: any) => (
+								<Option
+									key={v?.maqh}
+									value={v?.maqh}
+									title={v?.name}
+									onClick={() =>
+										setForm((prev: any) => ({
+											...prev,
+											maqh: v?.maqh,
+											xaid: '',
+										}))
+									}
+								/>
+							))}
+						</Select>
+
+						<Select isSearch name='xaid' value={form.xaid} placeholder='Lựa chọn' label={<span>Thị trấn/ Xã </span>}>
+							{listTown?.data?.map((v: any) => (
+								<Option
+									key={v?.xaid}
+									value={v?.xaid}
+									title={v?.name}
+									onClick={() =>
+										setForm((prev: any) => ({
+											...prev,
+											xaid: v?.xaid,
+										}))
+									}
+								/>
 							))}
 						</Select>
 					</div>
 
-					<div className={styles.note}>
+					<div className={styles.mt}>
+						<Input
+							placeholder='Nhập địa chỉ'
+							name='address'
+							type='text'
+							value={form.address}
+							label={<span>Địa chỉ chi tiết</span>}
+						/>
+					</div>
+
+					<div className={styles.mt}>
 						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
 					</div>
 				</div>

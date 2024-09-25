@@ -8,6 +8,9 @@ export enum QUERY_KEY {
 
 	dropdown_role,
 	dropdown_category_group_contractor,
+	dropdown_province,
+	dropdown_district,
+	dropdown_town,
 }
 
 export enum TYPE_DATE {
