@@ -4,5 +4,4 @@ export interface PropsDataWrapper {
 	children: any;
 	noti?: any;
 	iconEmpty?: any;
-	LoadingCustom?: React.ReactNode;
 }

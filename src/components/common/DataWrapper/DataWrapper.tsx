@@ -4,16 +4,14 @@ import Noti from './components/Noti';
 import {PropsDataWrapper} from './interfaces';
 import styles from './DataWrapper.module.scss';
 
-function DataWrapper({loading, data = [], children, LoadingCustom, noti = <Noti />}: PropsDataWrapper) {
+function DataWrapper({loading, data = [], children, noti = <Noti />}: PropsDataWrapper) {
 	return (
 		<Fragment>
 			{loading ? (
 				<div className={styles.container}>
-					{LoadingCustom || (
-						<div className={styles.loading}>
-							<Loading />
-						</div>
-					)}
+					<div className={styles.loading}>
+						<Loading />
+					</div>
 				</div>
 			) : null}
 
@@ -23,7 +21,7 @@ function DataWrapper({loading, data = [], children, LoadingCustom, noti = <Noti 
 				</div>
 			) : null}
 
-			{!loading && data?.length > 0 ? children : null}
+			{!loading && data?.length > 0 ? <div className={styles.main}>{children}</div> : null}
 		</Fragment>
 	);
 }

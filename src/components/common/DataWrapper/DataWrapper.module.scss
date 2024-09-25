@@ -1,5 +1,17 @@
 .container {
 	min-height: 55vh;
+	background: #fff;
+	border-radius: 8px;
+}
+
+.main {
+	max-height: 100%;
+	padding: 8px 10px;
+	background: #fff;
+	border-radius: 8px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 }
 
 .loading {
