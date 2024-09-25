@@ -168,7 +168,18 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 					});
 				}}
 			>
-				<CreateGroupContractor />
+				<CreateGroupContractor
+					onClose={() => {
+						const {action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
 			</PositionContainer>
 		</div>
 	);

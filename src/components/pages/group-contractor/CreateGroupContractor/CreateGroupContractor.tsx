@@ -5,10 +5,10 @@ import styles from './CreateGroupContractor.module.scss';
 import {IoClose} from 'react-icons/io5';
 import Button from '~/components/common/Button';
 import {FolderOpen} from 'iconsax-react';
-import Form, {Input} from '~/components/common/Form';
+import Form, {FormContext, Input} from '~/components/common/Form';
 import TextArea from '~/components/common/Form/components/TextArea';
 
-function CreateGroupContractor({}: PropsCreateGroupContractor) {
+function CreateGroupContractor({onClose}: PropsCreateGroupContractor) {
 	const [form, setForm] = useState<{name: string; note: string}>({
 		name: '',
 		note: '',
@@ -37,21 +37,21 @@ function CreateGroupContractor({}: PropsCreateGroupContractor) {
 				</div>
 				<div className={styles.group_button}>
 					<div>
-						<Button p_12_20 grey rounded_6>
+						<Button p_12_20 grey rounded_6 onClick={onClose}>
 							Hủy bỏ
 						</Button>
 					</div>
-					{/* <FormContext.Consumer>
-						{({onSubmit}) => ( */}
-					<div className={styles.btn}>
-						<Button p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
-							Lưu lại
-						</Button>
-					</div>
-					{/* )}
-					</FormContext.Consumer> */}
+					<FormContext.Consumer>
+						{({isDone}) => (
+							<div className={styles.btn}>
+								<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
+									Lưu lại
+								</Button>
+							</div>
+						)}
+					</FormContext.Consumer>
 				</div>
-				<div className={styles.close}>
+				<div className={styles.close} onClick={onClose}>
 					<IoClose size={28} color='#8492A6' />
 				</div>
 			</div>

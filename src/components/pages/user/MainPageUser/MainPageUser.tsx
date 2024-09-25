@@ -222,8 +222,8 @@ function MainPageUser({}: PropsMainPageUser) {
 					/>
 					<Pagination
 						currentPage={Number(_page) || 1}
-						total={listUser?.data?.pagination?.totalCount}
 						pageSize={Number(_pageSize) || 20}
+						total={listUser?.data?.pagination?.totalCount}
 						dependencies={[_pageSize, _keyword, _status, _roleUuid, _isHaveAcc]}
 					/>
 				</DataWrapper>

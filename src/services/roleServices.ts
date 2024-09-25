@@ -1,10 +1,8 @@
 import axiosClient from '.';
 
 const roleServices = {
-	listRole: (
+	categoryRole: (
 		data: {
-			pageSize: number;
-			page: number;
 			keyword: string;
 		},
 		tokenAxios?: any
