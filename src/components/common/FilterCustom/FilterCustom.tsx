@@ -31,7 +31,7 @@ function FilterCustom({listFilter, name, query, isSearch, disabled = false}: Pro
 			render={(attrs: any) => (
 				<div className={styles.mainOption}>
 					{isSearch ? (
-						<div className={clsx(styles.container)}>
+						<div className={clsx(styles.main_search)}>
 							<div className={styles.icon}>
 								<GrSearch color='#005994' size={20} />
 							</div>
