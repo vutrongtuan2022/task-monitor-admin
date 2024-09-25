@@ -27,7 +27,7 @@ export enum TYPE_ACCOUNT {
 
 // USER
 
-export enum ACCOUNT_STATUS {
+export enum STATUS_ACCOUNT {
 	NOT_HAVE = 0,
 	HAVE = 1,
 }
