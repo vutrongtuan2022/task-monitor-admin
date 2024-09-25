@@ -17,7 +17,7 @@ $border: #e1e5ed;
 $border-disable: #e1e5ed;
 
 $border-radius: 8px;
-$padding: 8px 20px;
+$padding: 10px 20px;
 $font-size: 16px;
 
 .tippy {
@@ -94,9 +94,9 @@ $font-size: 16px;
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
-	height: 42px;
+	height: 44px;
 	font-size: $font-size;
-	padding: 8px 16px;
+	padding: $padding;
 	border: 1px solid $border;
 	border-radius: $border-radius;
 	cursor: pointer;
@@ -121,6 +121,7 @@ $font-size: 16px;
 
 	&.active {
 		background-color: $bg-focus;
+		border: 1px solid $color-active;
 
 		.icon {
 			color: $color-focus;

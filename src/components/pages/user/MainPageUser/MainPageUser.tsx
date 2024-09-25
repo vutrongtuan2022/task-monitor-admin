@@ -12,33 +12,39 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Search from '~/components/common/Search';
 import IconCustom from '~/components/common/IconCustom';
-import {Edit, Lock1, Trash, Unlock, UserAdd} from 'iconsax-react';
+import {Edit, Lock1, TickCircle, Trash, Unlock, UserAdd} from 'iconsax-react';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {useSelector} from 'react-redux';
-import {RootState} from '~/redux/store';
 import StateActive from '~/components/common/StateActive';
-import {QUERY_KEY} from '~/constants/config/enum';
+import {ACCOUNT_STATUS, CONFIG_STATUS, QUERY_KEY} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
+import Link from 'next/link';
+import Popup from '~/components/common/Popup';
+import FormCreateAccount from '../FormCreateAccount';
+import Dialog from '~/components/common/Dialog';
+import Loading from '~/components/common/Loading';
+import FilterCustom from '~/components/common/FilterCustom';
 
 function MainPageUser({}: PropsMainPageUser) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {infoUser} = useSelector((state: RootState) => state.user);
 	const [dataStatus, setDataStatus] = useState<IUser | null>(null);
+	const [dataCreateAccount, setDataCreateAccount] = useState<IUser | null>(null);
 
-	const {_page, _pageSize, _keyword, _status} = router.query;
+	const {_page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc} = router.query;
 
-	const listUserStaff = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _keyword, _status], {
+	const listUser = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc], {
 		queryFn: () =>
 			httpRequest({
 				http: userServices.listUser({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
-					status: !!_status ? Number(_status) : null,
+					status: 1,
+					isHaveAcc: !!_isHaveAcc ? Number(_isHaveAcc) : null,
+					roleUuid: _roleUuid as string,
 				}),
 			}),
 		select(data) {
@@ -51,7 +57,7 @@ function MainPageUser({}: PropsMainPageUser) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Cập nhật trạng thái thành công',
+				msgSuccess: 'Xóa nhân viên thành công',
 				http: userServices.updateStatus({
 					uuid: dataStatus?.uuid!,
 				}),
@@ -67,10 +73,31 @@ function MainPageUser({}: PropsMainPageUser) {
 
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcChangeStatus.isLoading} />
 			<div className={styles.head}>
-				<div className={styles.search}>
-					<Search keyName='_keyword' placeholder='Tìm kiếm theo tên nhân viên, ID' />
+				<div className={styles.main_search}>
+					<div className={styles.search}>
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên nhân viên, ID' />
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Trạng thái'
+							query='_isHaveAcc'
+							listFilter={[
+								{
+									id: ACCOUNT_STATUS.HAVE,
+									name: 'Đã cấp tài khoản',
+								},
+								{
+									id: ACCOUNT_STATUS.NOT_HAVE,
+									name: 'Chưa cấp tài khoản',
+								},
+							]}
+						/>
+					</div>
 				</div>
+
 				<div className={styles.btn}>
 					<Button
 						p_14_23
@@ -85,8 +112,8 @@ function MainPageUser({}: PropsMainPageUser) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={listUserStaff?.data?.items || []}
-					loading={listUserStaff.isLoading}
+					data={listUser?.data?.items || []}
+					loading={listUser.isLoading}
 					noti={
 						<Noti
 							button={
@@ -105,108 +132,72 @@ function MainPageUser({}: PropsMainPageUser) {
 				>
 					<Table
 						fixedHeader={true}
-						data={listUserStaff?.data?.items || []}
+						data={listUser?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
-								render: (data: any, index: number) => <>{index + 1}</>,
+								render: (data: IUser, index: number) => <>{index + 1}</>,
 							},
 							{
 								title: 'Mã nhân viên',
-								render: (data: any) => <span>{data?.code || '---'}</span>,
+								render: (data: IUser) => <span style={{fontWeight: '600'}}>{data?.code || '---'}</span>,
 							},
 							{
 								title: 'Họ tên',
 								fixedLeft: true,
-								render: (data: any) => <span style={{color: 'var(--primary-btn)'}}>{data?.fullname || '---'}</span>,
+								render: (data: IUser) => (
+									<Link href={``} className={styles.link}>
+										{data?.fullname || '---'}
+									</Link>
+								),
 							},
 							{
 								title: 'Số điện thoại',
-								render: (data: any) => <>{data?.email || '---'}</>,
+								render: (data: IUser) => <>{data?.email || '---'}</>,
 							},
 							{
 								title: 'Email',
-								render: (data: any) => <span style={{color: 'var(--primary-btn)'}}>{data?.email || '---'}</span>,
+								render: (data: IUser) => <span style={{color: 'var(--primary-btn)'}}>{data?.email || '---'}</span>,
 							},
 							{
-								title: 'Nhóm quyền',
-								render: (data: any) => <>{data?.phoneNumber || '---'}</>,
-							},
-							{
-								title: 'Tình trạng',
-								render: (data: any) => (
+								title: 'Tình trạng tài khoản',
+								render: (data: IUser) => (
 									<StateActive
-										stateActive={3}
+										stateActive={data?.isHaveAcc}
 										listState={[
 											{
-												state: 1,
-												text: 'Hoạt động',
+												state: ACCOUNT_STATUS.HAVE,
+												text: 'Đã cấp tài khoản',
 												textColor: '#fff',
 												backgroundColor: '#06D7A0',
 											},
 											{
-												state: 2,
-												text: 'Đang khóa',
+												state: ACCOUNT_STATUS.NOT_HAVE,
+												text: 'Chưa cấp tài khoản',
 												textColor: '#fff',
 												backgroundColor: '#F37277',
-											},
-											{
-												state: 3,
-												text: 'Chưa có dữ liệu',
-												textColor: '#fff',
-												backgroundColor: '#FDAD73',
 											},
 										]}
 									/>
 								),
 							},
-							{
-								title: 'Trạng thái tài khoản',
-								render: (data: any) => (
-									<StateActive
-										stateActive={3}
-										listState={[
-											{
-												state: 1,
-												text: 'Hoạt động',
-												textColor: '#fff',
-												backgroundColor: '#06D7A0',
-											},
-											{
-												state: 2,
-												text: 'Đang khóa',
-												textColor: '#fff',
-												backgroundColor: '#F37277',
-											},
-											{
-												state: 3,
-												text: 'Chưa có dữ liệu',
-												textColor: '#fff',
-												backgroundColor: '#FDAD73',
-											},
-										]}
-									/>
-								),
-							},
+
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: any) => (
+								render: (data: IUser) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										{data?.uuid != infoUser?.userUuid ? (
+										{data?.isHaveAcc == ACCOUNT_STATUS.NOT_HAVE ? (
 											<IconCustom
 												icon={<UserAdd fontSize={20} fontWeight={600} />}
 												tooltip='Cấp tài khoản'
 												color='#6CD1F2'
-												onClick={() => {}}
+												onClick={() => {
+													setDataCreateAccount(data);
+												}}
 											/>
 										) : (
-											<IconCustom
-												icon={data?.status == 0 ? <Lock1 size='22' /> : <Unlock size='22' />}
-												tooltip={data.status == 1 ? 'Khóa' : 'Mở khóa'}
-												color='#06D7A0'
-												onClick={() => {}}
-											/>
+											<IconCustom icon={<TickCircle size='23' />} tooltip='Đã cấp tài khoản' color='#35c244' />
 										)}
 
 										<IconCustom
@@ -220,16 +211,33 @@ function MainPageUser({}: PropsMainPageUser) {
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
-											onClick={() => {}}
+											onClick={() => {
+												setDataStatus(data);
+											}}
 										/>
 									</div>
 								),
 							},
 						]}
 					/>
-					<Pagination pageSize={1} currentPage={1} total={10} />
+					<Pagination
+						currentPage={Number(_page) || 1}
+						total={listUser?.data?.pagination?.totalCount}
+						pageSize={Number(_pageSize) || 20}
+						dependencies={[_pageSize, _keyword, _status, _roleUuid, _isHaveAcc]}
+					/>
 				</DataWrapper>
 			</WrapperScrollbar>
+			<Popup open={!!dataCreateAccount} onClose={() => setDataCreateAccount(null)}>
+				<FormCreateAccount dataCreateAccount={dataCreateAccount} onClose={() => setDataCreateAccount(null)} />
+			</Popup>
+			<Dialog
+				open={!!dataStatus}
+				onClose={() => setDataStatus(null)}
+				title={'Xác nhận xóa'}
+				note={'Bạn có chắc chắn muốn xóa nhân viên này?'}
+				onSubmit={funcChangeStatus.mutate}
+			/>
 		</div>
 	);
 }

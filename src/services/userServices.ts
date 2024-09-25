@@ -7,6 +7,8 @@ const userServices = {
 			page: number;
 			keyword: string;
 			status: number | null;
+			roleUuid: string;
+			isHaveAcc: number | null;
 		},
 		tokenAxios?: any
 	) => {
@@ -52,17 +54,6 @@ const userServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/User/detail-user`, data, {
-			cancelToken: tokenAxios,
-		});
-	},
-	addAccountUser: (
-		data: {
-			uuid: string;
-			accountUsername: string;
-		},
-		tokenAxios?: any
-	) => {
-		return axiosClient.post(`/User/add-account-user`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

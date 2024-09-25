@@ -1,0 +1,54 @@
+.container {
+	position: relative;
+	width: 640px;
+	background-color: var(--light);
+	border-radius: 24px;
+
+	.btn_close {
+		position: absolute;
+		right: 15px;
+		top: 15px;
+		cursor: pointer;
+		user-select: none;
+		font-size: 24px;
+		color: var(--dark);
+		transition: 0.3s;
+
+		&:active {
+			transform: scale(0.9);
+		}
+	}
+
+	.header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 24px 32px;
+		border-bottom: 1px solid var(--gray-2);
+
+		.title {
+			font-size: 24px;
+			font-weight: 600;
+			color: var(--dark);
+		}
+	}
+	.form {
+		background-color: var(--grey);
+		border-radius: 0 0 24px 24px;
+		padding: 20px 32px 32px 32px;
+
+		.select {
+			margin-top: 16px;
+		}
+		.group_button {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-top: 24px;
+			.btn {
+				gap: 16px;
+				display: flex;
+			}
+		}
+	}
+}
