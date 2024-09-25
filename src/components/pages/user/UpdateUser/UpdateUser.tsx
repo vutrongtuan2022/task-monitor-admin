@@ -1,25 +1,27 @@
 import React, {useState} from 'react';
 
-import {ICreateUser, PropsCreateUser} from './interfaces';
-import styles from './CreateUser.module.scss';
+import styles from './UpdateUser.module.scss';
 import Form, {FormContext, Input} from '~/components/common/Form';
-import Loading from '~/components/common/Loading';
-import TextArea from '~/components/common/Form/components/TextArea';
-import Button from '~/components/common/Button';
-import {FolderOpen} from 'iconsax-react';
 import {IoClose} from 'react-icons/io5';
+import Button from '~/components/common/Button';
+import Select, {Option} from '~/components/common/Select';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
 import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
-
-import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
+import Loading from '~/components/common/Loading';
+import {FolderOpen} from 'iconsax-react';
+import TextArea from '~/components/common/Form/components/TextArea';
+import router from 'next/router';
+import {IUpdateUser, PropsUpdateUser} from './interfaces';
 
-function CreateUser({onClose}: PropsCreateUser) {
+function UpdateUser({onClose}: PropsUpdateUser) {
 	const queryClient = useQueryClient();
 
-	const [form, setForm] = useState<ICreateUser>({
+	const {_uuidUser} = router.query;
+
+	const [form, setForm] = useState<IUpdateUser>({
 		uuid: '',
 		fullName: '',
 		email: '',
@@ -33,12 +35,40 @@ function CreateUser({onClose}: PropsCreateUser) {
 		note: '',
 	});
 
+	useQuery([QUERY_KEY.detail_user], {
+		queryFn: () =>
+			httpRequest({
+				http: userServices.detailUser({
+					uuid: _uuidUser as string,
+				}),
+			}),
+		onSuccess(data) {
+			setForm({
+				uuid: data?.uuid,
+				fullName: data?.fullname,
+				email: data?.email,
+				gender: data?.gender,
+				phone: data?.phone,
+				birthday: data?.birthday,
+				address: data?.address,
+				matp: data?.tp?.uuid,
+				maqh: data?.qh?.uuid,
+				xaid: data?.xa?.uuid,
+				note: data?.note,
+			});
+		},
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuidUser,
+	});
+
 	const funcCreateUser = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Thêm nhân viên thành công!',
+				msgSuccess: 'Chỉnh sửa nhân viên thành công!',
 				http: userServices.upsertUser({
 					uuid: form.uuid,
 					fullName: form.fullName,
@@ -54,7 +84,6 @@ function CreateUser({onClose}: PropsCreateUser) {
 				}),
 			});
 		},
-
 		onSuccess(data) {
 			if (data) {
 				onClose();
@@ -124,7 +153,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
 			<Loading loading={funcCreateUser.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Thêm mới nhân viên</h4>
+				<h4 className={styles.title}>Chỉnh sửa nhân viên</h4>
 				<div className={styles.form}>
 					<Input
 						placeholder='Nhập họ và tên'
@@ -301,4 +330,4 @@ function CreateUser({onClose}: PropsCreateUser) {
 	);
 }
 
-export default CreateUser;
+export default UpdateUser;
