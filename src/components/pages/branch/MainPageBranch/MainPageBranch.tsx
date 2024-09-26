@@ -148,6 +148,10 @@ function MainPageBranch({}: PropsMainPageBranch) {
 							},
 
 							{
+								title: 'Mã chi nhánh',
+								render: (data: IBranches) => <>{data?.code}</>,
+							},
+							{
 								title: 'Tên chi nhánh',
 								render: (data: IBranches) => <>{data?.name}</>,
 							},

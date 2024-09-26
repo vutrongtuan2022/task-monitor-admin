@@ -46,9 +46,10 @@ const contractorcatServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-	categoryCat: (
+	categoryContractorCat: (
 		data: {
 			keyword: string;
+			status: number;
 		},
 		tokenAxios?: any
 	) => {

@@ -28,6 +28,7 @@ export enum PATH {
 	Contractor = '/contractor',
 	GroupContractor = '/group-contractor',
 	User = '/user',
+	Account = '/account',
 }
 
 export const Menu: {
@@ -76,6 +77,12 @@ export const Menu: {
 		title: 'Quản lý nhân viên',
 		path: PATH.User,
 		pathActive: PATH.User,
+		icon: UserOctagon,
+	},
+	{
+		title: 'Quản lý tài khoản',
+		path: PATH.Account,
+		pathActive: PATH.Account,
 		icon: UserOctagon,
 	},
 ];
