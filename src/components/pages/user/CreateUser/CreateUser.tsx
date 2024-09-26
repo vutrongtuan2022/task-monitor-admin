@@ -62,7 +62,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 					uuid: '',
 					fullName: '',
 					email: '',
-					gender: 0,
+					gender: TYPE_GENDER.MALE,
 					phone: '',
 					birthday: '',
 					address: '',
@@ -153,7 +153,19 @@ function CreateUser({onClose}: PropsCreateUser) {
 						}
 					/>
 
-					<Input placeholder='Nhập email' isEmail name='email' type='text' value={form.email} label={<span>Email</span>} />
+					<Input
+						placeholder='Nhập email'
+						isEmail
+						isRequired
+						name='email'
+						type='text'
+						value={form.email}
+						label={
+							<span>
+								Email <span style={{color: 'red'}}>*</span>
+							</span>
+						}
+					/>
 
 					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
 
@@ -199,6 +211,26 @@ function CreateUser({onClose}: PropsCreateUser) {
 								/>
 								<label className={styles.input_lable} htmlFor='female'>
 									Nữ
+								</label>
+							</div>
+
+							<div className={styles.item_radio}>
+								<input
+									id='other'
+									className={styles.input_radio}
+									type='radio'
+									name='gender'
+									value={form.gender}
+									checked={form.gender == TYPE_GENDER.OTHER}
+									onChange={(e) =>
+										setForm((prev: any) => ({
+											...prev,
+											gender: TYPE_GENDER.OTHER,
+										}))
+									}
+								/>
+								<label className={styles.input_lable} htmlFor='other'>
+									Khác
 								</label>
 							</div>
 						</div>

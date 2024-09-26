@@ -85,7 +85,7 @@ function MainPageUser({}: PropsMainPageUser) {
 					<div className={styles.filter}>
 						<FilterCustom
 							isSearch
-							name='Trạng thái'
+							name='Tình trạng'
 							query='_isHaveAcc'
 							listFilter={[
 								{

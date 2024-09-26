@@ -7,6 +7,7 @@ export enum QUERY_KEY {
 	table_list_user,
 	table_role,
 	table_branches,
+	table_list_account,
 
 	dropdown_role,
 	dropdown_category_group_contractor,
@@ -16,6 +17,7 @@ export enum QUERY_KEY {
 
 	detail_contractor,
 	detail_user,
+	detail_account,
 }
 
 export enum TYPE_DATE {
@@ -40,11 +42,12 @@ export enum TYPE_ACCOUNT {
 export enum STATUS_ACCOUNT {
 	NOT_HAVE = 0,
 	HAVE = 1,
+	LOCK = 2,
 }
 
 export enum STATUS_CONFIG {
+	ACTIVE = 1,
 	NOT_ACTIVE,
-	ACTIVE,
 }
 
 export enum TYPE_GENDER {

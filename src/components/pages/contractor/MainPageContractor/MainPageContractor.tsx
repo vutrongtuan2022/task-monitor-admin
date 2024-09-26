@@ -54,8 +54,9 @@ function MainPageContractor({}: PropsMainPageContractor) {
 	const listGroupContractor = useQuery([QUERY_KEY.dropdown_category_group_contractor], {
 		queryFn: () =>
 			httpRequest({
-				http: contractorcatServices.categoryCat({
+				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
 				}),
 			}),
 		select(data) {
