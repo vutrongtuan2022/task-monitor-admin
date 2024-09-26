@@ -33,7 +33,7 @@ const userServices = {
 			email: string;
 			gender: number;
 			phone: string;
-			birthday: string;
+			birthday: string | null;
 			address: string;
 			matp: string;
 			maqh: string;

@@ -8,7 +8,7 @@ export interface IUpdateUser {
 	email: string;
 	gender: number;
 	phone: string;
-	birthday: string;
+	birthday: Date | null;
 	address: string;
 	matp: string;
 	maqh: string;

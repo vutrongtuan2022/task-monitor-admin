@@ -15,6 +15,8 @@ import {FolderOpen} from 'iconsax-react';
 import TextArea from '~/components/common/Form/components/TextArea';
 import router from 'next/router';
 import {IUpdateUser, PropsUpdateUser} from './interfaces';
+import DatePicker from '~/components/common/DatePicker';
+import {timeSubmit} from '~/common/funcs/optionConvert';
 
 function UpdateUser({onClose}: PropsUpdateUser) {
 	const queryClient = useQueryClient();
@@ -27,7 +29,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 		email: '',
 		gender: TYPE_GENDER.MALE,
 		phone: '',
-		birthday: '',
+		birthday: null,
 		address: '',
 		matp: '',
 		maqh: '',
@@ -75,7 +77,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 					email: form.email,
 					gender: form.gender,
 					phone: form.phone,
-					birthday: form.birthday,
+					birthday: form.birthday ? timeSubmit(form.birthday) : null,
 					address: form.address,
 					matp: form.matp,
 					maqh: form.maqh,
@@ -93,7 +95,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 					email: '',
 					gender: TYPE_GENDER.MALE,
 					phone: '',
-					birthday: '',
+					birthday: null,
 					address: '',
 					matp: '',
 					maqh: '',
@@ -196,7 +198,22 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 						}
 					/>
 
-					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
+					{/* <Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} /> */}
+
+					<DatePicker
+						icon={true}
+						label={<span>Ngày sinh</span>}
+						placeholder='Chọn ngày sinh'
+						value={form?.birthday}
+						onSetValue={(birthday) =>
+							setForm((prev) => ({
+								...prev,
+								birthday: birthday,
+							}))
+						}
+						name='birthday'
+						onClean={true}
+					/>
 
 					<div className={styles.gennder}>
 						<label style={{fontSize: '16px', fontWeight: '500'}}>

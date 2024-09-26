@@ -15,6 +15,8 @@ import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
 
 import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
+import DatePicker from '~/components/common/DatePicker';
+import {timeSubmit} from '~/common/funcs/optionConvert';
 
 function CreateUser({onClose}: PropsCreateUser) {
 	const queryClient = useQueryClient();
@@ -25,7 +27,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 		email: '',
 		gender: TYPE_GENDER.MALE,
 		phone: '',
-		birthday: '',
+		birthday: null,
 		address: '',
 		matp: '',
 		maqh: '',
@@ -45,7 +47,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 					email: form.email,
 					gender: form.gender,
 					phone: form.phone,
-					birthday: form.birthday,
+					birthday: form.birthday ? timeSubmit(form.birthday) : null,
 					address: form.address,
 					matp: form.matp,
 					maqh: form.maqh,
@@ -64,7 +66,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 					email: '',
 					gender: TYPE_GENDER.MALE,
 					phone: '',
-					birthday: '',
+					birthday: null,
 					address: '',
 					matp: '',
 					maqh: '',
@@ -167,7 +169,22 @@ function CreateUser({onClose}: PropsCreateUser) {
 						}
 					/>
 
-					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
+					{/* <Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} /> */}
+
+					<DatePicker
+						icon={true}
+						label={<span>Ngày sinh</span>}
+						placeholder='Chọn ngày sinh'
+						value={form?.birthday}
+						onSetValue={(birthday) =>
+							setForm((prev) => ({
+								...prev,
+								birthday: birthday,
+							}))
+						}
+						name='birthday'
+						onClean={true}
+					/>
 
 					<div className={styles.gennder}>
 						<label style={{fontSize: '16px', fontWeight: '500'}}>
