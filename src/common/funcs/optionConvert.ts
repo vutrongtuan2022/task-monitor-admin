@@ -32,6 +32,11 @@ export const timeSubmit = (date: Date | null | undefined, isTo?: boolean) => {
 	return date ? `${date.getFullYear()}-${checkTime(date.getMonth() + 1)}-${checkTime(date.getDate())}T${isTo ? '23:59' : '00:00'}` : null;
 };
 
+// dateOnly: 2021-09-01
+export const timeSubmitDateOnly = (date: Date | null | undefined) => {
+	return date ? `${date.getFullYear()}-${checkTime(date.getMonth() + 1)}-${checkTime(date.getDate())}` : null;
+};
+
 export function getKeyCert(): {
 	time: string;
 	keyCert: string;

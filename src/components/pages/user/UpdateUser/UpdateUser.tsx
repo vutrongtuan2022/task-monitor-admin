@@ -16,7 +16,7 @@ import TextArea from '~/components/common/Form/components/TextArea';
 import router from 'next/router';
 import {IUpdateUser, PropsUpdateUser} from './interfaces';
 import DatePicker from '~/components/common/DatePicker';
-import {timeSubmit} from '~/common/funcs/optionConvert';
+import {timeSubmit, timeSubmitDateOnly} from '~/common/funcs/optionConvert';
 
 function UpdateUser({onClose}: PropsUpdateUser) {
 	const queryClient = useQueryClient();
@@ -51,7 +51,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 				email: data?.email,
 				gender: data?.gender,
 				phone: data?.phone,
-				birthday: data?.birthday || '',
+				birthday: data?.birthday ? new Date(data.birthday) : null,
 				address: data?.address || '',
 				matp: data?.tp?.uuid || '',
 				maqh: data?.qh?.uuid || '',
@@ -77,7 +77,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 					email: form.email,
 					gender: form.gender,
 					phone: form.phone,
-					birthday: form.birthday ? timeSubmit(form.birthday) : null,
+					birthday: form.birthday ? timeSubmitDateOnly(form.birthday) : '',
 					address: form.address,
 					matp: form.matp,
 					maqh: form.maqh,
@@ -203,7 +203,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 					<DatePicker
 						icon={true}
 						label={<span>Ngày sinh</span>}
-						placeholder='Chọn ngày sinh'
+						placeholder='dd/mm/yyyy'
 						value={form?.birthday}
 						onSetValue={(birthday) =>
 							setForm((prev) => ({

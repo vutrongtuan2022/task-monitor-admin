@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {PropsMainPageProject} from './interfaces';
+import {IProject, PropsMainPageProject} from './interfaces';
 import styles from './MainPageProject.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -17,11 +17,33 @@ import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
 import Progress from '~/components/common/Progress';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
+import projectServices from '~/services/projectServices';
 
 function MainPageProject({}: PropsMainPageProject) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
-	const {action} = router.query;
+	const {_page, _pageSize, _keyword, _status, _managerUuid} = router.query;
+
+	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _keyword, _status, _managerUuid], {
+		queryFn: () =>
+			httpRequest({
+				http: projectServices.listProject({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 20,
+					keyword: (_keyword as string) || '',
+					status: STATUS_CONFIG.ACTIVE,
+					state: null,
+					managerUuid: (_managerUuid as string) || '',
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
 
 	return (
 		<div className={styles.container}>
@@ -51,7 +73,7 @@ function MainPageProject({}: PropsMainPageProject) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={[1]}
+					data={listProject?.data?.items || []}
 					loading={false}
 					noti={
 						<Noti
@@ -71,44 +93,44 @@ function MainPageProject({}: PropsMainPageProject) {
 				>
 					<Table
 						fixedHeader={true}
-						data={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+						data={listProject?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
-								render: (data: any, index: number) => <>{index + 1}</>,
+								render: (data: IProject, index: number) => <>{index + 1}</>,
 							},
 							{
 								title: 'ID dự án',
 								fixedLeft: true,
-								render: (data: any) => <>123456</>,
+								render: (data: IProject) => <>{data?.code}</>,
 							},
 							{
-								title: 'Tên dự án',
-								render: (data: any) => <>Dự án Xây Dựng số 3A</>,
+								title: 'Tên công trình',
+								render: (data: IProject) => <>{data?.name}</>,
 							},
 							{
-								title: 'Lãnh đạo phục trách',
-								render: (data: any) => <>Dương Minh Anh</>,
+								title: 'Quy trình áp dụng',
+								render: (data: IProject) => <>{data?.type}</>,
 							},
 							{
-								title: 'Kế hoạch vốn 2024 (triệu đồng)',
-								render: (data: any) => <>1.000</>,
+								title: 'Lãnh đạo phụ trách',
+								render: (data: IProject) => <>1.000</>,
 							},
 							{
-								title: 'Tổng mức đầu tư (triệu đồng)',
-								render: (data: any) => <>400</>,
+								title: 'Cán bộ chuyên quản',
+								render: (data: IProject) => <>400</>,
 							},
 							{
-								title: 'Tổng dự toán (triệu đồng)',
-								render: (data: any) => <>200</>,
+								title: 'TMDT(VND)',
+								render: (data: IProject) => <>200</>,
 							},
 							{
-								title: 'Trạng thái giải ngân',
-								render: (data: any) => <Progress percent={50} width={80} />,
+								title: 'Tiến độ dự án',
+								render: (data: IProject) => <Progress percent={50} width={80} />,
 							},
 							{
-								title: 'Trạng thái dự án',
-								render: (data: any) => (
+								title: 'Trạng thái',
+								render: (data: IProject) => (
 									<StateActive
 										stateActive={1}
 										listState={[
@@ -131,7 +153,7 @@ function MainPageProject({}: PropsMainPageProject) {
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: any) => (
+								render: (data: IProject) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
@@ -154,21 +176,6 @@ function MainPageProject({}: PropsMainPageProject) {
 					<Pagination pageSize={1} currentPage={1} total={10} />
 				</DataWrapper>
 			</WrapperScrollbar>
-
-			<PositionContainer
-				open={action == 'create'}
-				onClose={() => {
-					const {action, ...rest} = router.query;
-					router.replace({
-						pathname: router.pathname,
-						query: {
-							...rest,
-						},
-					});
-				}}
-			>
-				<div style={{width: 500, background: '#ffff', height: '100vh'}}>a</div>
-			</PositionContainer>
 		</div>
 	);
 }

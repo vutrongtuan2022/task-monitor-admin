@@ -16,7 +16,7 @@ import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
 import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
 import DatePicker from '~/components/common/DatePicker';
-import {timeSubmit} from '~/common/funcs/optionConvert';
+import {timeSubmit, timeSubmitDateOnly} from '~/common/funcs/optionConvert';
 
 function CreateUser({onClose}: PropsCreateUser) {
 	const queryClient = useQueryClient();
@@ -47,7 +47,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 					email: form.email,
 					gender: form.gender,
 					phone: form.phone,
-					birthday: form.birthday ? timeSubmit(form.birthday) : null,
+					birthday: form.birthday ? timeSubmitDateOnly(form.birthday) : '',
 					address: form.address,
 					matp: form.matp,
 					maqh: form.maqh,
@@ -174,7 +174,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 					<DatePicker
 						icon={true}
 						label={<span>Ngày sinh</span>}
-						placeholder='Chọn ngày sinh'
+						placeholder='dd/mm/yyyy'
 						value={form?.birthday}
 						onSetValue={(birthday) =>
 							setForm((prev) => ({

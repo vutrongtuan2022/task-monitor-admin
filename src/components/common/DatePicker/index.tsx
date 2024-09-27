@@ -1,11 +1,11 @@
-import {memo, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 import Calendar from './components/Calendar';
 import HeadlessTippy from '@tippyjs/react/headless';
 import {PropsDatePicker} from './interface';
 import clsx from 'clsx';
 import styles from './DatePicker.module.scss';
 import convertDate from '~/common/funcs/convertDate';
-import {FaRegCalendarCheck} from 'react-icons/fa';
+import {CalendarSearch} from 'iconsax-react';
 
 function DatePicker({
 	placeholder,
@@ -22,6 +22,10 @@ function DatePicker({
 	const [show, setShow] = useState<boolean>(false);
 	const [isFocus, setIsFocus] = useState<boolean>(false);
 	const [inputValue, setInputValue] = useState<string>(value ? convertDate(value).getDateFormat() || '' : '');
+
+	useEffect(() => {
+		setInputValue(value ? convertDate(value).getDateFormat() || '' : '');
+	}, [value]);
 
 	const handleClickDay = (time: number) => {
 		setIsFocus(false);
@@ -49,6 +53,14 @@ function DatePicker({
 			month = day[1] + month;
 		}
 
+		if (day.length === 2 && Number(day) < 1) {
+			day = '01';
+		}
+
+		if (month.length === 2 && Number(month) < 1) {
+			month = '01';
+		}
+
 		if (month.length === 2 && Number(month) > 12) {
 			month = '0' + month[0];
 		}
@@ -64,6 +76,7 @@ function DatePicker({
 		const input = e.target.value;
 
 		const formattedInput = formatDateInput(input);
+
 		setInputValue(formattedInput);
 
 		const regex = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[0-2])\/\d{4}$/;
@@ -126,7 +139,7 @@ function DatePicker({
 						>
 							{icon && (
 								<div className={styles.icon}>
-									<FaRegCalendarCheck size={18} />
+									<CalendarSearch size={18} />
 								</div>
 							)}
 
