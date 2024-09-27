@@ -22,45 +22,6 @@ $border-radius: 8px;
 $padding-input: 10px 20px;
 $font-size-input: 16px;
 
-// .calendar {
-// 	position: relative;
-// 	cursor: pointer;
-// 	display: flex;
-// 	align-items: center;
-// 	border-radius: 8px;
-// 	border: 1px solid var(--border-color);
-// 	background-color: var(--bg-light);
-// 	font-size: 16px;
-// 	font-weight: 500;
-// 	padding: 8px 20px;
-
-// 	&.placeholder {
-// 		font-weight: 500;
-// 		color: $color-placeholder;
-// 	}
-
-// 	&.focus {
-// 		border: 1px solid $color-focus !important;
-// 		background-color: $bg-focus !important;
-// 	}
-
-// 	&.readonly {
-// 		cursor: default;
-// 		border: 1px solid $border-disable !important;
-// 		background-color: $bg-disable !important;
-// 	}
-
-// 	.clean {
-// 		position: absolute;
-// 		right: 12px;
-// 		opacity: 0.7;
-// 	}
-
-// 	.input {
-// 		background-color: #fff;
-// 	}
-// }
-
 .container {
 	margin-top: 16px;
 

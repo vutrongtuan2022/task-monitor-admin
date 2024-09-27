@@ -116,7 +116,7 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 							}
 							label={
 								<span>
-									Nhóm quyền<span style={{color: 'red'}}>*</span>
+									Nhóm quyền <span style={{color: 'red'}}>*</span>
 								</span>
 							}
 						>

@@ -156,7 +156,7 @@
 	tbody {
 		.fixedLeft,
 		.fixedRight {
-			background: #f5f9fb;
+			background: inherit;
 		}
 
 		.fixedLeft {
@@ -177,7 +177,6 @@
 	}
 
 	.tr_data {
-		background-color: #f5f9fb;
 		border-bottom: 2px solid var(--light);
 		td:first-child {
 			border-top-left-radius: 6px;
@@ -187,6 +186,14 @@
 			border-top-right-radius: 6px;
 			border-bottom-right-radius: 6px;
 		}
+	}
+
+	.tr_data:nth-child(even) {
+		background-color: #f4f5f6;
+	}
+
+	.tr_data:nth-child(odd) {
+		background-color: #e2f1fb;
 	}
 }
 

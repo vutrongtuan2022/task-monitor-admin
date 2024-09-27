@@ -1,0 +1,83 @@
+@import '../../../styles/variables';
+
+.container {
+	background-color: inherit;
+
+	width: calc(100% - $width-tab);
+	top: $height-header;
+	right: 0;
+	left: calc($width-tab);
+	transition: width $duration ease-in-out, left $duration ease-in-out;
+	z-index: 1;
+
+	&.small {
+		width: calc(100% - $width-tab-hidden);
+		left: calc($width-tab-hidden);
+	}
+
+	.icon {
+		color: var(--light);
+		font-size: 20px;
+	}
+}
+
+.main {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 100%;
+	padding-bottom: 16px;
+}
+
+.breadcrumb {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+}
+
+.item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.link {
+	color: var(--light);
+	font-size: 16px;
+	font-weight: 400;
+	user-select: none;
+	transition: 0.3s;
+
+	&:hover {
+		text-decoration: underline;
+	}
+
+	&.pathNow {
+		text-decoration: none;
+		opacity: 0.5;
+	}
+}
+
+@media (max-width: $widthTablet) {
+	.container {
+		left: calc($width-tab-hidden);
+		right: 0;
+		width: calc(100vw - $width-tab-hidden);
+	}
+}
+
+@media (max-width: $widthMobile) {
+	.container {
+		left: 0;
+		right: 0;
+		width: 100%;
+	}
+	.link {
+		color: var(--light);
+		font-size: 14px;
+		font-weight: 400;
+		user-select: none;
+		transition: 0.3s;
+	}
+}

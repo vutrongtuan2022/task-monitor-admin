@@ -16,7 +16,7 @@
 		align-items: center;
 		padding: 20px;
 		font-size: 16px;
-		color: var(--primary);
+		color: var(--primary-btn);
 
 		.btnMonth {
 			display: flex;
@@ -26,7 +26,7 @@
 			outline: none;
 			background-color: transparent;
 			font-size: 20px;
-			color: var(--primary);
+			color: var(--primary-btn);
 			cursor: pointer;
 		}
 	}
@@ -79,13 +79,13 @@
 }
 
 .current {
-	color: var(--primary);
-	border: 1px solid var(--primary);
+	color: var(--primary-btn);
+	border: 1px solid var(--primary-btn);
 	border-radius: 6px;
 }
 
 .active {
-	background: radial-gradient(72.29% 96.43% at 50.5% 3.57%, var(--primary) 0%, var(--primary) 100%);
+	background: radial-gradient(72.29% 96.43% at 50.5% 3.57%, var(--primary-btn) 0%, var(--primary-btn) 100%);
 	border-radius: 6px;
 	.dateText {
 		color: var(--light);
@@ -107,7 +107,7 @@
 	// 	bottom: -5px;
 	// 	transform: translate(-50%, 50%);
 	// 	content: '';
-	// 	border-top: 10px solid var(--primary);
+	// 	border-top: 10px solid var(--primary-btn);
 	// 	border-right: 10px solid transparent;
 	// 	border-left: 10px solid transparent;
 	// 	cursor: pointer;
@@ -140,8 +140,8 @@
 	}
 
 	&.active {
-		background: radial-gradient(72.29% 96.43% at 50.5% 3.57%, var(--primary) 0%, var(--primary) 100%);
-		border: 1px solid var(--primary);
+		background: radial-gradient(72.29% 96.43% at 50.5% 3.57%, var(--primary-btn) 0%, var(--primary-btn) 100%);
+		border: 1px solid var(--primary-btn);
 		color: var(--light);
 	}
 }

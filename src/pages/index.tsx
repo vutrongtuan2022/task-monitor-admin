@@ -12,7 +12,7 @@ export default function Home() {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<div>Trang chu</div>
+			<div>Trang chủ</div>
 		</Fragment>
 	);
 }
