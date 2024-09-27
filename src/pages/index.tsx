@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import {Fragment, ReactElement} from 'react';
+import ProcedureTree from '~/components/common/ProcedureTree';
 import BaseLayout from '~/components/layouts/BaseLayout';
 
 export default function Home() {
@@ -12,7 +13,9 @@ export default function Home() {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<div>Trang chủ</div>
+			<div style={{backgroundColor: '#fff', height: '600px'}}>
+				<ProcedureTree />
+			</div>
 		</Fragment>
 	);
 }
