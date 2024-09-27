@@ -1,4 +1,4 @@
-import {Buildings2, Data, DocumentText1, ElementEqual, Receipt21, ReceiptItem, UserOctagon} from 'iconsax-react';
+import {Buildings2, Data, DocumentText1, ElementEqual, Receipt21, ReceiptItem, TagUser, UserOctagon} from 'iconsax-react';
 import icons from '../images/icons';
 import {TYPE_DATE} from './enum';
 
@@ -83,7 +83,7 @@ export const Menu: {
 		title: 'Quản lý tài khoản',
 		path: PATH.Account,
 		pathActive: PATH.Account,
-		icon: UserOctagon,
+		icon: TagUser,
 	},
 ];
 
