@@ -103,7 +103,7 @@ function MainPageAccount({}: PropsMainPageAccount) {
 
 	return (
 		<div className={styles.container}>
-			<Loading loading={funcChangeStatus.isLoading} />
+			<Loading loading={funcChangeStatus.isLoading || funcDeleteAccount.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -154,14 +154,6 @@ function MainPageAccount({}: PropsMainPageAccount) {
 									</Link>
 								),
 							},
-							// {
-							// 	title: 'Số điện thoại',
-							// 	render: (data: IAccount) => <>{data?.email || '---'}</>,
-							// },
-							// {
-							// 	title: 'Email',
-							// 	render: (data: IAccount) => <span>{data?.email || '---'}</span>,
-							// },
 							{
 								title: 'Nhóm quyền',
 								render: (data: IAccount) => (
