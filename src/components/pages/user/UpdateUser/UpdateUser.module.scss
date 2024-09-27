@@ -64,14 +64,33 @@
 		gap: 24px;
 	}
 
-	.item_radio {
-		cursor: pointer;
-		user-select: none;
-	}
-
 	.input_radio {
+		appearance: none;
+		border-radius: 50%;
 		width: 20px;
 		height: 20px;
+		position: relative;
+		cursor: pointer;
+		border: 2px solid #777e90;
+	}
+
+	.input_radio:checked {
+		background-color: inherit;
+		border: 2px solid #3772ff;
+	}
+
+	.input_radio:checked::before {
+		content: '';
+		display: block;
+		width: 11px;
+		height: 11px;
+		background-color: #3772ff;
+		border: 1px solid #3772ff;
+		border-radius: 50%;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 
 	.input_lable {
