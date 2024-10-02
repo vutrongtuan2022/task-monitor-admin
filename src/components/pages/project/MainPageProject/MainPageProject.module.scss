@@ -13,8 +13,19 @@
 	margin-bottom: 16px;
 }
 
-.search {
-	min-width: 400px;
+.main_search {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 12px;
+
+	.search {
+		min-width: 400px;
+	}
+
+	.filter {
+		min-width: 220px;
+	}
 }
 
 .main {

@@ -1,9 +1,10 @@
 import Head from 'next/head';
-import {Fragment, ReactElement} from 'react';
-import ProcedureTree from '~/components/common/ProcedureTree';
+import { Fragment, ReactElement, useState } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 
 export default function Home() {
+
+	const [listChecked, setListChecked] = useState<any[]>([]);
 	return (
 		<Fragment>
 			<Head>
@@ -13,9 +14,7 @@ export default function Home() {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<div style={{backgroundColor: '#fff', height: '600px'}}>
-				<ProcedureTree />
-			</div>
+			<div>Trang chủ</div>
 		</Fragment>
 	);
 }
