@@ -22,16 +22,21 @@
 		transform: scale(0.9);
 	}
 	&.create {
-		color: #35c244 !important;
+		color: #35c244;
 	}
 
 	&.edit {
-		color: var(--primary-btn) !important;
+		color: var(--primary-btn);
 	}
 	&.delete {
-		color: var(--error) !important;
+		color: var(--error);
 	}
 	&.view {
-		color: var(--orange) !important;
+		color: var(--orange);
+	}
+
+	&.disnable {
+		pointer-events: none;
+		opacity: 0.3;
 	}
 }
