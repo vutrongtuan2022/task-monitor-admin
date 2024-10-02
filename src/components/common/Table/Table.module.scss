@@ -17,16 +17,15 @@
 			border-color: #06d7a0;
 		}
 
-		&:checked::before {
-			content: '';
+		&:checked::after {
+			content: '✓';
 			position: absolute;
 			top: 50%;
 			left: 50%;
-			width: 6px;
-			height: 12px;
-			border: solid white;
-			border-width: 0 2px 2px 0;
-			transform: translate(-50%, -50%) rotate(45deg);
+			transform: translate(-50%, -50%);
+			color: white;
+			font-size: 12px;
+			font-weight: bold;
 		}
 
 		&:hover {

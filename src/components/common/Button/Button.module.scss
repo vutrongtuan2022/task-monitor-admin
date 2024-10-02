@@ -98,6 +98,12 @@
 	border: 1px solid var(--border-color-btn);
 }
 
+.inhenrit {
+	background: inherit;
+	color: inherit;
+	border: none;
+}
+
 .primaryLinear {
 	background: var(--gradient-blue-red);
 	color: var(--light);
@@ -182,6 +188,10 @@
 	padding: 2px 9px;
 }
 
+.p_4_4 {
+	padding: 0px;
+}
+
 .p_4_8 {
 	padding: 4px 8px;
 }
@@ -223,6 +233,14 @@
 
 .p_8_16 {
 	padding: 8px 16px;
+}
+
+.p_12_12 {
+	padding: 12px;
+}
+
+.p_10_23 {
+	padding: 10px 23px;
 }
 
 .w_fit {

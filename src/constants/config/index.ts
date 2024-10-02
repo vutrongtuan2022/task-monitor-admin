@@ -23,6 +23,7 @@ export enum PATH {
 
 	Home = '/',
 	Project = '/project',
+	CreateProject = '/project/create',
 	Task = '/task',
 	Branch = '/branch',
 	Contractor = '/contractor',

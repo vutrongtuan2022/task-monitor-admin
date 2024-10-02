@@ -17,6 +17,17 @@ const userServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+
+	updateStatus: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Project/update-status-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default userServices;

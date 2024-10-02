@@ -55,3 +55,9 @@ export enum TYPE_GENDER {
 	FEMALE,
 	OTHER,
 }
+
+export enum TYPE_WORK_STATUS {
+	PREPARE = 0,
+	DO,
+	FINISH,
+}

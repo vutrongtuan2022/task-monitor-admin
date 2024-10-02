@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {IProject, PropsMainPageProject} from './interfaces';
 import styles from './MainPageProject.module.scss';
@@ -17,18 +17,24 @@ import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
 import Progress from '~/components/common/Progress';
-import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG, TYPE_WORK_STATUS} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
+import FilterCustom from '~/components/common/FilterCustom';
+import Loading from '~/components/common/Loading';
+import Dialog from '~/components/common/Dialog';
+import {PATH} from '~/constants/config';
 
 function MainPageProject({}: PropsMainPageProject) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _status, _managerUuid} = router.query;
+	const [deleteProject, setDeleteProject] = useState<IProject | null>(null);
 
-	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _keyword, _status, _managerUuid], {
+	const {_page, _pageSize, _keyword, _status, _managerUuid, _state} = router.query;
+
+	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _managerUuid], {
 		queryFn: () =>
 			httpRequest({
 				http: projectServices.listProject({
@@ -36,7 +42,7 @@ function MainPageProject({}: PropsMainPageProject) {
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
-					state: null,
+					state: !!_state ? Number(_state) : null,
 					managerUuid: (_managerUuid as string) || '',
 				}),
 			}),
@@ -45,27 +51,63 @@ function MainPageProject({}: PropsMainPageProject) {
 		},
 	});
 
+	const funcDeleteProject = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa dự án thành công',
+				http: projectServices.updateStatus({
+					uuid: deleteProject?.uuid!,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setDeleteProject(null);
+				queryClient.invalidateQueries([QUERY_KEY.table_list_user]);
+			}
+		},
+	});
+
 	return (
 		<div className={styles.container}>
+			<Loading loading={listProject.isLoading || funcDeleteProject.isLoading} />
 			<div className={styles.head}>
-				<div className={styles.search}>
-					<Search keyName='_keyword' placeholder='Tìm kiếm theo tên dự án, ID' />
+				<div className={styles.main_search}>
+					<div className={styles.search}>
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên dự án, ID' />
+					</div>
+
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Trạng thái'
+							query='_state'
+							listFilter={[
+								{
+									id: TYPE_WORK_STATUS.PREPARE,
+									name: 'Chuẩn bị',
+								},
+								{
+									id: TYPE_WORK_STATUS.DO,
+									name: 'Thực hiện',
+								},
+								{
+									id: TYPE_WORK_STATUS.FINISH,
+									name: 'Kết thúc',
+								},
+							]}
+						/>
+					</div>
 				</div>
 				<div className={styles.btn}>
 					<Button
-						p_14_23
+						p_10_23
 						rounded_8
 						light-blue
+						href={PATH.CreateProject}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
-						onClick={() => {
-							router.replace({
-								pathname: router.pathname,
-								query: {
-									...router.query,
-									action: 'create',
-								},
-							});
-						}}
 					>
 						Thêm mới dự án
 					</Button>
@@ -74,7 +116,7 @@ function MainPageProject({}: PropsMainPageProject) {
 			<WrapperScrollbar>
 				<DataWrapper
 					data={listProject?.data?.items || []}
-					loading={false}
+					loading={listProject.isLoading}
 					noti={
 						<Noti
 							button={
@@ -82,7 +124,7 @@ function MainPageProject({}: PropsMainPageProject) {
 									p_14_23
 									rounded_8
 									light-blue
-									href={''}
+									href={PATH.CreateProject}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 								>
 									Thêm mới dự án
@@ -110,41 +152,47 @@ function MainPageProject({}: PropsMainPageProject) {
 							},
 							{
 								title: 'Quy trình áp dụng',
-								render: (data: IProject) => <>{data?.type}</>,
+								render: (data: IProject) => <>{data?.taskCat?.name}</>,
 							},
 							{
 								title: 'Lãnh đạo phụ trách',
-								render: (data: IProject) => <>1.000</>,
+								render: (data: IProject) => <>{data?.manager?.fullname}</>,
 							},
 							{
 								title: 'Cán bộ chuyên quản',
-								render: (data: IProject) => <>400</>,
+								render: (data: IProject) => <>{data?.user?.fullname}</>,
 							},
 							{
 								title: 'TMDT(VND)',
-								render: (data: IProject) => <>200</>,
+								render: (data: IProject) => <>{}</>,
 							},
 							{
 								title: 'Tiến độ dự án',
-								render: (data: IProject) => <Progress percent={50} width={80} />,
+								render: (data: IProject) => <Progress percent={data?.progress} width={80} />,
 							},
 							{
 								title: 'Trạng thái',
 								render: (data: IProject) => (
 									<StateActive
-										stateActive={1}
+										stateActive={data?.state}
 										listState={[
 											{
-												state: 1,
-												text: 'Hoàn thành',
+												state: TYPE_WORK_STATUS.PREPARE,
+												text: 'Chuẩn bị',
 												textColor: '#fff',
-												backgroundColor: '#06D7A0',
+												backgroundColor: '#5B70B3',
 											},
 											{
-												state: 2,
-												text: 'Chưa hoàn thành',
+												state: TYPE_WORK_STATUS.DO,
+												text: 'Thực hiện',
 												textColor: '#fff',
-												backgroundColor: '#F37277',
+												backgroundColor: '#16C1F3',
+											},
+											{
+												state: TYPE_WORK_STATUS.FINISH,
+												text: 'Kết thúc',
+												textColor: '#fff',
+												backgroundColor: '#06D7A0',
 											},
 										]}
 									/>
@@ -166,16 +214,31 @@ function MainPageProject({}: PropsMainPageProject) {
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
-											onClick={() => {}}
+											onClick={() => {
+												setDeleteProject(data);
+											}}
 										/>
 									</div>
 								),
 							},
 						]}
 					/>
-					<Pagination pageSize={1} currentPage={1} total={10} />
+					<Pagination
+						currentPage={Number(_page) || 1}
+						pageSize={Number(_pageSize) || 20}
+						total={listProject?.data?.pagination?.totalCount}
+						dependencies={[_pageSize, _keyword, _status, _managerUuid, _state]}
+					/>
 				</DataWrapper>
 			</WrapperScrollbar>
+			<Dialog
+				type='error'
+				open={!!deleteProject}
+				onClose={() => setDeleteProject(null)}
+				title={'Xác nhận xóa'}
+				note={'Bạn có chắc chắn muốn xóa dự án này?'}
+				onSubmit={funcDeleteProject.mutate}
+			/>
 		</div>
 	);
 }
