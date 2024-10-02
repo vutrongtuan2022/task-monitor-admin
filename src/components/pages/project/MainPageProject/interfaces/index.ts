@@ -3,6 +3,7 @@ export interface PropsMainPageProject {}
 export interface IProject {
 	name: string;
 	code: string;
+	totalInvest: number;
 	realBudget: number;
 	type: number;
 	manager: {

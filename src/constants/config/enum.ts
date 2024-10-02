@@ -14,6 +14,10 @@ export enum QUERY_KEY {
 	dropdown_province,
 	dropdown_district,
 	dropdown_town,
+	dropdown_branches,
+	dropdown_task_cat,
+	dropdown_user,
+	dropdown_manager,
 
 	detail_contractor,
 	detail_user,

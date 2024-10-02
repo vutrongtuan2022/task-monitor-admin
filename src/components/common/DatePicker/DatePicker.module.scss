@@ -23,8 +23,6 @@ $padding-input: 10px 20px;
 $font-size-input: 16px;
 
 .container {
-	margin-top: 16px;
-
 	.calendar {
 		display: flex;
 		justify-content: space-between;
@@ -60,7 +58,9 @@ $font-size-input: 16px;
 }
 
 .icon {
-	margin-right: 8px;
+	margin-right: 20px;
+	width: fit-content;
+	height: fit-content;
 	display: flex;
 	justify-content: center;
 	align-items: center;

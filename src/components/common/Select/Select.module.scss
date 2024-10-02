@@ -25,11 +25,11 @@ $font-size: 16px;
 }
 
 .search_group {
-	height: 48px;
+	height: 42px;
 	font-weight: 500;
-	font-size: 13px;
+	font-size: 14px;
 	color: $color-text;
-	padding: 6px 16px;
+	padding: 0px 12px;
 	display: flex;
 	align-items: center;
 	gap: 4px;
@@ -44,22 +44,15 @@ $font-size: 16px;
 	margin-bottom: 12px;
 	background-color: #f4f6fa;
 
-	// &.focus {
-	// 	border: 1px solid $border-focus;
-	// 	background: $bg-focus;
-	// }
-
-	// &:hover {
-	// 	border: 1px solid $border-hover;
-	// }
-
 	input {
+		height: 100%;
 		display: block;
 		flex: 1;
 		outline: none;
 		border: none;
 		background-color: transparent;
-		padding: 8px;
+		padding: 4px;
+
 		&::placeholder {
 			color: #9ea5c0;
 			opacity: 1;

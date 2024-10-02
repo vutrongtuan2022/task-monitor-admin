@@ -139,15 +139,9 @@ function DatePicker({
 						>
 							{icon && (
 								<div className={styles.icon}>
-									<CalendarSearch size={18} />
+									<CalendarSearch size={24} />
 								</div>
 							)}
-
-							{/* {onClean && !!value && (
-								<div className={clsx(styles.clean, styles.icon)} onClick={handleClean}>
-									<RiCloseCircleFill color='#29303c' />
-								</div>
-							)} */}
 						</div>
 					</div>
 				</HeadlessTippy>

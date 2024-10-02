@@ -11,7 +11,6 @@ import Pagination from '~/components/common/Pagination';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
-import PositionContainer from '~/components/common/PositionContainer';
 import {useRouter} from 'next/router';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
@@ -25,6 +24,9 @@ import FilterCustom from '~/components/common/FilterCustom';
 import Loading from '~/components/common/Loading';
 import Dialog from '~/components/common/Dialog';
 import {PATH} from '~/constants/config';
+import Link from 'next/link';
+import Tippy from '@tippyjs/react';
+import {convertCoin} from '~/common/funcs/convertCoin';
 
 function MainPageProject({}: PropsMainPageProject) {
 	const router = useRouter();
@@ -72,7 +74,7 @@ function MainPageProject({}: PropsMainPageProject) {
 
 	return (
 		<div className={styles.container}>
-			<Loading loading={listProject.isLoading || funcDeleteProject.isLoading} />
+			<Loading loading={funcDeleteProject.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -144,7 +146,13 @@ function MainPageProject({}: PropsMainPageProject) {
 							{
 								title: 'ID dự án',
 								fixedLeft: true,
-								render: (data: IProject) => <>{data?.code}</>,
+								render: (data: IProject) => (
+									<Tippy content='Chi tiết dự án'>
+										<Link href={`/project/${data?.uuid}`} className={styles.link}>
+											{data?.code}
+										</Link>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Tên công trình',
@@ -164,7 +172,7 @@ function MainPageProject({}: PropsMainPageProject) {
 							},
 							{
 								title: 'TMDT(VND)',
-								render: (data: IProject) => <>{}</>,
+								render: (data: IProject) => <>{convertCoin(data?.totalInvest)}</>,
 							},
 							{
 								title: 'Tiến độ dự án',
@@ -207,13 +215,14 @@ function MainPageProject({}: PropsMainPageProject) {
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
+											disnable={data?.state == TYPE_WORK_STATUS.FINISH}
 											onClick={() => {}}
 										/>
-
 										<IconCustom
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
+											disnable={data?.state == TYPE_WORK_STATUS.DO}
 											onClick={() => {
 												setDeleteProject(data);
 											}}

@@ -1,6 +1,6 @@
 import axiosClient from '.';
 
-const userServices = {
+const projectServices = {
 	listProject: (
 		data: {
 			pageSize: number;
@@ -13,7 +13,7 @@ const userServices = {
 		},
 		tokenAxios?: any
 	) => {
-		return axiosClient.post(`/Project/get-all-project`, data, {
+		return axiosClient.post(`/Project/get-page-list-project`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
@@ -30,4 +30,4 @@ const userServices = {
 	},
 };
 
-export default userServices;
+export default projectServices;
