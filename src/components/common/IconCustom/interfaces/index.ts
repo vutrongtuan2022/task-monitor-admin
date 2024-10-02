@@ -5,4 +5,5 @@ export interface PropsIconCustom {
 	color?: string;
 	href?: string;
 	type?: 'edit' | 'delete' | 'view' | 'create';
+	disnable?: boolean;
 }
