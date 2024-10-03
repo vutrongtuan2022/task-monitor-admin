@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import {IContractor, PropsMainPageContractor} from './interfaces';
+import { IContractor, PropsMainPageContractor } from './interfaces';
 import styles from './MainPageContractor.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -12,26 +12,26 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
-import {Edit, Trash} from 'iconsax-react';
+import { Edit, Trash } from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
-import {useRouter} from 'next/router';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
-import {httpRequest} from '~/services';
+import { useRouter } from 'next/router';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY, STATUS_CONFIG } from '~/constants/config/enum';
+import { httpRequest } from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
 import PositionContainer from '~/components/common/PositionContainer';
 import CreateContractor from '../CreateContractor';
 import Dialog from '~/components/common/Dialog';
-import {toastWarn} from '~/common/funcs/toast';
+import { toastWarn } from '~/common/funcs/toast';
 import Loading from '~/components/common/Loading';
 import UpdateContractor from '../UpdateContractor';
 
-function MainPageContractor({}: PropsMainPageContractor) {
+function MainPageContractor({ }: PropsMainPageContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _type, action, _uuidContractor} = router.query;
+	const { _page, _pageSize, _keyword, _type, action, _uuidContractor } = router.query;
 
 	const [uuidDelete, setUuidDelete] = useState<string>('');
 
@@ -83,7 +83,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 	});
 	const handleDeleteContractor = () => {
 		if (!uuidDelete) {
-			return toastWarn({msg: 'Không tìm thấy nhà thầu!'});
+			return toastWarn({ msg: 'Không tìm thấy nhà thầu!' });
 		}
 
 		return funcDeleteContractor.mutate();
@@ -112,7 +112,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 
 				<div className={styles.btn}>
 					<Button
-						p_14_23
+						p_14_24
 						rounded_8
 						light-blue
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
@@ -138,7 +138,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 						<Noti
 							button={
 								<Button
-									p_14_23
+									p_14_24
 									rounded_8
 									light-blue
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
@@ -188,7 +188,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 								title: 'Hành động',
 								fixedRight: true,
 								render: (data: IContractor) => (
-									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
@@ -227,7 +227,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			<PositionContainer
 				open={action == 'create'}
 				onClose={() => {
-					const {action, ...rest} = router.query;
+					const { action, ...rest } = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -239,7 +239,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			>
 				<CreateContractor
 					onClose={() => {
-						const {action, ...rest} = router.query;
+						const { action, ...rest } = router.query;
 
 						router.replace({
 							pathname: router.pathname,
@@ -254,7 +254,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			<PositionContainer
 				open={!!_uuidContractor}
 				onClose={() => {
-					const {_uuidContractor, ...rest} = router.query;
+					const { _uuidContractor, ...rest } = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -266,7 +266,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			>
 				<UpdateContractor
 					onClose={() => {
-						const {_uuidContractor, ...rest} = router.query;
+						const { _uuidContractor, ...rest } = router.query;
 
 						router.replace({
 							pathname: router.pathname,
