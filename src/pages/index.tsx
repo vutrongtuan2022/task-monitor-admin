@@ -1,9 +1,8 @@
 import Head from 'next/head';
-import { Fragment, ReactElement, useState } from 'react';
+import {Fragment, ReactElement, useState} from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 
-export default function Home() {
-
+export default function Page() {
 	const [listChecked, setListChecked] = useState<any[]>([]);
 	return (
 		<Fragment>
@@ -19,6 +18,6 @@ export default function Home() {
 	);
 }
 
-Home.getLayout = function (Page: ReactElement) {
+Page.getLayout = function (Page: ReactElement) {
 	return <BaseLayout title='Trang chủ'>{Page}</BaseLayout>;
 };

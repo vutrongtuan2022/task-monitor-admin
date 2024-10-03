@@ -1,25 +1,25 @@
 import Head from 'next/head';
 import {Fragment, ReactElement} from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
-import MainPageTask from '~/components/pages/task/MainPageTask';
+import MainWorkReport from '~/components/pages/project/MainWorkReport';
 
 export default function Page() {
 	return (
 		<Fragment>
 			<Head>
-				<title>Quản lý quy trình</title>
-				<meta name='description' content='Quản lý quy trình' />
+				<title>Chi tiết dự án</title>
+				<meta name='description' content='Chi tiết dự án' />
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<MainPageTask />
+			<MainWorkReport />
 		</Fragment>
 	);
 }
 
 Page.getLayout = function (Page: ReactElement) {
 	return (
-		<BaseLayout isAction={false} title='Quản lý quy trình'>
+		<BaseLayout isAction={false} title='Chi tiết dự án'>
 			{Page}
 		</BaseLayout>
 	);

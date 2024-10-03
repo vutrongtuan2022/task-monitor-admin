@@ -22,8 +22,14 @@ export enum PATH {
 	ChangePassword = '/change-password',
 
 	Home = '/',
+
 	Project = '/project',
-	CreateProject = '/project/create',
+	ProjectCreate = '/project/create',
+	ProjectInfo = '/project/infor-project',
+	ProjectContractor = '/project/infor-contractor',
+	ProjectDisbursementProgress = '/project/disbursement-progress',
+	ProjectWorkReport = '/project/work-report',
+
 	Task = '/task',
 	Branch = '/branch',
 	Contractor = '/contractor',
