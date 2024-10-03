@@ -1,25 +1,25 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {IFormCreateProject, PropsCreateProject} from './interfaces';
+import { IFormCreateProject, PropsCreateProject } from './interfaces';
 import styles from './CreateProject.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import {PATH} from '~/constants/config';
-import Form, {Input} from '~/components/common/Form';
-import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
-import {httpRequest} from '~/services';
+import { PATH } from '~/constants/config';
+import Form, { Input } from '~/components/common/Form';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEY, STATUS_CONFIG, TYPE_ACCOUNT } from '~/constants/config/enum';
+import { httpRequest } from '~/services';
 import branchesServices from '~/services/branchesServices';
-import Select, {Option} from '~/components/common/Select';
+import Select, { Option } from '~/components/common/Select';
 import clsx from 'clsx';
 import taskCatServices from '~/services/taskCatServices';
 import userServices from '~/services/userServices';
 import SelectMany from '~/components/common/SelectMany';
-import {convertCoin, price} from '~/common/funcs/convertCoin';
+import { convertCoin, price } from '~/common/funcs/convertCoin';
 import provineServices from '~/services/provineServices';
 import DatePicker from '~/components/common/DatePicker';
 import TextArea from '~/components/common/Form/components/TextArea';
 
-function CreateProject({}: PropsCreateProject) {
+function CreateProject({ }: PropsCreateProject) {
 	const [users, setUsers] = useState<any[]>([]);
 	const [form, setForm] = useState<IFormCreateProject>({
 		branchUuid: '',
@@ -48,7 +48,7 @@ function CreateProject({}: PropsCreateProject) {
 		}));
 	}, [form.realBudget, form.reserveBudget]);
 
-	const {data: listBranches} = useQuery([QUERY_KEY.dropdown_branches], {
+	const { data: listBranches } = useQuery([QUERY_KEY.dropdown_branches], {
 		queryFn: () =>
 			httpRequest({
 				http: branchesServices.categoryBranches({
@@ -61,7 +61,7 @@ function CreateProject({}: PropsCreateProject) {
 		},
 	});
 
-	const {data: listTasks} = useQuery([QUERY_KEY.dropdown_task_cat], {
+	const { data: listTasks } = useQuery([QUERY_KEY.dropdown_task_cat], {
 		queryFn: () =>
 			httpRequest({
 				http: taskCatServices.categoryTaskCat({
@@ -74,7 +74,7 @@ function CreateProject({}: PropsCreateProject) {
 		},
 	});
 
-	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
+	const { data: listUser } = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
 			httpRequest({
 				http: userServices.categoryUser({
@@ -89,7 +89,7 @@ function CreateProject({}: PropsCreateProject) {
 		},
 	});
 
-	const {data: listManager} = useQuery([QUERY_KEY.dropdown_manager], {
+	const { data: listManager } = useQuery([QUERY_KEY.dropdown_manager], {
 		queryFn: () =>
 			httpRequest({
 				http: userServices.categoryUser({
@@ -104,7 +104,7 @@ function CreateProject({}: PropsCreateProject) {
 		},
 	});
 
-	const {data: listProvince} = useQuery([QUERY_KEY.dropdown_province], {
+	const { data: listProvince } = useQuery([QUERY_KEY.dropdown_province], {
 		queryFn: () =>
 			httpRequest({
 				http: provineServices.listProvine({
@@ -116,7 +116,7 @@ function CreateProject({}: PropsCreateProject) {
 		},
 	});
 
-	const {data: listDistrict} = useQuery([QUERY_KEY.dropdown_district, form.matp], {
+	const { data: listDistrict } = useQuery([QUERY_KEY.dropdown_district, form.matp], {
 		queryFn: () =>
 			httpRequest({
 				http: provineServices.listDistrict({
@@ -130,7 +130,7 @@ function CreateProject({}: PropsCreateProject) {
 		enabled: !!form?.matp,
 	});
 
-	const {data: listTown} = useQuery([QUERY_KEY.dropdown_town, form.maqh], {
+	const { data: listTown } = useQuery([QUERY_KEY.dropdown_town, form.maqh], {
 		queryFn: () =>
 			httpRequest({
 				http: provineServices.listTown({
@@ -171,7 +171,7 @@ function CreateProject({}: PropsCreateProject) {
 										isSearch={true}
 										label={
 											<span>
-												Tên chi nhánh <span style={{color: 'red'}}>*</span>
+												Tên chi nhánh <span style={{ color: 'red' }}>*</span>
 											</span>
 										}
 										name='branchUuid'
@@ -196,7 +196,7 @@ function CreateProject({}: PropsCreateProject) {
 									<Input
 										label={
 											<span>
-												Mã chi nhánh <span style={{color: 'red'}}>*</span>
+												Mã chi nhánh <span style={{ color: 'red' }}>*</span>
 											</span>
 										}
 										type='text'
@@ -210,7 +210,7 @@ function CreateProject({}: PropsCreateProject) {
 									<Input
 										label={
 											<span>
-												Tên công trình <span style={{color: 'red'}}>*</span>
+												Tên công trình <span style={{ color: 'red' }}>*</span>
 											</span>
 										}
 										type='text'
@@ -224,7 +224,7 @@ function CreateProject({}: PropsCreateProject) {
 										isSearch={true}
 										label={
 											<span>
-												Quy trình áp dụng <span style={{color: 'red'}}>*</span>
+												Quy trình áp dụng <span style={{ color: 'red' }}>*</span>
 											</span>
 										}
 										name='type'
@@ -251,7 +251,7 @@ function CreateProject({}: PropsCreateProject) {
 										placeholder='Chọn'
 										label={
 											<span>
-												Cán bộ chuyên quản <span style={{color: 'red'}}>*</span>
+												Cán bộ chuyên quản <span style={{ color: 'red' }}>*</span>
 											</span>
 										}
 										value={users}
@@ -272,7 +272,7 @@ function CreateProject({}: PropsCreateProject) {
 										isSearch={true}
 										label={
 											<span>
-												Lãnh đạo phụ trách <span style={{color: 'red'}}>*</span>
+												Lãnh đạo phụ trách <span style={{ color: 'red' }}>*</span>
 											</span>
 										}
 										name='managerUuid'
@@ -304,7 +304,7 @@ function CreateProject({}: PropsCreateProject) {
 								<Input
 									label={
 										<span>
-											Kế hoạch vốn đầu tư <span style={{color: 'red'}}>*</span>
+											Kế hoạch vốn đầu tư <span style={{ color: 'red' }}>*</span>
 										</span>
 									}
 									placeholder='Nhập kế hoạch vốn đầu tư'
@@ -319,7 +319,7 @@ function CreateProject({}: PropsCreateProject) {
 								<Input
 									label={
 										<span>
-											Tổng dự toán <span style={{color: 'red'}}>*</span>
+											Tổng dự toán <span style={{ color: 'red' }}>*</span>
 										</span>
 									}
 									type='text'
@@ -334,7 +334,7 @@ function CreateProject({}: PropsCreateProject) {
 								<Input
 									label={
 										<span>
-											Vốn dự phòng được duyệt <span style={{color: 'red'}}>*</span>
+											Vốn dự phòng được duyệt <span style={{ color: 'red' }}>*</span>
 										</span>
 									}
 									type='text'
@@ -349,7 +349,7 @@ function CreateProject({}: PropsCreateProject) {
 								<Input
 									label={
 										<span>
-											Tổng mức đầu tư dự án <span style={{color: 'red'}}>*</span>
+											Tổng mức đầu tư dự án <span style={{ color: 'red' }}>*</span>
 										</span>
 									}
 									placeholder='Nhập tổng mức đầu tư dự án'
@@ -370,10 +370,11 @@ function CreateProject({}: PropsCreateProject) {
 						<div className={styles.form}>
 							<div className={styles.col_3}>
 								<DatePicker
+									onClean={true}
 									icon={true}
 									label={
 										<span>
-											Thời gian bắt đầu dự kiến <span style={{color: 'red'}}>*</span>
+											Thời gian bắt đầu dự kiến <span style={{ color: 'red' }}>*</span>
 										</span>
 									}
 									name='expectStart'
@@ -387,10 +388,11 @@ function CreateProject({}: PropsCreateProject) {
 									}
 								/>
 								<DatePicker
+									onClean={true}
 									icon={true}
 									label={
 										<span>
-											Thời gian kết thúc dự kiến <span style={{color: 'red'}}>*</span>
+											Thời gian kết thúc dự kiến <span style={{ color: 'red' }}>*</span>
 										</span>
 									}
 									name='expectEnd'
@@ -404,10 +406,11 @@ function CreateProject({}: PropsCreateProject) {
 									}
 								/>
 								<DatePicker
+									onClean={true}
 									icon={true}
 									label={
 										<span>
-											Thời gian bắt đầu dự án được phê duyệt <span style={{color: 'red'}}>*</span>
+											Thời gian bắt đầu dự án được phê duyệt <span style={{ color: 'red' }}>*</span>
 										</span>
 									}
 									name='realStart'
