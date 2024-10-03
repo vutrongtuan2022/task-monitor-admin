@@ -1,9 +1,8 @@
 import Head from 'next/head';
-import {Fragment, ReactElement, useState} from 'react';
+import { Fragment, ReactElement } from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 
 export default function Page() {
-	const [listChecked, setListChecked] = useState<any[]>([]);
 	return (
 		<Fragment>
 			<Head>
@@ -14,6 +13,7 @@ export default function Page() {
 			</Head>
 
 			<div>Trang chủ</div>
+
 		</Fragment>
 	);
 }
