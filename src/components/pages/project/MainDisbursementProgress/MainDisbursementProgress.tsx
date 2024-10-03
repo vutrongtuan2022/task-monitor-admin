@@ -138,19 +138,19 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 									},
 									{
 										title: 'Báo cáo tháng',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>{'Báo cáo tháng 10'}</>,
 									},
 									{
 										title: 'Ngày gửi báo cáo',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>01/09/2024</>,
 									},
 									{
 										title: 'Số tiền giải ngân (VND)',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>400.000.000</>,
 									},
 									{
 										title: 'Người báo cáo',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>Vũ Thị Ngân</>,
 									},
 									{
 										title: 'Trạng thái',

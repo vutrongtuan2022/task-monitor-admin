@@ -137,23 +137,23 @@ function MainWorkReport({}: PropsMainWorkReport) {
 									},
 									{
 										title: 'Tên công việc',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>{'Lập thiết kế kiến trúc sơ bộ công trình'}</>,
 									},
 									{
 										title: 'Giai đoạn thực hiện',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>{'Giai đoạn chuẩn bị đầu tư'}</>,
 									},
 									{
 										title: 'Megatype',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>{'Subtask'}</>,
 									},
 									{
 										title: 'Công việc bổ sung',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>{'2'}</>,
 									},
 									{
 										title: 'Người báo cáo',
-										render: (data: any) => <>{'---'}</>,
+										render: (data: any) => <>{'Vũ Thị Ngân'}</>,
 									},
 									{
 										title: 'Trạng thái',
@@ -186,7 +186,7 @@ function MainWorkReport({}: PropsMainWorkReport) {
 									},
 									{
 										title: 'Tình trạng',
-										render: (data: any) => <div></div>,
+										render: (data: any) => <div>Đã báo cáo</div>,
 									},
 								]}
 							/>
