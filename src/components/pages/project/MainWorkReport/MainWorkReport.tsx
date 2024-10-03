@@ -6,8 +6,6 @@ import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
 import {useRouter} from 'next/router';
 import Button from '~/components/common/Button';
-import Image from 'next/image';
-import icons from '~/constants/images/icons';
 import Progress from '~/components/common/Progress';
 import {clsx} from 'clsx';
 import GridColumn from '~/components/layouts/GridColumn';
@@ -178,9 +176,11 @@ function MainWorkReport({}: PropsMainWorkReport) {
 														},
 													]}
 												/>
-												<Link href={``} className={styles.link_state}>
-													Gửi lại
-												</Link>
+												{data === 1 && (
+													<Link href={`#`} className={styles.link_state}>
+														Gửi lại
+													</Link>
+												)}
 											</div>
 										),
 									},
