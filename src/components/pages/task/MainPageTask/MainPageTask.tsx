@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PropsMainPageTask } from './interfaces';
+import {PropsMainPageTask} from './interfaces';
 import styles from './MainPageTask.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -12,9 +12,9 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
-import { Edit, Trash } from 'iconsax-react';
+import {Edit, Trash} from 'iconsax-react';
 
-function MainPageTask({ }: PropsMainPageTask) {
+function MainPageTask({}: PropsMainPageTask) {
 	return (
 		<div className={styles.container}>
 			<div className={styles.head}>
@@ -32,7 +32,7 @@ function MainPageTask({ }: PropsMainPageTask) {
 						href={''}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 					>
-						Thêm mới dự án
+						Thêm mới quy trình
 					</Button>
 				</div>
 			</div>
@@ -50,7 +50,7 @@ function MainPageTask({ }: PropsMainPageTask) {
 									href={''}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 								>
-									Thêm mới dự án
+									Thêm mới quy trình
 								</Button>
 							}
 						/>
@@ -67,35 +67,29 @@ function MainPageTask({ }: PropsMainPageTask) {
 							},
 
 							{
-								title: 'Mã nhóm nhà thầu',
-								render: (data: any) => <>NNT04422</>,
+								title: 'Tên quy trình',
+								render: (data: any) => <>Quy mô phòng giao dịch</>,
 							},
 							{
-								title: 'Tên nhóm nhà thầu',
-								render: (data: any) => <>Nhóm nhà thầu số 3</>,
+								title: 'Ngày tạo',
+								render: (data: any) => <>15/07/2024 09:52</>,
 							},
-							{
-								title: 'Mô tả',
-								render: (data: any) => <span>---</span>,
-							},
-
 							{
 								title: 'Hành động',
 								fixedRight: true,
 								render: (data: any) => (
-									<div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
-											onClick={() => { }}
+											onClick={() => {}}
 										/>
-
 										<IconCustom
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
-											onClick={() => { }}
+											onClick={() => {}}
 										/>
 									</div>
 								),
