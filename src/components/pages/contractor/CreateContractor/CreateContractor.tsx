@@ -1,23 +1,23 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import {IFormCreateContractor, PropsCreateContractor} from './interfaces';
+import { IFormCreateContractor, PropsCreateContractor } from './interfaces';
 import styles from './CreateContractor.module.scss';
-import {IoClose} from 'react-icons/io5';
+import { IoClose } from 'react-icons/io5';
 import Button from '~/components/common/Button';
-import {FolderOpen} from 'iconsax-react';
-import Form, {FormContext, Input} from '~/components/common/Form';
+import { FolderOpen } from 'iconsax-react';
+import Form, { FormContext, Input } from '~/components/common/Form';
 import TextArea from '~/components/common/Form/components/TextArea';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {httpRequest} from '~/services';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { httpRequest } from '~/services';
 import contractorcatServices from '~/services/contractorcatServices';
-import {QUERY_KEY} from '~/constants/config/enum';
+import { QUERY_KEY, STATUS_CONFIG } from '~/constants/config/enum';
 import Loading from '~/components/common/Loading';
 import contractorServices from '~/services/contractorServices';
-import Select, {Option} from '~/components/common/Select';
+import Select, { Option } from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
-import {toastWarn} from '~/common/funcs/toast';
+import { toastWarn } from '~/common/funcs/toast';
 
-function CreateContractor({onClose}: PropsCreateContractor) {
+function CreateContractor({ onClose }: PropsCreateContractor) {
 	const queryClient = useQueryClient();
 
 	const [form, setForm] = useState<IFormCreateContractor>({
@@ -33,8 +33,9 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 	const listGroupContractor = useQuery([QUERY_KEY.dropdown_category_group_contractor], {
 		queryFn: () =>
 			httpRequest({
-				http: contractorcatServices.categoryCat({
+				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
 				}),
 			}),
 		select(data) {
@@ -119,7 +120,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 
 	const handleSubmit = () => {
 		if (!form.type) {
-			return toastWarn({msg: 'Vui lòng chọn nhóm nhà thầu!'});
+			return toastWarn({ msg: 'Vui lòng chọn nhóm nhà thầu!' });
 		}
 
 		return funcCreateContractor.mutate();
@@ -139,7 +140,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 						isRequired
 						label={
 							<span>
-								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+								Tên nhà thầu <span style={{ color: 'red' }}>*</span>
 							</span>
 						}
 					/>
@@ -158,7 +159,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 							}
 							label={
 								<span>
-									Thuộc nhóm nhà thầu<span style={{color: 'red'}}>*</span>
+									Thuộc nhóm nhà thầu<span style={{ color: 'red' }}>*</span>
 								</span>
 							}
 						>
@@ -240,7 +241,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 						</Button>
 					</div>
 					<FormContext.Consumer>
-						{({isDone}) => (
+						{({ isDone }) => (
 							<div className={styles.btn}>
 								<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
 									Lưu lại
