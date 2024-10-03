@@ -106,7 +106,7 @@ function MainPageUser({ }: PropsMainPageUser) {
 
 					<div className={styles.btn}>
 						<Button
-							p_14_23
+							p_14_24
 							rounded_8
 							light-blue
 							href={''}
@@ -133,7 +133,7 @@ function MainPageUser({ }: PropsMainPageUser) {
 							<Noti
 								button={
 									<Button
-										p_14_23
+										p_14_24
 										rounded_8
 										light-blue
 										href={''}
