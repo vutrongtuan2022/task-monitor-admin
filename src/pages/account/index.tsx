@@ -4,7 +4,7 @@ import BaseLayout from '~/components/layouts/BaseLayout';
 import MainPageAccount from '~/components/pages/account/MainPageAccount';
 import MainPageUser from '~/components/pages/user/MainPageUser';
 
-export default function Home() {
+export default function Page() {
 	return (
 		<Fragment>
 			<Head>
@@ -19,7 +19,7 @@ export default function Home() {
 	);
 }
 
-Home.getLayout = function (Page: ReactElement) {
+Page.getLayout = function (Page: ReactElement) {
 	return (
 		<BaseLayout isAction={false} title='Quản lý tài khoản'>
 			{Page}

@@ -2,7 +2,7 @@ import Head from 'next/head';
 import {Fragment, ReactElement} from 'react';
 import BaseLayout from '~/components/layouts/BaseLayout';
 
-export default function Home() {
+export default function Page() {
 	return (
 		<Fragment>
 			<Head>
@@ -16,7 +16,7 @@ export default function Home() {
 	);
 }
 
-Home.getLayout = function (Page: ReactElement) {
+Page.getLayout = function (Page: ReactElement) {
 	return (
 		<BaseLayout isAction={false} title='Thông tin cá nhân'>
 			{Page}

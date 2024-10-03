@@ -108,7 +108,7 @@ function MainPageProject({}: PropsMainPageProject) {
 						p_10_23
 						rounded_8
 						light-blue
-						href={PATH.CreateProject}
+						href={PATH.ProjectCreate}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 					>
 						Thêm mới dự án
@@ -126,7 +126,7 @@ function MainPageProject({}: PropsMainPageProject) {
 									p_14_23
 									rounded_8
 									light-blue
-									href={PATH.CreateProject}
+									href={PATH.ProjectCreate}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 								>
 									Thêm mới dự án
@@ -148,7 +148,7 @@ function MainPageProject({}: PropsMainPageProject) {
 								fixedLeft: true,
 								render: (data: IProject) => (
 									<Tippy content='Chi tiết dự án'>
-										<Link href={`/project/${data?.uuid}`} className={styles.link}>
+										<Link href={`${PATH.ProjectInfo}?_uuid=${data?.uuid}`} className={styles.link}>
 											{data?.code}
 										</Link>
 									</Tippy>
