@@ -15,7 +15,6 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-
 	detailContractor: (
 		data: {
 			uuid: string;
@@ -26,7 +25,6 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-
 	updateStatusContractor: (
 		data: {
 			uuid: string;
@@ -37,7 +35,6 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-
 	upsertContractor: (
 		data: {
 			uuid: string;
@@ -52,6 +49,18 @@ const contractorServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Contractor/upsert-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	categoryContractor: (
+		data: {
+			keyword: string;
+			status: number;
+			type: number;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/category-contractor`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

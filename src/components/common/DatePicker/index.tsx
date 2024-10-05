@@ -1,12 +1,12 @@
-import { memo, useEffect, useState } from 'react';
+import {memo, useEffect, useState} from 'react';
 import Calendar from './components/Calendar';
 import HeadlessTippy from '@tippyjs/react/headless';
-import { PropsDatePicker } from './interface';
+import {PropsDatePicker} from './interface';
 import clsx from 'clsx';
 import styles from './DatePicker.module.scss';
 import convertDate from '~/common/funcs/convertDate';
-import { CalendarSearch } from 'iconsax-react';
-import { RiCloseCircleFill } from 'react-icons/ri';
+import {CalendarSearch} from 'iconsax-react';
+import {RiCloseCircleFill} from 'react-icons/ri';
 
 function DatePicker({
 	placeholder,
@@ -41,8 +41,6 @@ function DatePicker({
 		onSetValue(null);
 		setInputValue('');
 	};
-
-	console.log('value', value);
 
 	const formatDateInput = (value: string) => {
 		const cleanValue = value.replace(/\D/g, '');

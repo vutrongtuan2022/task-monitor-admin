@@ -1,26 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
-import { IFormCreateProject, PropsCreateProject } from './interfaces';
+import {IFormCreateProject, PropsCreateProject} from './interfaces';
 import styles from './CreateProject.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import { PATH } from '~/constants/config';
-import Form, { Input } from '~/components/common/Form';
-import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEY, STATUS_CONFIG, TYPE_ACCOUNT } from '~/constants/config/enum';
-import { httpRequest } from '~/services';
+import {PATH} from '~/constants/config';
+import Form, {Input} from '~/components/common/Form';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
 import branchesServices from '~/services/branchesServices';
-import Select, { Option } from '~/components/common/Select';
+import Select, {Option} from '~/components/common/Select';
 import clsx from 'clsx';
 import taskCatServices from '~/services/taskCatServices';
 import userServices from '~/services/userServices';
 import SelectMany from '~/components/common/SelectMany';
-import { convertCoin, price } from '~/common/funcs/convertCoin';
+import {convertCoin, price} from '~/common/funcs/convertCoin';
 import provineServices from '~/services/provineServices';
 import DatePicker from '~/components/common/DatePicker';
 import TextArea from '~/components/common/Form/components/TextArea';
+import contractorcatServices from '~/services/contractorcatServices';
+import GroupContractor from '../GroupContractor';
+import Button from '~/components/common/Button';
+import projectServices from '~/services/projectServices';
+import moment from 'moment';
+import {useRouter} from 'next/router';
+import Loading from '~/components/common/Loading';
+import {toastWarn} from '~/common/funcs/toast';
 
-function CreateProject({ }: PropsCreateProject) {
+function CreateProject({}: PropsCreateProject) {
+	const router = useRouter();
+
 	const [users, setUsers] = useState<any[]>([]);
+	const [listContractor, setListContractor] = useState<
+		{
+			idGroupContractor: number;
+			uuidGroupContractor: string;
+			codeGroupContractor: string;
+			nameGroupContractor: string;
+			uuidContractor: string;
+			codeContractor: string;
+			nameContractor: string;
+		}[]
+	>([]);
 	const [form, setForm] = useState<IFormCreateProject>({
 		branchUuid: '',
 		branchCode: '',
@@ -48,7 +69,7 @@ function CreateProject({ }: PropsCreateProject) {
 		}));
 	}, [form.realBudget, form.reserveBudget]);
 
-	const { data: listBranches } = useQuery([QUERY_KEY.dropdown_branches], {
+	const {data: listBranches} = useQuery([QUERY_KEY.dropdown_branches], {
 		queryFn: () =>
 			httpRequest({
 				http: branchesServices.categoryBranches({
@@ -61,7 +82,7 @@ function CreateProject({ }: PropsCreateProject) {
 		},
 	});
 
-	const { data: listTasks } = useQuery([QUERY_KEY.dropdown_task_cat], {
+	const {data: listTasks} = useQuery([QUERY_KEY.dropdown_task_cat], {
 		queryFn: () =>
 			httpRequest({
 				http: taskCatServices.categoryTaskCat({
@@ -74,7 +95,7 @@ function CreateProject({ }: PropsCreateProject) {
 		},
 	});
 
-	const { data: listUser } = useQuery([QUERY_KEY.dropdown_user], {
+	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
 			httpRequest({
 				http: userServices.categoryUser({
@@ -89,7 +110,7 @@ function CreateProject({ }: PropsCreateProject) {
 		},
 	});
 
-	const { data: listManager } = useQuery([QUERY_KEY.dropdown_manager], {
+	const {data: listManager} = useQuery([QUERY_KEY.dropdown_manager], {
 		queryFn: () =>
 			httpRequest({
 				http: userServices.categoryUser({
@@ -104,7 +125,7 @@ function CreateProject({ }: PropsCreateProject) {
 		},
 	});
 
-	const { data: listProvince } = useQuery([QUERY_KEY.dropdown_province], {
+	const {data: listProvince} = useQuery([QUERY_KEY.dropdown_province], {
 		queryFn: () =>
 			httpRequest({
 				http: provineServices.listProvine({
@@ -116,7 +137,7 @@ function CreateProject({ }: PropsCreateProject) {
 		},
 	});
 
-	const { data: listDistrict } = useQuery([QUERY_KEY.dropdown_district, form.matp], {
+	const {data: listDistrict} = useQuery([QUERY_KEY.dropdown_district, form.matp], {
 		queryFn: () =>
 			httpRequest({
 				http: provineServices.listDistrict({
@@ -130,7 +151,7 @@ function CreateProject({ }: PropsCreateProject) {
 		enabled: !!form?.matp,
 	});
 
-	const { data: listTown } = useQuery([QUERY_KEY.dropdown_town, form.maqh], {
+	const {data: listTown} = useQuery([QUERY_KEY.dropdown_town, form.maqh], {
 		queryFn: () =>
 			httpRequest({
 				http: provineServices.listTown({
@@ -144,8 +165,95 @@ function CreateProject({ }: PropsCreateProject) {
 		enabled: !!form?.maqh,
 	});
 
+	useQuery([QUERY_KEY.dropdown_group_contractor], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorcatServices.categoryContractorCat({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					isDefault: 2,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setListContractor(
+					data?.map((v: any) => ({
+						idGroupContractor: v?.id,
+						uuidGroupContractor: v?.uuid,
+						codeGroupContractor: v?.code,
+						nameGroupContractor: v?.name,
+						uuidContractor: '',
+						codeContractor: '',
+						nameContractor: '',
+					}))
+				);
+			}
+		},
+	});
+
+	const funcCreateProject = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Thêm dự án thành công!',
+				http: projectServices.createProject({
+					branchUuid: form?.branchUuid,
+					name: form?.name,
+					type: form?.type!,
+					employeeUuid: users?.map((v: any) => v?.uuid),
+					managerUuid: form?.managerUuid,
+					contractorUuid: listContractor?.map((v) => v?.uuidContractor),
+					description: form?.description,
+					expectBudget: price(form?.expectBudget),
+					realBudget: price(form?.realBudget),
+					reserveBudget: price(form?.reserveBudget),
+					expectStart: moment(form?.expectStart).format('YYYY-MM-DD'),
+					expectEnd: moment(form?.expectEnd).format('YYYY-MM-DD'),
+					realStart: moment(form?.realStart).format('YYYY-MM-DD'),
+					matp: form?.matp,
+					maqh: form?.maqh,
+					xaid: form?.xaid,
+					address: form?.address,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				router.back();
+			}
+		},
+	});
+
+	const handleCreateProject = () => {
+		if (!form.type) {
+			return toastWarn({msg: 'Chọn quy trình áp dụng!'});
+		}
+		if (users?.length == 0) {
+			return toastWarn({msg: 'Chọn cán bộ chuyên quản!'});
+		}
+		if (!form.managerUuid) {
+			return toastWarn({msg: 'Chọn lãnh đạo phụ trách!'});
+		}
+		if (listContractor?.some((v) => v.uuidContractor == '')) {
+			return toastWarn({msg: 'Chọn đầy đủ nhà thầu!'});
+		}
+		if (!form?.expectStart) {
+			return toastWarn({msg: 'Chọn thời gian bắt đầu dự kiến!'});
+		}
+		if (!form?.expectEnd) {
+			return toastWarn({msg: 'Chọn thời gian kết thúc dự kiến!'});
+		}
+		if (!form?.realStart) {
+			return toastWarn({msg: 'Chọn thời gian bắt đầu dự án được phê duyệt!'});
+		}
+
+		return funcCreateProject.mutate();
+	};
+
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcCreateProject.isLoading} />
 			<Breadcrumb
 				listUrls={[
 					{
@@ -157,6 +265,24 @@ function CreateProject({ }: PropsCreateProject) {
 						title: 'Thêm mới dự án',
 					},
 				]}
+				action={
+					<div className={styles.group_btn}>
+						<Button
+							p_14_24
+							rounded_8
+							light-red
+							onClick={(e) => {
+								e.preventDefault();
+								window.history.back();
+							}}
+						>
+							Hủy bỏ
+						</Button>
+						<Button p_14_24 rounded_8 blueLinear onClick={handleCreateProject}>
+							Lưu lại
+						</Button>
+					</div>
+				}
 			/>
 			<div className={styles.main}>
 				<Form form={form} setForm={setForm}>
@@ -171,7 +297,7 @@ function CreateProject({ }: PropsCreateProject) {
 										isSearch={true}
 										label={
 											<span>
-												Tên chi nhánh <span style={{ color: 'red' }}>*</span>
+												Tên chi nhánh <span style={{color: 'red'}}>*</span>
 											</span>
 										}
 										name='branchUuid'
@@ -196,11 +322,11 @@ function CreateProject({ }: PropsCreateProject) {
 									<Input
 										label={
 											<span>
-												Mã chi nhánh <span style={{ color: 'red' }}>*</span>
+												Mã chi nhánh <span style={{color: 'red'}}>*</span>
 											</span>
 										}
 										type='text'
-										placeholder='Mã tài khoản'
+										placeholder='Mã chi nhánh'
 										name='branchCode'
 										value={form?.branchCode}
 										readOnly={true}
@@ -210,7 +336,7 @@ function CreateProject({ }: PropsCreateProject) {
 									<Input
 										label={
 											<span>
-												Tên công trình <span style={{ color: 'red' }}>*</span>
+												Tên công trình <span style={{color: 'red'}}>*</span>
 											</span>
 										}
 										type='text'
@@ -224,7 +350,7 @@ function CreateProject({ }: PropsCreateProject) {
 										isSearch={true}
 										label={
 											<span>
-												Quy trình áp dụng <span style={{ color: 'red' }}>*</span>
+												Quy trình áp dụng <span style={{color: 'red'}}>*</span>
 											</span>
 										}
 										name='type'
@@ -251,7 +377,7 @@ function CreateProject({ }: PropsCreateProject) {
 										placeholder='Chọn'
 										label={
 											<span>
-												Cán bộ chuyên quản <span style={{ color: 'red' }}>*</span>
+												Cán bộ chuyên quản <span style={{color: 'red'}}>*</span>
 											</span>
 										}
 										value={users}
@@ -272,7 +398,7 @@ function CreateProject({ }: PropsCreateProject) {
 										isSearch={true}
 										label={
 											<span>
-												Lãnh đạo phụ trách <span style={{ color: 'red' }}>*</span>
+												Lãnh đạo phụ trách <span style={{color: 'red'}}>*</span>
 											</span>
 										}
 										name='managerUuid'
@@ -287,12 +413,30 @@ function CreateProject({ }: PropsCreateProject) {
 												onClick={() =>
 													setForm((prev) => ({
 														...prev,
-														managerUuid: v?.id,
+														managerUuid: v?.uuid,
 													}))
 												}
 											/>
 										))}
 									</Select>
+								</div>
+								<div className={styles.mt}>
+									<div className={styles.col_2}>
+										<p className={styles.label}>
+											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
+										</p>
+										<p className={styles.label}>
+											Nhà thầu <span style={{color: 'red'}}>*</span>
+										</p>
+									</div>
+									{listContractor?.map((v) => (
+										<GroupContractor
+											key={v?.uuidGroupContractor}
+											data={v}
+											listContractor={listContractor}
+											setListContractor={setListContractor}
+										/>
+									))}
 								</div>
 							</div>
 						</div>
@@ -304,7 +448,7 @@ function CreateProject({ }: PropsCreateProject) {
 								<Input
 									label={
 										<span>
-											Kế hoạch vốn đầu tư <span style={{ color: 'red' }}>*</span>
+											Kế hoạch vốn đầu tư <span style={{color: 'red'}}>*</span>
 										</span>
 									}
 									placeholder='Nhập kế hoạch vốn đầu tư'
@@ -319,7 +463,7 @@ function CreateProject({ }: PropsCreateProject) {
 								<Input
 									label={
 										<span>
-											Tổng dự toán <span style={{ color: 'red' }}>*</span>
+											Tổng dự toán <span style={{color: 'red'}}>*</span>
 										</span>
 									}
 									type='text'
@@ -334,7 +478,7 @@ function CreateProject({ }: PropsCreateProject) {
 								<Input
 									label={
 										<span>
-											Vốn dự phòng được duyệt <span style={{ color: 'red' }}>*</span>
+											Vốn dự phòng được duyệt <span style={{color: 'red'}}>*</span>
 										</span>
 									}
 									type='text'
@@ -349,7 +493,7 @@ function CreateProject({ }: PropsCreateProject) {
 								<Input
 									label={
 										<span>
-											Tổng mức đầu tư dự án <span style={{ color: 'red' }}>*</span>
+											Tổng mức đầu tư dự án <span style={{color: 'red'}}>*</span>
 										</span>
 									}
 									placeholder='Nhập tổng mức đầu tư dự án'
@@ -374,7 +518,7 @@ function CreateProject({ }: PropsCreateProject) {
 									icon={true}
 									label={
 										<span>
-											Thời gian bắt đầu dự kiến <span style={{ color: 'red' }}>*</span>
+											Thời gian bắt đầu dự kiến <span style={{color: 'red'}}>*</span>
 										</span>
 									}
 									name='expectStart'
@@ -392,7 +536,7 @@ function CreateProject({ }: PropsCreateProject) {
 									icon={true}
 									label={
 										<span>
-											Thời gian kết thúc dự kiến <span style={{ color: 'red' }}>*</span>
+											Thời gian kết thúc dự kiến <span style={{color: 'red'}}>*</span>
 										</span>
 									}
 									name='expectEnd'
@@ -410,7 +554,7 @@ function CreateProject({ }: PropsCreateProject) {
 									icon={true}
 									label={
 										<span>
-											Thời gian bắt đầu dự án được phê duyệt <span style={{ color: 'red' }}>*</span>
+											Thời gian bắt đầu dự án được phê duyệt <span style={{color: 'red'}}>*</span>
 										</span>
 									}
 									name='realStart'

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {Fragment, useState} from 'react';
 
-import {PropsMainInfoProject} from './interfaces';
+import {IDetailInfoProject, PropsMainInfoProject} from './interfaces';
 import styles from './MainInfoProject.module.scss';
 import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
@@ -8,255 +8,361 @@ import {useRouter} from 'next/router';
 import Button from '~/components/common/Button';
 import GridColumn from '~/components/layouts/GridColumn';
 import StateActive from '~/components/common/StateActive';
-import {TYPE_WORK_STATUS} from '~/constants/config/enum';
+import {QUERY_KEY, TYPE_WORK_STATUS} from '~/constants/config/enum';
 import Progress from '~/components/common/Progress';
 import Link from 'next/link';
 import Moment from 'react-moment';
 import clsx from 'clsx';
+import {httpRequest} from '~/services';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import projectServices from '~/services/projectServices';
+import {convertCoin} from '~/common/funcs/convertCoin';
+import Dialog from '~/components/common/Dialog';
+import Loading from '~/components/common/Loading';
+import Breadcrumb from '~/components/common/Breadcrumb';
+import icons from '~/constants/images/icons';
 
 function MainInfoProject({}: PropsMainInfoProject) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
 	const {_uuid} = router.query;
 
-	return (
-		<LayoutPages
-			listPages={[
-				{
-					title: 'Thông tin chung',
-					path: `${PATH.ProjectInfo}?_uuid=${_uuid}`,
-				},
-				{
-					title: 'Báo cáo công việc',
-					path: `${PATH.ProjectWorkReport}?_uuid=${_uuid}`,
-				},
-				{
-					title: 'Tiến độ giải ngân',
-					path: `${PATH.ProjectDisbursementProgress}?_uuid=${_uuid}`,
-				},
-				{
-					title: 'Thông tin nhà thầu',
-					path: `${PATH.ProjectContractor}?_uuid=${_uuid}`,
-				},
-			]}
-			action={
-				<div className={styles.group_btn}>
-					<Button p_14_24 rounded_8 blueLinear>
-						Thực hiện dự án
-					</Button>
-					<Button p_14_24 rounded_8 light-red>
-						Xóa
-					</Button>
-					<Button p_14_24 rounded_8 primaryLinear>
-						Chỉnh sửa
-					</Button>
-				</div>
+	const [openDelete, setOpenDelete] = useState<boolean>(false);
+	const [openStart, setOpenStart] = useState<boolean>(false);
+
+	const {data: detailProject} = useQuery<IDetailInfoProject>([QUERY_KEY.detail_project, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: projectServices.detailInfoProject({
+					uuid: _uuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuid,
+	});
+
+	const funcDeleteProject = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa dự án thành công',
+				http: projectServices.updateStatus({
+					uuid: _uuid as string,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setOpenDelete(false);
+				router.replace(`${PATH.Project}`, undefined, {
+					scroll: false,
+					shallow: false,
+				});
 			}
-		>
-			<div className={styles.grid}>
-				<div className={styles.basic_info}>
-					<div className={styles.head}>
-						<h4>Thông tin cơ bản</h4>
-						<div className={styles.state}>
-							<p>Trạng thái dự án:</p>
-							<StateActive
-								stateActive={1}
-								listState={[
-									{
-										state: TYPE_WORK_STATUS.PREPARE,
-										text: 'Chuẩn bị',
-										textColor: '#fff',
-										backgroundColor: '#5B70B3',
-									},
-									{
-										state: TYPE_WORK_STATUS.DO,
-										text: 'Thực hiện',
-										textColor: '#fff',
-										backgroundColor: '#16C1F3',
-									},
-									{
-										state: TYPE_WORK_STATUS.FINISH,
-										text: 'Kết thúc',
-										textColor: '#fff',
-										backgroundColor: '#06D7A0',
-									},
-								]}
-							/>
+		},
+	});
+
+	const funcStartProject = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Dự án được bắt đầu thực hiện!',
+				http: projectServices.updateState({
+					uuid: _uuid as string,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setOpenStart(false);
+				queryClient.invalidateQueries([QUERY_KEY.detail_project]);
+			}
+		},
+	});
+
+	return (
+		<Fragment>
+			<Loading loading={funcDeleteProject.isLoading || funcStartProject.isLoading} />
+			<Breadcrumb
+				listUrls={[
+					{
+						path: PATH.Project,
+						title: 'Danh sách dự án',
+					},
+					{
+						path: '',
+						title: 'Chi tiết dự án',
+					},
+				]}
+			/>
+			<LayoutPages
+				listPages={[
+					{
+						title: 'Thông tin chung',
+						path: `${PATH.ProjectInfo}?_uuid=${_uuid}`,
+					},
+					{
+						title: 'Báo cáo công việc',
+						path: `${PATH.ProjectWorkReport}?_uuid=${_uuid}`,
+					},
+					{
+						title: 'Tiến độ giải ngân',
+						path: `${PATH.ProjectDisbursementProgress}?_uuid=${_uuid}`,
+					},
+					{
+						title: 'Thông tin nhà thầu',
+						path: `${PATH.ProjectContractor}?_uuid=${_uuid}`,
+					},
+				]}
+				action={
+					<div className={styles.group_btn}>
+						{detailProject?.state == TYPE_WORK_STATUS.PREPARE && (
+							<Button p_14_24 rounded_8 blueLinear onClick={() => setOpenStart(true)}>
+								Thực hiện dự án
+							</Button>
+						)}
+						{detailProject?.state == TYPE_WORK_STATUS.PREPARE && (
+							<Button p_14_24 rounded_8 light-red onClick={() => setOpenDelete(true)}>
+								Xóa
+							</Button>
+						)}
+						{detailProject?.state == TYPE_WORK_STATUS.PREPARE && (
+							<Button p_14_24 rounded_8 primaryLinear href={`${PATH.UpdateInfoProject}?_uuid=${_uuid}`}>
+								Chỉnh sửa
+							</Button>
+						)}
+					</div>
+				}
+			>
+				<div className={styles.grid}>
+					<div className={styles.basic_info}>
+						<div className={styles.head}>
+							<h4>Thông tin cơ bản</h4>
+							<div className={styles.state}>
+								<p>Trạng thái dự án:</p>
+								<StateActive
+									stateActive={detailProject?.state!}
+									listState={[
+										{
+											state: TYPE_WORK_STATUS.PREPARE,
+											text: 'Chuẩn bị',
+											textColor: '#fff',
+											backgroundColor: '#5B70B3',
+										},
+										{
+											state: TYPE_WORK_STATUS.DO,
+											text: 'Thực hiện',
+											textColor: '#fff',
+											backgroundColor: '#16C1F3',
+										},
+										{
+											state: TYPE_WORK_STATUS.FINISH,
+											text: 'Kết thúc',
+											textColor: '#fff',
+											backgroundColor: '#06D7A0',
+										},
+									]}
+								/>
+							</div>
 						</div>
+						<div className={styles.progress_group}>
+							<GridColumn col_3>
+								<div className={styles.item}>
+									<p>Mã dự án</p>
+									<p>{detailProject?.code || '---'}</p>
+								</div>
+								<div className={styles.item}>
+									<p>Tiến độ dự án</p>
+									<Progress percent={detailProject?.progress!} width={80} />
+								</div>
+							</GridColumn>
+							<div className={styles.mt}>
+								<GridColumn col_3>
+									<div className={styles.item}>
+										<p>Tên chi nhánh</p>
+										<p>{detailProject?.branch?.name || '---'}</p>
+									</div>
+									<div className={styles.item}>
+										<p>Mã chi nhánh</p>
+										<p>{detailProject?.branch?.code || '---'}</p>
+									</div>
+								</GridColumn>
+							</div>
+							<div className={styles.mt}>
+								<GridColumn col_3>
+									<div className={styles.item}>
+										<p>Tên công trình</p>
+										<p>{detailProject?.name || '---'}</p>
+									</div>
+									<div className={styles.item}>
+										<p>Quy trình áp dụng</p>
+										<p>
+											{detailProject?.taskCat?.name}
+											<Link href={`${PATH.Task}/${detailProject?.taskCat?.uuid}`} className={styles.link}>
+												Chi tiết
+											</Link>
+										</p>
+									</div>
+								</GridColumn>
+							</div>
+							<div className={styles.mt}>
+								<GridColumn col_3>
+									<div className={styles.item}>
+										<p>Lãnh đạo phụ trách</p>
+										<p>{detailProject?.manager?.fullname || '---'}</p>
+									</div>
+									<div className={styles.item}>
+										<p>Cán bộ chuyên quản</p>
+										<p>
+											{detailProject?.user?.[0]?.fullname}
+											<span className={styles.link}>và {detailProject?.user?.length! - 1} người khác</span>
+										</p>
+									</div>
+									<div className={styles.item}>
+										<p>Công tác số hóa hồ sơ</p>
+										<p>{detailProject?.digitalFile}</p>
+									</div>
+								</GridColumn>
+							</div>
+							<div className={styles.mt}>
+								<GridColumn col_3>
+									<div className={styles.item}>
+										<p>Ngày tạo dự án</p>
+										<p>
+											<Moment date={detailProject?.created} format='HH:mm, DD/MM/YYYY' />
+										</p>
+									</div>
+									<div className={styles.item}>
+										<p>Thời gian bắt đầu dự tính</p>
+										<p>
+											<Moment date={detailProject?.expectStart} format='DD/MM/YYYY' />
+										</p>
+									</div>
+									<div className={styles.item}>
+										<p>Thời gian kết thúc dự tính</p>
+										<p>
+											<Moment date={detailProject?.expectEnd} format='DD/MM/YYYY' />
+										</p>
+									</div>
+								</GridColumn>
+							</div>
+							<div className={styles.mt}>
+								<GridColumn col_3>
+									<div className={styles.item}>
+										<p>Thời gian bắt đầu dự án được phê duyệt</p>
+										<p>
+											<Moment date={detailProject?.realStart} format='DD/MM/YYYY' />
+										</p>
+									</div>
+									<div className={styles.item}>
+										<p>Thời gian kết thúc dự án</p>
+										<p>
+											{detailProject?.realEnd ? <Moment date={detailProject?.realEnd} format='DD/MM/YYYY' /> : '---'}
+										</p>
+									</div>
+								</GridColumn>
+							</div>
+						</div>
+					</div>
+					<div className={styles.basic_info}>
+						<div className={styles.head}>
+							<h4>Thông tin vốn dự án</h4>
+						</div>
+						<div className={styles.progress_group}>
+							<div className={styles.item_capital}>
+								<p>Kế hoạch vốn đầu tư</p>
+								<p style={{color: '#2970FF'}}>{convertCoin(detailProject?.expectBudget!)} VND</p>
+							</div>
+							<div className={styles.line}></div>
+							<div className={styles.item_capital}>
+								<p>Tổng mức đầu tư dự án</p>
+								<p>{convertCoin(detailProject?.totalInvest!)} VND</p>
+							</div>
+							<div className={styles.line}></div>
+							<div className={styles.item_capital}>
+								<p>Tổng dự toán</p>
+								<p>{convertCoin(detailProject?.realBudget!)} VND</p>
+							</div>
+							<div className={styles.line}></div>
+							<div className={styles.item_capital}>
+								<p>Vốn dự phòng được duyệt</p>
+								<p>{convertCoin(detailProject?.reserveBudget!)} VND</p>
+							</div>
+							<div className={styles.line}></div>
+							<div className={styles.item_capital}>
+								<p>Vốn dự phòng còn lại</p>
+								<p>{convertCoin(detailProject?.remainReserveBudget!)} VND</p>
+							</div>
+							<div className={styles.line}></div>
+							<div className={styles.item_capital}>
+								<p>Số tiền giải ngân lũy kế đến hiện tại</p>
+								<p>{convertCoin(detailProject?.accumAmount!)} VND</p>
+							</div>
+							<div className={styles.line}></div>
+							<div className={styles.item_capital}>
+								<p>Kế hoạch vốn theo năm</p>
+								<p>{convertCoin(detailProject?.annualBudget!)} VND</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className={clsx(styles.basic_info, styles.mt)}>
+					<div className={styles.head}>
+						<h4>Thông tin khác</h4>
 					</div>
 					<div className={styles.progress_group}>
 						<GridColumn col_3>
 							<div className={styles.item}>
-								<p>Mã dự án</p>
-								<p>122345</p>
+								<p>Tỉnh/TP</p>
+								<p>{detailProject?.tp?.name || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Tiến độ dự án</p>
-								<Progress percent={60} width={80} />
+								<p>Quận/huyện</p>
+								<p>{detailProject?.qh?.name || '---'}</p>
+							</div>
+							<div className={styles.item}>
+								<p>Xã/Phường</p>
+								<p>{detailProject?.xa?.name || '---'}</p>
 							</div>
 						</GridColumn>
 						<div className={styles.mt}>
 							<GridColumn col_3>
 								<div className={styles.item}>
-									<p>Tên chi nhánh</p>
-									<p>Chi nhánh số 3</p>
+									<p>Địa chỉ chi tiết</p>
+									<p>{detailProject?.address || '---'}</p>
 								</div>
 								<div className={styles.item}>
-									<p>Mã chi nhánh</p>
-									<p>56334422123</p>
-								</div>
-							</GridColumn>
-						</div>
-						<div className={styles.mt}>
-							<GridColumn col_3>
-								<div className={styles.item}>
-									<p>Tên công trình</p>
-									<p>Công trình hải Dương số 34</p>
-								</div>
-								<div className={styles.item}>
-									<p>Quy trình áp dụng</p>
-									<p>
-										Quy mô phòng giao dịch
-										<Link href={`#`} className={styles.link}>
-											Chi tiết
-										</Link>
-									</p>
-								</div>
-							</GridColumn>
-						</div>
-						<div className={styles.mt}>
-							<GridColumn col_3>
-								<div className={styles.item}>
-									<p>Lãnh đạo phụ trách</p>
-									<p>Vũ Trí Cương</p>
-								</div>
-								<div className={styles.item}>
-									<p>Cán bộ chuyên quản</p>
-									<p>
-										Linh Vũ
-										<span className={styles.link}>và 2 người khác</span>
-									</p>
-								</div>
-								<div className={styles.item}>
-									<p>Công tác số hóa hồ sơ</p>
-									<p>Chưa triển khai</p>
-								</div>
-							</GridColumn>
-						</div>
-						<div className={styles.mt}>
-							<GridColumn col_3>
-								<div className={styles.item}>
-									<p>Ngày tạo dự án</p>
-									<p>
-										<Moment format='HH:mm, DD/MM/YYYY' />
-									</p>
-								</div>
-								<div className={styles.item}>
-									<p>Thời gian bắt đầu dự tính</p>
-									<p>
-										<Moment format='DD/MM/YYYY' />
-									</p>
-								</div>
-								<div className={styles.item}>
-									<p>Thời gian kết thúc dự tính</p>
-									<p>
-										<Moment format='DD/MM/YYYY' />
-									</p>
-								</div>
-							</GridColumn>
-						</div>
-						<div className={styles.mt}>
-							<GridColumn col_3>
-								<div className={styles.item}>
-									<p>Thời gian bắt đầu dự án được phê duyệt</p>
-									<p>
-										<Moment format='DD/MM/YYYY' />
-									</p>
-								</div>
-								<div className={styles.item}>
-									<p>Thời gian kết thúc dự án</p>
-									<p>---</p>
+									<p>Ghi chú</p>
+									<p>{detailProject?.description || '---'}</p>
 								</div>
 							</GridColumn>
 						</div>
 					</div>
 				</div>
-				<div className={styles.basic_info}>
-					<div className={styles.head}>
-						<h4>Thông tin vốn dự án</h4>
-					</div>
-					<div className={styles.progress_group}>
-						<div className={styles.item_capital}>
-							<p>Kế hoạch vốn đầu tư</p>
-							<p style={{color: '#2970FF'}}>1.000.000.000 VND</p>
-						</div>
-						<div className={styles.line}></div>
-						<div className={styles.item_capital}>
-							<p>Tổng mức đầu tư dự án</p>
-							<p>1.000.000.000 VND</p>
-						</div>
-						<div className={styles.line}></div>
-						<div className={styles.item_capital}>
-							<p>Tổng dự toán</p>
-							<p>1.000.000.000 VND</p>
-						</div>
-						<div className={styles.line}></div>
-						<div className={styles.item_capital}>
-							<p>Vốn dự phòng được duyệt</p>
-							<p>1.000.000.000 VND</p>
-						</div>
-						<div className={styles.line}></div>
-						<div className={styles.item_capital}>
-							<p>Vốn dự phòng còn lại</p>
-							<p>1.000.000.000 VND</p>
-						</div>
-						<div className={styles.line}></div>
-						<div className={styles.item_capital}>
-							<p>Số tiền giải ngân lũy kế đến hiện tại</p>
-							<p>1.000.000.000 VND</p>
-						</div>
-						<div className={styles.line}></div>
-						<div className={styles.item_capital}>
-							<p>Kế hoạch vốn theo năm</p>
-							<p>1.000.000.000 VND</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div className={clsx(styles.basic_info, styles.mt)}>
-				<div className={styles.head}>
-					<h4>Thông tin khác</h4>
-				</div>
-				<div className={styles.progress_group}>
-					<GridColumn col_3>
-						<div className={styles.item}>
-							<p>Tỉnh/TP</p>
-							<p>Hà Nội</p>
-						</div>
-						<div className={styles.item}>
-							<p>Quận/huyện</p>
-							<p>Hoàng Mai</p>
-						</div>
-						<div className={styles.item}>
-							<p>Xã/Phường</p>
-							<p>---</p>
-						</div>
-					</GridColumn>
-					<div className={styles.mt}>
-						<GridColumn col_3>
-							<div className={styles.item}>
-								<p>Địa chỉ chi tiết</p>
-								<p>130 nguyễn đức cảnh tương mai hoàng mai hà nội</p>
-							</div>
-							<div className={styles.item}>
-								<p>Ghi chú</p>
-								<p>---</p>
-							</div>
-						</GridColumn>
-					</div>
-				</div>
-			</div>
-		</LayoutPages>
+			</LayoutPages>
+			<Dialog
+				type='error'
+				open={openDelete}
+				onClose={() => setOpenDelete(false)}
+				title={'Xác nhận xóa'}
+				note={'Bạn có chắc chắn muốn xóa dự án này?'}
+				onSubmit={funcDeleteProject.mutate}
+			/>
+			<Dialog
+				type='primary'
+				open={openStart}
+				icon={icons.success}
+				onClose={() => setOpenStart(false)}
+				title={'Thực hiện dự án'}
+				note={'Bạn có chắc chắn muốn thực hiện dự án này không?'}
+				onSubmit={funcStartProject.mutate}
+			/>
+		</Fragment>
 	);
 }
 

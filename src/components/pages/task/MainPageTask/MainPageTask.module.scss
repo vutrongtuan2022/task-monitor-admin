@@ -12,12 +12,6 @@
 	flex-wrap: wrap;
 	margin-bottom: 16px;
 }
-// .search_fillter {
-// 	display: flex;
-// 	gap: 10px;
-// 	flex-wrap: wrap;
-// }
-
 .search {
 	min-width: 400px;
 }
@@ -27,4 +21,15 @@
 	overflow: auto;
 	border-radius: 8px;
 	background: #fff;
+}
+
+.link {
+	color: #005994;
+	font-size: 14px;
+	font-weight: 500;
+	transition: 0.3s;
+
+	&:hover {
+		text-decoration: underline;
+	}
 }

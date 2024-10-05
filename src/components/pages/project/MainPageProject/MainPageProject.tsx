@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
-import { IProject, PropsMainPageProject } from './interfaces';
+import {IProject, PropsMainPageProject} from './interfaces';
 import styles from './MainPageProject.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -11,30 +11,30 @@ import Pagination from '~/components/common/Pagination';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
-import { Edit, Trash } from 'iconsax-react';
+import {Edit, Trash} from 'iconsax-react';
 import Progress from '~/components/common/Progress';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY, STATUS_CONFIG, TYPE_WORK_STATUS } from '~/constants/config/enum';
-import { httpRequest } from '~/services';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG, TYPE_WORK_STATUS} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
 import FilterCustom from '~/components/common/FilterCustom';
 import Loading from '~/components/common/Loading';
 import Dialog from '~/components/common/Dialog';
-import { PATH } from '~/constants/config';
+import {PATH} from '~/constants/config';
 import Link from 'next/link';
 import Tippy from '@tippyjs/react';
-import { convertCoin } from '~/common/funcs/convertCoin';
+import {convertCoin} from '~/common/funcs/convertCoin';
 
-function MainPageProject({ }: PropsMainPageProject) {
+function MainPageProject({}: PropsMainPageProject) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const [deleteProject, setDeleteProject] = useState<IProject | null>(null);
 
-	const { _page, _pageSize, _keyword, _status, _managerUuid, _state } = router.query;
+	const {_page, _pageSize, _keyword, _status, _managerUuid, _state} = router.query;
 
 	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _managerUuid], {
 		queryFn: () =>
@@ -123,7 +123,7 @@ function MainPageProject({ }: PropsMainPageProject) {
 						<Noti
 							button={
 								<Button
-									p_14_24
+									p_10_24
 									rounded_8
 									light-blue
 									href={PATH.ProjectCreate}
@@ -171,7 +171,7 @@ function MainPageProject({ }: PropsMainPageProject) {
 								render: (data: IProject) => <>{data?.user?.fullname}</>,
 							},
 							{
-								title: 'TMDT(VND)',
+								title: 'TMĐT(VND)',
 								render: (data: IProject) => <>{convertCoin(data?.totalInvest)}</>,
 							},
 							{
@@ -210,13 +210,13 @@ function MainPageProject({ }: PropsMainPageProject) {
 								title: 'Hành động',
 								fixedRight: true,
 								render: (data: IProject) => (
-									<div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
-											disnable={data?.state == TYPE_WORK_STATUS.FINISH}
-											onClick={() => { }}
+											disnable={data?.state != TYPE_WORK_STATUS.PREPARE}
+											href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
 										/>
 										<IconCustom
 											type='delete'
