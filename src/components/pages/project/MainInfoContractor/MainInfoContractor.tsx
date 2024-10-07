@@ -10,11 +10,8 @@ import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Pagination from '~/components/common/Pagination';
 import Link from 'next/link';
-import StateActive from '~/components/common/StateActive';
 import Table from '~/components/common/Table';
 import Search from '~/components/common/Search';
-import DateRangerCustom from '~/components/common/DateRangerCustom';
-import FilterCustom from '~/components/common/FilterCustom';
 import clsx from 'clsx';
 import Image from 'next/image';
 import icons from '~/constants/images/icons';
@@ -72,7 +69,14 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 							</div>
 						</div>
 						<div className={styles.btn}>
-							<Button p_14_24 rounded_8 light-blue icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}>
+							<Button
+								p_14_24
+								rounded_8
+								light-blue
+								href={''}
+								onClick={() => {}}
+								icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+							>
 								Thêm mới nhà thầu
 							</Button>
 						</div>
@@ -88,11 +92,11 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 									},
 									{
 										title: 'Thuộc nhóm',
-										render: (data: any) => <>Nhà thầu thi công xây lắp</>,
+										render: (data: any) => <>{'---'}</>,
 									},
 									{
 										title: 'Tên nhà thầu',
-										render: (data: any) => <>Nhà thầu số 34 HD</>,
+										render: (data: any) => <>{'---'}</>,
 									},
 									{
 										title: 'Hợp đồng dự án',
