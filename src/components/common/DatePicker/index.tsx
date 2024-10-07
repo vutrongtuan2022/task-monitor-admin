@@ -49,6 +49,7 @@ function DatePicker({
 		let month = cleanValue.slice(2, 4);
 		const year = cleanValue.slice(4, 8);
 
+		// Điều chỉnh số ngày cho các tháng
 		if (day.length === 2 && Number(day) > 31) {
 			day = '0' + day[0];
 			month = day[1] + month;
@@ -64,6 +65,17 @@ function DatePicker({
 
 		if (month.length === 2 && Number(month) > 12) {
 			month = '0' + month[0];
+		}
+
+		// month 2
+		if (month === '02' && year.length === 4) {
+			const isLeapYear = (Number(year) % 4 === 0 && Number(year) % 100 !== 0) || Number(year) % 400 === 0;
+
+			if (isLeapYear && Number(day) > 29) {
+				day = '29';
+			} else if (!isLeapYear && Number(day) > 28) {
+				day = '28';
+			}
 		}
 
 		let formattedValue = day;
@@ -115,6 +127,7 @@ function DatePicker({
 					readOnly={readonly}
 					className={clsx(styles.input)}
 					maxLength={10}
+					onFocus={() => setIsFocus(true)} // Thêm onFocus
 					onClick={() => {
 						if (!readonly) {
 							setIsFocus(true);
@@ -138,12 +151,26 @@ function DatePicker({
 								}
 							}}
 						>
-							{icon && !inputValue && (
+							{/* Hiển thị biểu tượng tùy thuộc vào trạng thái focus */}
+							{/* {isFocus && !!inputValue ? (
+								<div className={clsx(styles.icon)} onClick={handleClean}>
+									<RiCloseCircleFill size={24} />
+								</div>
+							) : (
+								icon &&
+								!inputValue && (
+									<div className={styles.icon}>
+										<CalendarSearch size={24} />
+									</div>
+								)
+							)} */}
+
+							{icon && !isFocus && (
 								<div className={styles.icon}>
 									<CalendarSearch size={24} />
 								</div>
 							)}
-							{onClean && !!inputValue && (
+							{onClean && isFocus && (
 								<div className={clsx(styles.icon)} onClick={handleClean}>
 									<RiCloseCircleFill size={24} />
 								</div>
