@@ -124,6 +124,21 @@
 	color: var(--light);
 }
 
+.blue {
+	background: #4484ff;
+	color: var(--light);
+}
+
+.green {
+	background: #06d7a0;
+	color: var(--light);
+}
+
+.skyblue {
+	background: #16c1f3;
+	color: var(--light);
+}
+
 .warning {
 	background: var(--orange);
 	color: var(--light);
@@ -136,7 +151,7 @@
 }
 
 .light-blue {
-	background: var(--Gradient-4, linear-gradient(90deg, #1da7df -8.49%, #0b99d2 45.98%, #13c0f2 106.91%));
+	background: linear-gradient(90deg, #1da7df -8.49%, #0b99d2 45.98%, #13c0f2 106.91%);
 	color: var(--light);
 	border: 1px solid rgba(255, 255, 255, 0.3);
 }

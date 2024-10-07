@@ -132,7 +132,7 @@ function MainPageTask({}: PropsMainPageTask) {
 						p_14_24
 						rounded_8
 						light-blue
-						href={''}
+						href={PATH.CreateTask}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 					>
 						Thêm mới quy trình
@@ -150,7 +150,7 @@ function MainPageTask({}: PropsMainPageTask) {
 									p_14_24
 									rounded_8
 									light-blue
-									href={''}
+									href={PATH.CreateTask}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 								>
 									Thêm mới quy trình
