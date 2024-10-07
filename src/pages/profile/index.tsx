@@ -17,9 +17,5 @@ export default function Page() {
 }
 
 Page.getLayout = function (Page: ReactElement) {
-	return (
-		<BaseLayout isAction={false} title='Thông tin cá nhân'>
-			{Page}
-		</BaseLayout>
-	);
+	return <BaseLayout title='Thông tin cá nhân'>{Page}</BaseLayout>;
 };

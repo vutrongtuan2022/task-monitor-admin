@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-import {PropsMainPageTask} from './interfaces';
+import {ITaskCat, PropsMainPageTask} from './interfaces';
 import styles from './MainPageTask.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -13,10 +13,113 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
+import {useRouter} from 'next/router';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
+import taskCatServices from '~/services/taskCatServices';
+import Moment from 'react-moment';
+import {toastWarn} from '~/common/funcs/toast';
+import Loading from '~/components/common/Loading';
+import Dialog from '~/components/common/Dialog';
+import Tippy from '@tippyjs/react';
+import Link from 'next/link';
+import {PATH} from '~/constants/config';
+import Popup from '~/components/common/Popup';
+import ImportExcel from '~/components/common/ImportExcel';
 
 function MainPageTask({}: PropsMainPageTask) {
+	const router = useRouter();
+	const queryClient = useQueryClient();
+
+	const {_page, _pageSize, _keyword, _action} = router.query;
+
+	const [uuidDelete, setUuidDelete] = useState<string>('');
+	const [file, setFile] = useState<any>(null);
+
+	const listTaskCat = useQuery([QUERY_KEY.table_task_cat, _page, _pageSize, _keyword], {
+		queryFn: () =>
+			httpRequest({
+				http: taskCatServices.listTaskCat({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 20,
+					keyword: (_keyword as string) || '',
+					status: STATUS_CONFIG.ACTIVE,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	const handleCloseImport = () => {
+		const {_action, ...rest} = router.query;
+
+		router.replace({
+			pathname: router.pathname,
+			query: {
+				...rest,
+			},
+		});
+	};
+
+	const funcDeleteTaskCat = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa nhà thầu thành công!',
+				http: taskCatServices.updateStatusTaskCat({
+					uuid: uuidDelete,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setUuidDelete('');
+				queryClient.invalidateQueries([QUERY_KEY.table_task_cat]);
+			}
+		},
+	});
+
+	const handleDeleteTaskCat = () => {
+		if (!uuidDelete) {
+			return toastWarn({msg: 'Không tìm thấy nhà thầu!'});
+		}
+
+		return funcDeleteTaskCat.mutate();
+	};
+
+	// Func import excel
+	const fucnImportExcel = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Import quy trình thành công!',
+				http: taskCatServices.importTaskExcel({
+					FileData: file,
+					Type: 1,
+					name: file?.name?.split('.')?.[0],
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setFile(null);
+				handleCloseImport();
+				queryClient.invalidateQueries([QUERY_KEY.table_task_cat]);
+			}
+		},
+	});
+
+	const handleImportTask = () => {
+		return fucnImportExcel.mutate();
+	};
+
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcDeleteTaskCat.isLoading || fucnImportExcel.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
@@ -38,8 +141,8 @@ function MainPageTask({}: PropsMainPageTask) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={[1]}
-					loading={false}
+					data={listTaskCat?.data?.items || []}
+					loading={listTaskCat.isLoading}
 					noti={
 						<Noti
 							button={
@@ -58,26 +161,32 @@ function MainPageTask({}: PropsMainPageTask) {
 				>
 					<Table
 						fixedHeader={true}
-						data={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+						data={listTaskCat?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
 								fixedLeft: true,
-								render: (data: any, index: number) => <>{index + 1}</>,
+								render: (data: ITaskCat, index: number) => <>{index + 1}</>,
 							},
 
 							{
 								title: 'Tên quy trình',
-								render: (data: any) => <>Quy mô phòng giao dịch</>,
+								render: (data: ITaskCat) => (
+									<Tippy content='Chi tiết quy trình'>
+										<Link href={`${PATH.Task}/${data?.uuid}?_id=${data?.id}`} className={styles.link}>
+											{data?.name}
+										</Link>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Ngày tạo',
-								render: (data: any) => <>15/07/2024 09:52</>,
+								render: (data: ITaskCat) => <Moment date={data?.created} format='DD/MM/YYYY' />,
 							},
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: any) => (
+								render: (data: ITaskCat) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
@@ -89,16 +198,41 @@ function MainPageTask({}: PropsMainPageTask) {
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
-											onClick={() => {}}
+											onClick={() => setUuidDelete(data?.uuid)}
 										/>
 									</div>
 								),
 							},
 						]}
 					/>
-					<Pagination pageSize={1} currentPage={1} total={10} />
+					<Pagination
+						currentPage={Number(_page) || 1}
+						pageSize={Number(_pageSize) || 20}
+						total={listTaskCat?.data?.pagination?.totalCount}
+						dependencies={[_pageSize, _keyword]}
+					/>
 				</DataWrapper>
 			</WrapperScrollbar>
+
+			<Dialog
+				type='error'
+				open={!!uuidDelete}
+				onClose={() => setUuidDelete('')}
+				title={'Xóa quy trình'}
+				note={'Bạn có chắc chắn muốn xóa quy trình này?'}
+				onSubmit={handleDeleteTaskCat}
+			/>
+
+			<Popup open={_action == 'import'} onClose={handleCloseImport}>
+				<ImportExcel
+					name='file-tast'
+					file={file}
+					pathTemplate='/static/files/MauQuyTrinhXayDungHaTang.xlsx'
+					setFile={setFile}
+					onSubmit={handleImportTask}
+					onClose={handleCloseImport}
+				/>
+			</Popup>
 		</div>
 	);
 }

@@ -3,4 +3,5 @@ export interface PropsBreadcrumb {
 		title: string;
 		path: string;
 	}[];
+	action?: React.ReactNode;
 }

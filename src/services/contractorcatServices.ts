@@ -50,6 +50,7 @@ const contractorcatServices = {
 		data: {
 			keyword: string;
 			status: number;
+			isDefault?: number;
 		},
 		tokenAxios?: any
 	) => {

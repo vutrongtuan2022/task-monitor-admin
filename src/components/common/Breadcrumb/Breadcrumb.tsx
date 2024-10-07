@@ -8,7 +8,7 @@ import clsx from 'clsx';
 
 import {DocumentText1} from 'iconsax-react';
 
-function Breadcrumb({listUrls}: PropsBreadcrumb) {
+function Breadcrumb({listUrls, action}: PropsBreadcrumb) {
 	return (
 		<div className={clsx(styles.container)}>
 			<div className={styles.main}>
@@ -30,6 +30,7 @@ function Breadcrumb({listUrls}: PropsBreadcrumb) {
 						</div>
 					))}
 				</div>
+				{action}
 			</div>
 		</div>
 	);

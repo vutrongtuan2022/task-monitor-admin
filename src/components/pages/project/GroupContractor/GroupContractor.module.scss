@@ -1,0 +1,11 @@
+.col_2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.main {
+	& + & {
+		margin-top: 16px;
+	}
+}

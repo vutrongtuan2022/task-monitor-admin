@@ -4,13 +4,15 @@ export enum QUERY_KEY {
 
 	table_group_contractor,
 	table_contractor,
+	table_task_cat,
 	table_list_user,
 	table_role,
 	table_branches,
 	table_list_account,
 
 	dropdown_role,
-	dropdown_category_group_contractor,
+	dropdown_group_contractor,
+	dropdown_contractor,
 	dropdown_province,
 	dropdown_district,
 	dropdown_town,
@@ -22,6 +24,11 @@ export enum QUERY_KEY {
 	detail_contractor,
 	detail_user,
 	detail_account,
+	detail_task,
+	detail_project,
+	detail_general_update_project,
+
+	tree_task,
 }
 
 export enum TYPE_DATE {
@@ -61,7 +68,7 @@ export enum TYPE_GENDER {
 }
 
 export enum TYPE_WORK_STATUS {
-	PREPARE = 0,
+	PREPARE = 1,
 	DO,
 	FINISH,
 }
