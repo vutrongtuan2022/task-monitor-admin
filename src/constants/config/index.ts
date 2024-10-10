@@ -36,6 +36,7 @@ export enum PATH {
 
 	Task = '/task',
 	CreateTask = '/task/create',
+	UpdateTask = '/task/update',
 
 	Branch = '/branch',
 	Contractor = '/contractor',

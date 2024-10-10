@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, {Fragment, useState} from 'react';
 
-import { IUser, PropsMainPageUser } from './interfaces';
+import {IUser, PropsMainPageUser} from './interfaces';
 import styles from './MainPageUser.module.scss';
 import DataWrapper from '~/components/common/DataWrapper';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
@@ -12,12 +12,12 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Search from '~/components/common/Search';
 import IconCustom from '~/components/common/IconCustom';
-import { Edit, TickCircle, Trash, UserAdd } from 'iconsax-react';
-import { useRouter } from 'next/router';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {Edit, TickCircle, Trash, UserAdd} from 'iconsax-react';
+import {useRouter} from 'next/router';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import StateActive from '~/components/common/StateActive';
-import { STATUS_ACCOUNT, QUERY_KEY } from '~/constants/config/enum';
-import { httpRequest } from '~/services';
+import {STATUS_ACCOUNT, QUERY_KEY} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
 import Link from 'next/link';
 import Popup from '~/components/common/Popup';
@@ -29,16 +29,16 @@ import PositionContainer from '~/components/common/PositionContainer';
 import CreateUser from '../CreateUser';
 import UpdateUser from '../UpdateUser';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import { PATH } from '~/constants/config';
+import {PATH} from '~/constants/config';
 
-function MainPageUser({ }: PropsMainPageUser) {
+function MainPageUser({}: PropsMainPageUser) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const [deleteUser, setDeleteUser] = useState<IUser | null>(null);
 	const [dataCreateAccount, setDataCreateAccount] = useState<IUser | null>(null);
 
-	const { _page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc, action, _uuidUser } = router.query;
+	const {_page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc, action, _uuidUser} = router.query;
 
 	const listUser = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _keyword, _status, _roleUuid, _isHaveAcc], {
 		queryFn: () =>
@@ -164,7 +164,7 @@ function MainPageUser({ }: PropsMainPageUser) {
 								},
 								{
 									title: 'Mã nhân viên',
-									render: (data: IUser) => <span style={{ fontWeight: '600' }}>{data?.code || '---'}</span>,
+									render: (data: IUser) => <span style={{fontWeight: '600'}}>{data?.code || '---'}</span>,
 								},
 								{
 									title: 'Họ tên',
@@ -210,7 +210,7 @@ function MainPageUser({ }: PropsMainPageUser) {
 									title: 'Hành động',
 									fixedRight: true,
 									render: (data: IUser) => (
-										<div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+										<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 											{data?.isHaveAcc == STATUS_ACCOUNT.NOT_HAVE ? (
 												<IconCustom
 													icon={<UserAdd fontSize={20} fontWeight={600} />}
@@ -252,19 +252,19 @@ function MainPageUser({ }: PropsMainPageUser) {
 								},
 							]}
 						/>
-						<Pagination
-							currentPage={Number(_page) || 1}
-							pageSize={Number(_pageSize) || 20}
-							total={listUser?.data?.pagination?.totalCount}
-							dependencies={[_pageSize, _keyword, _status, _roleUuid, _isHaveAcc]}
-						/>
 					</DataWrapper>
+					<Pagination
+						currentPage={Number(_page) || 1}
+						pageSize={Number(_pageSize) || 20}
+						total={listUser?.data?.pagination?.totalCount}
+						dependencies={[_pageSize, _keyword, _status, _roleUuid, _isHaveAcc]}
+					/>
 				</WrapperScrollbar>
 
 				<PositionContainer
 					open={action == 'create'}
 					onClose={() => {
-						const { action, ...rest } = router.query;
+						const {action, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,
@@ -276,7 +276,7 @@ function MainPageUser({ }: PropsMainPageUser) {
 				>
 					<CreateUser
 						onClose={() => {
-							const { action, ...rest } = router.query;
+							const {action, ...rest} = router.query;
 
 							router.replace({
 								pathname: router.pathname,
@@ -291,7 +291,7 @@ function MainPageUser({ }: PropsMainPageUser) {
 				<PositionContainer
 					open={!!_uuidUser}
 					onClose={() => {
-						const { _uuidUser, ...rest } = router.query;
+						const {_uuidUser, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,
@@ -303,7 +303,7 @@ function MainPageUser({ }: PropsMainPageUser) {
 				>
 					<UpdateUser
 						onClose={() => {
-							const { _uuidUser, ...rest } = router.query;
+							const {_uuidUser, ...rest} = router.query;
 
 							router.replace({
 								pathname: router.pathname,

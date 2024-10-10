@@ -17,7 +17,7 @@ import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
 import Progress from '~/components/common/Progress';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, TYPE_WORK_STATUS} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG, STATE_PROJECT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
 import FilterCustom from '~/components/common/FilterCustom';
@@ -88,15 +88,15 @@ function MainPageProject({}: PropsMainPageProject) {
 							query='_state'
 							listFilter={[
 								{
-									id: TYPE_WORK_STATUS.PREPARE,
+									id: STATE_PROJECT.PREPARE,
 									name: 'Chuẩn bị',
 								},
 								{
-									id: TYPE_WORK_STATUS.DO,
+									id: STATE_PROJECT.DO,
 									name: 'Thực hiện',
 								},
 								{
-									id: TYPE_WORK_STATUS.FINISH,
+									id: STATE_PROJECT.FINISH,
 									name: 'Kết thúc',
 								},
 							]}
@@ -185,19 +185,19 @@ function MainPageProject({}: PropsMainPageProject) {
 										stateActive={data?.state}
 										listState={[
 											{
-												state: TYPE_WORK_STATUS.PREPARE,
+												state: STATE_PROJECT.PREPARE,
 												text: 'Chuẩn bị',
 												textColor: '#fff',
 												backgroundColor: '#5B70B3',
 											},
 											{
-												state: TYPE_WORK_STATUS.DO,
+												state: STATE_PROJECT.DO,
 												text: 'Thực hiện',
 												textColor: '#fff',
 												backgroundColor: '#16C1F3',
 											},
 											{
-												state: TYPE_WORK_STATUS.FINISH,
+												state: STATE_PROJECT.FINISH,
 												text: 'Kết thúc',
 												textColor: '#fff',
 												backgroundColor: '#06D7A0',
@@ -215,14 +215,14 @@ function MainPageProject({}: PropsMainPageProject) {
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
-											disnable={data?.state != TYPE_WORK_STATUS.PREPARE}
+											disnable={data?.state == STATE_PROJECT.FINISH}
 											href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
 										/>
 										<IconCustom
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
-											disnable={data?.state == TYPE_WORK_STATUS.DO}
+											disnable={data?.state == STATE_PROJECT.DO}
 											onClick={() => {
 												setDeleteProject(data);
 											}}
@@ -232,13 +232,13 @@ function MainPageProject({}: PropsMainPageProject) {
 							},
 						]}
 					/>
-					<Pagination
-						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
-						total={listProject?.data?.pagination?.totalCount}
-						dependencies={[_pageSize, _keyword, _status, _managerUuid, _state]}
-					/>
 				</DataWrapper>
+				<Pagination
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 20}
+					total={listProject?.data?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword, _status, _managerUuid, _state]}
+				/>
 			</WrapperScrollbar>
 			<Dialog
 				type='error'

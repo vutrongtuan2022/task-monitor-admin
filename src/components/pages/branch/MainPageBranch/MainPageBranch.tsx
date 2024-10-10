@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Tippy from '@tippyjs/react';
 import TippyHeadless from '@tippyjs/react/headless';
 
-import { IBranches, PropsMainPageBranch } from './interfaces';
+import {IBranches, PropsMainPageBranch} from './interfaces';
 import styles from './MainPageBranch.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -14,13 +14,13 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
-import { Edit, Trash } from 'iconsax-react';
-import { useRouter } from 'next/router';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY, STATUS_CONFIG } from '~/constants/config/enum';
-import { httpRequest } from '~/services';
+import {Edit, Trash} from 'iconsax-react';
+import {useRouter} from 'next/router';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
 import branchesServices from '~/services/branchesServices';
-import { toastWarn } from '~/common/funcs/toast';
+import {toastWarn} from '~/common/funcs/toast';
 import Loading from '~/components/common/Loading';
 import clsx from 'clsx';
 import Dialog from '~/components/common/Dialog';
@@ -28,11 +28,11 @@ import PositionContainer from '~/components/common/PositionContainer';
 import CreateBranch from '../CreateBranch';
 import UpdateBranch from '../UpdateBranch';
 
-function MainPageBranch({ }: PropsMainPageBranch) {
+function MainPageBranch({}: PropsMainPageBranch) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const { _page, _pageSize, _keyword, action, _uuidBranches } = router.query;
+	const {_page, _pageSize, _keyword, action, _uuidBranches} = router.query;
 
 	const [uuidDelete, setUuidDelete] = useState<string>('');
 	const [uuidDescription, setUuidDescription] = useState<string>('');
@@ -73,7 +73,7 @@ function MainPageBranch({ }: PropsMainPageBranch) {
 
 	const handleDeleteBranches = () => {
 		if (!uuidDelete) {
-			return toastWarn({ msg: 'Không tìm thấy chi nhánh!' });
+			return toastWarn({msg: 'Không tìm thấy chi nhánh!'});
 		}
 
 		return funcDeleteBranches.mutate();
@@ -183,7 +183,7 @@ function MainPageBranch({ }: PropsMainPageBranch) {
 														setUuidDescription(uuidDescription ? '' : data.uuid);
 													}
 												}}
-												className={clsx(styles.description, { [styles.active]: uuidDescription == data.uuid })}
+												className={clsx(styles.description, {[styles.active]: uuidDescription == data.uuid})}
 											>
 												{data?.note || '---'}
 											</p>
@@ -196,7 +196,7 @@ function MainPageBranch({ }: PropsMainPageBranch) {
 								title: 'Hành động',
 								fixedRight: true,
 								render: (data: IBranches) => (
-									<div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
@@ -223,19 +223,19 @@ function MainPageBranch({ }: PropsMainPageBranch) {
 							},
 						]}
 					/>
-					<Pagination
-						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
-						total={listBranches?.data?.pagination?.totalCount}
-						dependencies={[_pageSize, _keyword]}
-					/>
 				</DataWrapper>
+				<Pagination
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 20}
+					total={listBranches?.data?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword]}
+				/>
 			</WrapperScrollbar>
 
 			<PositionContainer
 				open={action == 'create'}
 				onClose={() => {
-					const { action, ...rest } = router.query;
+					const {action, ...rest} = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -247,7 +247,7 @@ function MainPageBranch({ }: PropsMainPageBranch) {
 			>
 				<CreateBranch
 					onClose={() => {
-						const { action, ...rest } = router.query;
+						const {action, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,
@@ -262,7 +262,7 @@ function MainPageBranch({ }: PropsMainPageBranch) {
 			<PositionContainer
 				open={!!_uuidBranches}
 				onClose={() => {
-					const { _uuidBranches, ...rest } = router.query;
+					const {_uuidBranches, ...rest} = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -274,7 +274,7 @@ function MainPageBranch({ }: PropsMainPageBranch) {
 			>
 				<UpdateBranch
 					onClose={() => {
-						const { _uuidBranches, ...rest } = router.query;
+						const {_uuidBranches, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,

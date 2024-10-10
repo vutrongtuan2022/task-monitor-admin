@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
-import { IGroupContractor, PropsMainGroupContractor } from './interfaces';
+import {IGroupContractor, PropsMainGroupContractor} from './interfaces';
 import styles from './MainGroupContractor.module.scss';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
@@ -12,24 +12,24 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
-import { Edit, Trash } from 'iconsax-react';
-import { useRouter } from 'next/router';
+import {Edit, Trash} from 'iconsax-react';
+import {useRouter} from 'next/router';
 import PositionContainer from '~/components/common/PositionContainer';
 import CreateGroupContractor from '../CreateGroupContractor';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY, STATUS_CONFIG } from '~/constants/config/enum';
-import { httpRequest } from '~/services';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {httpRequest} from '~/services';
 import contractorcatServices from '~/services/contractorcatServices';
-import { toastWarn } from '~/common/funcs/toast';
+import {toastWarn} from '~/common/funcs/toast';
 import Loading from '~/components/common/Loading';
 import Dialog from '~/components/common/Dialog';
 import UpdateGroupContractor from '../UpdateGroupContractor';
 
-function MainGroupContractor({ }: PropsMainGroupContractor) {
+function MainGroupContractor({}: PropsMainGroupContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const { _page, _pageSize, _keyword, action, _uuidGroupContractor } = router.query;
+	const {_page, _pageSize, _keyword, action, _uuidGroupContractor} = router.query;
 
 	const [uuidDelete, setUuidDelete] = useState<string>('');
 
@@ -69,7 +69,7 @@ function MainGroupContractor({ }: PropsMainGroupContractor) {
 
 	const handleDeleteGroupContractor = () => {
 		if (!uuidDelete) {
-			return toastWarn({ msg: 'Không tìm thấy nhóm nhà thầu!' });
+			return toastWarn({msg: 'Không tìm thấy nhóm nhà thầu!'});
 		}
 
 		return funcDeleteGroupContractor.mutate();
@@ -160,7 +160,7 @@ function MainGroupContractor({ }: PropsMainGroupContractor) {
 								title: 'Hành động',
 								fixedRight: true,
 								render: (data: IGroupContractor) => (
-									<div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
@@ -187,19 +187,19 @@ function MainGroupContractor({ }: PropsMainGroupContractor) {
 							},
 						]}
 					/>
-					<Pagination
-						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
-						total={listContractorCat?.data?.pagination?.totalCount}
-						dependencies={[_pageSize, _keyword]}
-					/>
 				</DataWrapper>
+				<Pagination
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 20}
+					total={listContractorCat?.data?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword]}
+				/>
 			</WrapperScrollbar>
 
 			<PositionContainer
 				open={action == 'create'}
 				onClose={() => {
-					const { action, ...rest } = router.query;
+					const {action, ...rest} = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -211,7 +211,7 @@ function MainGroupContractor({ }: PropsMainGroupContractor) {
 			>
 				<CreateGroupContractor
 					onClose={() => {
-						const { action, ...rest } = router.query;
+						const {action, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,
@@ -226,7 +226,7 @@ function MainGroupContractor({ }: PropsMainGroupContractor) {
 			<PositionContainer
 				open={!!_uuidGroupContractor}
 				onClose={() => {
-					const { _uuidGroupContractor, ...rest } = router.query;
+					const {_uuidGroupContractor, ...rest} = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -238,7 +238,7 @@ function MainGroupContractor({ }: PropsMainGroupContractor) {
 			>
 				<UpdateGroupContractor
 					onClose={() => {
-						const { _uuidGroupContractor, ...rest } = router.query;
+						const {_uuidGroupContractor, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,

@@ -262,13 +262,13 @@ function MainPageAccount({}: PropsMainPageAccount) {
 							},
 						]}
 					/>
-					<Pagination
-						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
-						total={listAccount?.data?.pagination?.totalCount}
-						dependencies={[_pageSize, _keyword, _roleUuid]}
-					/>
 				</DataWrapper>
+				<Pagination
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 20}
+					total={listAccount?.data?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword, _roleUuid]}
+				/>
 			</WrapperScrollbar>
 
 			<PositionContainer

@@ -57,6 +57,21 @@ const taskCatServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	insertTaskCat: (
+		data: {
+			name: string;
+			workflow: {
+				name: string;
+				stage: number;
+				children: any[];
+			}[];
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/TaskCat/insert-task-cat`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	importTaskExcel: (data: {name: any; FileData: any; Type: any}, tokenAxios?: any) => {
 		return axiosClient.post(`/TaskCat/import_excel`, data, {
 			cancelToken: tokenAxios,

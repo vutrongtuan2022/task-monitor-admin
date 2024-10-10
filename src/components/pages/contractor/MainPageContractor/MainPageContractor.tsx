@@ -218,13 +218,13 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							},
 						]}
 					/>
-					<Pagination
-						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
-						total={listContractor?.data?.pagination?.totalCount}
-						dependencies={[_pageSize, _keyword, _type]}
-					/>
 				</DataWrapper>
+				<Pagination
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 20}
+					total={listContractor?.data?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword, _type]}
+				/>
 			</WrapperScrollbar>
 
 			<PositionContainer

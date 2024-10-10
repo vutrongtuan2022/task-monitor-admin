@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 import {IFormCreateProject, PropsCreateProject} from './interfaces';
 import styles from './CreateProject.module.scss';
@@ -14,12 +14,10 @@ import clsx from 'clsx';
 import taskCatServices from '~/services/taskCatServices';
 import userServices from '~/services/userServices';
 import SelectMany from '~/components/common/SelectMany';
-import {convertCoin, price} from '~/common/funcs/convertCoin';
+import {price} from '~/common/funcs/convertCoin';
 import provineServices from '~/services/provineServices';
 import DatePicker from '~/components/common/DatePicker';
 import TextArea from '~/components/common/Form/components/TextArea';
-import contractorcatServices from '~/services/contractorcatServices';
-import GroupContractor from '../GroupContractor';
 import Button from '~/components/common/Button';
 import projectServices from '~/services/projectServices';
 import moment from 'moment';
@@ -31,17 +29,17 @@ function CreateProject({}: PropsCreateProject) {
 	const router = useRouter();
 
 	const [users, setUsers] = useState<any[]>([]);
-	const [listContractor, setListContractor] = useState<
-		{
-			idGroupContractor: number;
-			uuidGroupContractor: string;
-			codeGroupContractor: string;
-			nameGroupContractor: string;
-			uuidContractor: string;
-			codeContractor: string;
-			nameContractor: string;
-		}[]
-	>([]);
+	// const [listContractor, setListContractor] = useState<
+	// 	{
+	// 		idGroupContractor: number;
+	// 		uuidGroupContractor: string;
+	// 		codeGroupContractor: string;
+	// 		nameGroupContractor: string;
+	// 		uuidContractor: string;
+	// 		codeContractor: string;
+	// 		nameContractor: string;
+	// 	}[]
+	// >([]);
 	const [form, setForm] = useState<IFormCreateProject>({
 		branchUuid: '',
 		branchCode: '',
@@ -51,7 +49,7 @@ function CreateProject({}: PropsCreateProject) {
 		expectBudget: 0,
 		realBudget: 0,
 		reserveBudget: 0,
-		totalBudget: '',
+		totalInvest: 0,
 		matp: '',
 		maqh: '',
 		xaid: '',
@@ -61,13 +59,6 @@ function CreateProject({}: PropsCreateProject) {
 		realStart: '',
 		description: '',
 	});
-
-	useEffect(() => {
-		setForm((prev) => ({
-			...prev,
-			totalBudget: convertCoin(price(form.realBudget) + price(form.reserveBudget)),
-		}));
-	}, [form.realBudget, form.reserveBudget]);
 
 	const {data: listBranches} = useQuery([QUERY_KEY.dropdown_branches], {
 		queryFn: () =>
@@ -165,31 +156,31 @@ function CreateProject({}: PropsCreateProject) {
 		enabled: !!form?.maqh,
 	});
 
-	useQuery([QUERY_KEY.dropdown_group_contractor], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorcatServices.categoryContractorCat({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					isDefault: 2,
-				}),
-			}),
-		onSuccess(data) {
-			if (data) {
-				setListContractor(
-					data?.map((v: any) => ({
-						idGroupContractor: v?.id,
-						uuidGroupContractor: v?.uuid,
-						codeGroupContractor: v?.code,
-						nameGroupContractor: v?.name,
-						uuidContractor: '',
-						codeContractor: '',
-						nameContractor: '',
-					}))
-				);
-			}
-		},
-	});
+	// useQuery([QUERY_KEY.dropdown_group_contractor], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: contractorcatServices.categoryContractorCat({
+	// 				keyword: '',
+	// 				status: STATUS_CONFIG.ACTIVE,
+	// 				isDefault: 2,
+	// 			}),
+	// 		}),
+	// 	onSuccess(data) {
+	// 		if (data) {
+	// 			setListContractor(
+	// 				data?.map((v: any) => ({
+	// 					idGroupContractor: v?.id,
+	// 					uuidGroupContractor: v?.uuid,
+	// 					codeGroupContractor: v?.code,
+	// 					nameGroupContractor: v?.name,
+	// 					uuidContractor: '',
+	// 					codeContractor: '',
+	// 					nameContractor: '',
+	// 				}))
+	// 			);
+	// 		}
+	// 	},
+	// });
 
 	const funcCreateProject = useMutation({
 		mutationFn: () => {
@@ -203,11 +194,13 @@ function CreateProject({}: PropsCreateProject) {
 					type: form?.type!,
 					employeeUuid: users?.map((v: any) => v?.uuid),
 					managerUuid: form?.managerUuid,
-					contractorUuid: listContractor?.map((v) => v?.uuidContractor),
+					contractorUuid: [],
+					// contractorUuid: listContractor?.map((v) => v?.uuidContractor),
 					description: form?.description,
 					expectBudget: price(form?.expectBudget),
 					realBudget: price(form?.realBudget),
 					reserveBudget: price(form?.reserveBudget),
+					totalInvest: price(form?.totalInvest),
 					expectStart: moment(form?.expectStart).format('YYYY-MM-DD'),
 					expectEnd: moment(form?.expectEnd).format('YYYY-MM-DD'),
 					realStart: moment(form?.realStart).format('YYYY-MM-DD'),
@@ -235,9 +228,9 @@ function CreateProject({}: PropsCreateProject) {
 		if (!form.managerUuid) {
 			return toastWarn({msg: 'Chọn lãnh đạo phụ trách!'});
 		}
-		if (listContractor?.some((v) => v.uuidContractor == '')) {
-			return toastWarn({msg: 'Chọn đầy đủ nhà thầu!'});
-		}
+		// if (listContractor?.some((v) => v.uuidContractor == '')) {
+		// 	return toastWarn({msg: 'Chọn đầy đủ nhà thầu!'});
+		// }
 		if (!form?.expectStart) {
 			return toastWarn({msg: 'Chọn thời gian bắt đầu dự kiến!'});
 		}
@@ -420,7 +413,7 @@ function CreateProject({}: PropsCreateProject) {
 										))}
 									</Select>
 								</div>
-								<div className={styles.mt}>
+								{/* <div className={styles.mt}>
 									<div className={styles.col_2}>
 										<p className={styles.label}>
 											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
@@ -437,7 +430,7 @@ function CreateProject({}: PropsCreateProject) {
 											setListContractor={setListContractor}
 										/>
 									))}
-								</div>
+								</div> */}
 							</div>
 						</div>
 						<div className={styles.basic_info}>
@@ -499,9 +492,8 @@ function CreateProject({}: PropsCreateProject) {
 									placeholder='Nhập tổng mức đầu tư dự án'
 									type='text'
 									isMoney
-									name='totalBudget'
-									value={form?.totalBudget}
-									readOnly={true}
+									name='totalInvest'
+									value={form?.totalInvest}
 									unit='VND'
 								/>
 							</div>

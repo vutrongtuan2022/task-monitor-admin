@@ -43,7 +43,7 @@ function MainDetailTask({}: PropsMainDetailTask) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Xóa nhà thầu thành công!',
+				msgSuccess: 'Xóa quy trình thành công!',
 				http: taskCatServices.updateStatusTaskCat({
 					uuid: _uuid as string,
 				}),
@@ -59,7 +59,7 @@ function MainDetailTask({}: PropsMainDetailTask) {
 
 	const handleDeleteTaskCat = () => {
 		if (!_uuid) {
-			return toastWarn({msg: 'Không tìm thấy nhà thầu!'});
+			return toastWarn({msg: 'Không tìm thấy quy trình!'});
 		}
 
 		return funcDeleteTaskCat.mutate();
@@ -83,7 +83,7 @@ function MainDetailTask({}: PropsMainDetailTask) {
 						<Button p_14_24 rounded_8 light-red onClick={() => setOpenDelete(true)}>
 							Xóa
 						</Button>
-						<Button p_14_24 rounded_8 primaryLinear>
+						<Button p_14_24 rounded_8 primaryLinear href={`${PATH.UpdateTask}?_uuid=${_uuid}`}>
 							Chỉnh sửa
 						</Button>
 					</div>

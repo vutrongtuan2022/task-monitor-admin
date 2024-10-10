@@ -48,6 +48,7 @@ const projectServices = {
 			description: string;
 			expectBudget: number;
 			realBudget: number;
+			totalInvest: number;
 			reserveBudget: number;
 			expectStart: string;
 			expectEnd: string;
@@ -93,6 +94,44 @@ const projectServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Project/update-general-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	detailBudgetProject: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Project/project-budget-detail`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	updateBudgetProject: (
+		data: {
+			uuid: string;
+			expectBudget: number;
+			totalInvest: number;
+			realBudget: number;
+			reserveBudget: number;
+			annual: {
+				year: number;
+				budget: number;
+			}[];
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Project/update-budget-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	detailProgressProject: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Project/progress-project`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

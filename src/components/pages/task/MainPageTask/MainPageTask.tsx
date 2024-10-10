@@ -129,7 +129,7 @@ function MainPageTask({}: PropsMainPageTask) {
 
 				<div className={styles.btn}>
 					<Button
-						p_14_24
+						p_10_24
 						rounded_8
 						light-blue
 						href={PATH.CreateTask}
@@ -147,7 +147,7 @@ function MainPageTask({}: PropsMainPageTask) {
 						<Noti
 							button={
 								<Button
-									p_14_24
+									p_10_24
 									rounded_8
 									light-blue
 									href={PATH.CreateTask}
@@ -192,7 +192,7 @@ function MainPageTask({}: PropsMainPageTask) {
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
-											onClick={() => {}}
+											href={`${PATH.UpdateTask}?_uuid=${data?.uuid}`}
 										/>
 										<IconCustom
 											type='delete'
@@ -205,13 +205,13 @@ function MainPageTask({}: PropsMainPageTask) {
 							},
 						]}
 					/>
-					<Pagination
-						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
-						total={listTaskCat?.data?.pagination?.totalCount}
-						dependencies={[_pageSize, _keyword]}
-					/>
 				</DataWrapper>
+				<Pagination
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 20}
+					total={listTaskCat?.data?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword]}
+				/>
 			</WrapperScrollbar>
 
 			<Dialog

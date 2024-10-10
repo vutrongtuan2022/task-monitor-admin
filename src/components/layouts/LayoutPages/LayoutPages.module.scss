@@ -1,7 +1,8 @@
 .container {
-	height: 100%;
+	max-height: 100%;
 	display: flex;
 	flex-direction: column;
+	overflow: auto;
 }
 
 .head {
@@ -13,6 +14,20 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 12px;
+	overflow: auto;
+
+	&::-webkit-scrollbar {
+		height: 3px;
+	}
+	&::-webkit-scrollbar-track {
+		background: #f8f3f3;
+	}
+	&::-webkit-scrollbar-thumb {
+		background: #cdd5df;
+	}
+	&::-webkit-scrollbar-thumb:hover {
+		background: #3772ff;
+	}
 }
 
 .listPages {
@@ -22,6 +37,7 @@
 }
 
 .tab {
+	min-width: fit-content;
 	padding: 12px 16px;
 	border-radius: 8px;
 	border: 1px solid #eaedf2;

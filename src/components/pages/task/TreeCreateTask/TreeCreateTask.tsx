@@ -3,7 +3,7 @@ import React, {Fragment, useState} from 'react';
 import {PropsTreeCreateTask} from './interfaces';
 import styles from './TreeCreateTask.module.scss';
 import clsx from 'clsx';
-import {Add, AddCircle, MinusCirlce, Trash} from 'iconsax-react';
+import {AddCircle, MinusCirlce, Trash} from 'iconsax-react';
 import {convertToRoman} from '~/common/funcs/optionConvert';
 import Button from '~/components/common/Button';
 
@@ -48,6 +48,23 @@ function TreeCreateTask({task, level, stage, index, workflow, setWorkflow}: Prop
 		setWorkflow(removeTaskFromWorkflow(workflow));
 	};
 
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const {name, value} = e.target;
+
+		const updateWorkflow: any = (tasks: any[]) => {
+			return tasks.map((t: any) => {
+				if (t === task) {
+					return {...t, [name]: value};
+				} else if (t.children.length > 0) {
+					return {...t, children: updateWorkflow(t.children)};
+				}
+				return t;
+			});
+		};
+
+		setWorkflow(updateWorkflow(workflow));
+	};
+
 	return (
 		<Fragment>
 			<div className={clsx(styles.container, {[styles.child]: level > 1})}>
@@ -65,15 +82,32 @@ function TreeCreateTask({task, level, stage, index, workflow, setWorkflow}: Prop
 						{level == 3 && '#'}
 						{level == 4 && '##'}
 					</div>
-					<input name='name' value={task?.name || ''} placeholder='Nhập tên công việc' className={styles.input} />
+					<input
+						name='name'
+						value={task?.name || ''}
+						placeholder='Nhập tên công việc'
+						className={styles.input}
+						onChange={handleChange}
+						disabled={level == 1}
+					/>
 				</div>
-				<div className={styles.list_task}>
-					<p className={styles.task}>Task: 1</p>
-					<div className={styles.line}></div>
-					<p className={styles.task}>SubTask: 1</p>
-					<div className={styles.line}></div>
-					<p className={styles.task}>SubSubTask: 1</p>
-				</div>
+				{/* <div className={styles.list_task}>
+					{level == 1 && (
+						<>
+							<p className={styles.task}>Task: {1}</p>
+							<div className={styles.line}></div>
+						</>
+					)}
+
+					{level <= 2 && (
+						<>
+							<p className={styles.task}>SubTask: {1}</p>
+							<div className={styles.line}></div>
+						</>
+					)}
+
+					<p className={styles.task}>SubSubTask: {1}</p>
+				</div> */}
 				<div className={styles.control}>
 					{level != 1 && (
 						<div className={styles.delele_task} onClick={handleRemoveTask}>

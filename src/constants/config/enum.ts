@@ -9,6 +9,7 @@ export enum QUERY_KEY {
 	table_role,
 	table_branches,
 	table_list_account,
+	table_list_activity_project,
 
 	dropdown_role,
 	dropdown_group_contractor,
@@ -26,7 +27,10 @@ export enum QUERY_KEY {
 	detail_account,
 	detail_task,
 	detail_project,
+	detail_progress_project,
 	detail_general_update_project,
+	detail_budget_project,
+	detail_contractor_project,
 
 	tree_task,
 }
@@ -67,8 +71,25 @@ export enum TYPE_GENDER {
 	OTHER,
 }
 
-export enum TYPE_WORK_STATUS {
+export enum STATE_PROJECT {
 	PREPARE = 1,
 	DO,
 	FINISH,
+}
+
+export enum STATE_WORK_PROJECT {
+	NOT_PROCESSED,
+	PROCESSING,
+	COMPLETED,
+}
+
+export enum STATUS_WORK_PROJECT {
+	NOT_DONE,
+	ON_SCHEDULE,
+	SLOW_PROGRESS,
+}
+
+export enum TYPE_OF_WORK {
+	ARISE,
+	HAVE_PLAN,
 }

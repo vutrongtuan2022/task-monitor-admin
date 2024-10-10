@@ -8,11 +8,20 @@ import Button from '~/components/common/Button';
 import Form, {Input} from '~/components/common/Form';
 import clsx from 'clsx';
 import TreeCreateTask from '../TreeCreateTask';
+import {useMutation} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
+import taskCatServices from '~/services/taskCatServices';
+import {useRouter} from 'next/router';
+import {toastWarn} from '~/common/funcs/toast';
+import Loading from '~/components/common/Loading';
 
 function MainCreateTask({}: PropsMainCreateTask) {
+	const router = useRouter();
+
 	const [form, setForm] = useState<{name: string}>({
 		name: '',
 	});
+
 	const [workflow, setWorkflow] = useState<ITaskCreate[]>([
 		{
 			name: 'Giai đoạn chuẩn bị đầu tư',
@@ -34,10 +43,65 @@ function MainCreateTask({}: PropsMainCreateTask) {
 		},
 	]);
 
-	console.log(workflow);
+	const validateNames = (tasks: any[]): boolean => {
+		for (const task of tasks) {
+			if (task.name.trim() === '') {
+				return false;
+			}
+
+			if (task.children.length > 0) {
+				const isValidChildren = validateNames(task.children);
+				if (!isValidChildren) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	};
+
+	const removeLevel = (tasks: any[]): any[] => {
+		return tasks.map(({level, children, ...rest}) => {
+			return {
+				...rest,
+				children: children.length > 0 ? removeLevel(children) : [],
+			};
+		});
+	};
+
+	const fucnInsertTaskCat = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Thêm mới quy trình thành công!',
+				http: taskCatServices.insertTaskCat({
+					name: form.name,
+					workflow: removeLevel(workflow)?.reduce((prev, cur) => [...prev, ...cur.children], []),
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				router.back();
+			}
+		},
+	});
+
+	const handleInsertTaskCat = () => {
+		if (!form.name) {
+			return toastWarn({msg: 'Nhập tên quy trình!'});
+		}
+		if (!validateNames(workflow)) {
+			return toastWarn({msg: 'Nhập đầy đủ tên công việc!'});
+		}
+
+		return fucnInsertTaskCat.mutate();
+	};
 
 	return (
 		<div className={styles.container}>
+			<Loading loading={fucnInsertTaskCat.isLoading} />
 			<Breadcrumb
 				listUrls={[
 					{
@@ -62,7 +126,7 @@ function MainCreateTask({}: PropsMainCreateTask) {
 						>
 							Hủy bỏ
 						</Button>
-						<Button p_14_24 rounded_8 primaryLinear>
+						<Button p_14_24 rounded_8 primaryLinear onClick={handleInsertTaskCat}>
 							Lưu lại
 						</Button>
 					</div>

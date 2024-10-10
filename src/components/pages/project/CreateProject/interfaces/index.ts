@@ -9,7 +9,7 @@ export interface IFormCreateProject {
 	expectBudget: number;
 	realBudget: number;
 	reserveBudget: number;
-	totalBudget: string;
+	totalInvest: number;
 	matp: string;
 	maqh: string;
 	xaid: string;

@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useState} from 'react';
 
 import {PropsMainDisbursementProgress} from './interfaces';
 import styles from './MainDisbursementProgress.module.scss';
@@ -20,11 +20,80 @@ import {clsx} from 'clsx';
 import Link from 'next/link';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Breadcrumb from '~/components/common/Breadcrumb';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
+import projectServices from '~/services/projectServices';
+import {QUERY_KEY} from '~/constants/config/enum';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
 	const {_uuid} = router.query;
+
+	const [openDelete, setOpenDelete] = useState<boolean>(false);
+	const [openStart, setOpenStart] = useState<boolean>(false);
+	const [openFinish, setOpenFinish] = useState<boolean>(false);
+
+	const funcDeleteProject = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa dự án thành công',
+				http: projectServices.updateStatus({
+					uuid: _uuid as string,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setOpenDelete(false);
+				router.replace(`${PATH.Project}`, undefined, {
+					scroll: false,
+					shallow: false,
+				});
+			}
+		},
+	});
+
+	const funcStartProject = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Dự án được bắt đầu thực hiện!',
+				http: projectServices.updateState({
+					uuid: _uuid as string,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setOpenStart(false);
+				queryClient.invalidateQueries([QUERY_KEY.detail_project]);
+			}
+		},
+	});
+
+	const funcFinishProject = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Kết thúc dự án thành công!',
+				http: projectServices.updateState({
+					uuid: _uuid as string,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setOpenFinish(false);
+				queryClient.invalidateQueries([QUERY_KEY.detail_project]);
+			}
+		},
+	});
 
 	return (
 		<Fragment>
@@ -195,8 +264,8 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										},
 									]}
 								/>
-								<Pagination currentPage={1} pageSize={20} total={20} />
 							</DataWrapper>
+							<Pagination currentPage={1} pageSize={20} total={20} />
 						</WrapperScrollbar>
 					</div>
 				</div>
