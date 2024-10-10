@@ -25,6 +25,7 @@ import projectServices from '~/services/projectServices';
 import Loading from '~/components/common/Loading';
 import moment from 'moment';
 import {toastWarn} from '~/common/funcs/toast';
+import GridColumn from '~/components/layouts/GridColumn';
 
 function UpdateInfoProject({}: PropsUpdateInfoProject) {
 	const router = useRouter();
@@ -289,7 +290,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 								<h4>Thông tin cơ bản</h4>
 							</div>
 							<div className={styles.form}>
-								<div className={styles.col_2}>
+								<GridColumn col_2>
 									<Select
 										isSearch={true}
 										label={
@@ -328,21 +329,21 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 										value={form?.branchCode}
 										readOnly={true}
 									/>
-								</div>
-								<div className={clsx(styles.mt, styles.col_2)}>
-									<Input
-										label={
-											<span>
-												Tên công trình <span style={{color: 'red'}}>*</span>
-											</span>
-										}
-										type='text'
-										placeholder='Nhập tên công trình'
-										name='name'
-										value={form?.name}
-										isRequired={true}
-										blur={true}
-									/>
+									<div>
+										<Input
+											label={
+												<span>
+													Tên công trình <span style={{color: 'red'}}>*</span>
+												</span>
+											}
+											type='text'
+											placeholder='Nhập tên công trình'
+											name='name'
+											value={form?.name}
+											isRequired={true}
+											blur={true}
+										/>
+									</div>
 									<Select
 										isSearch={true}
 										label={
@@ -368,8 +369,6 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
-								</div>
-								<div className={clsx(styles.mt, styles.col_2)}>
 									<SelectMany
 										placeholder='Chọn'
 										label={
@@ -416,7 +415,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
-								</div>
+								</GridColumn>
 							</div>
 						</div>
 						<div className={clsx(styles.basic_info, styles.mt)}>
@@ -424,7 +423,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 								<h4>Thông tin khác</h4>
 							</div>
 							<div className={styles.form}>
-								<div className={styles.col_3}>
+								<GridColumn col_3>
 									<DatePicker
 										onClean={true}
 										icon={true}
@@ -479,8 +478,6 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											}))
 										}
 									/>
-								</div>
-								<div className={clsx(styles.col_3, styles.mt)}>
 									<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
 										{listProvince?.map((v: any) => (
 											<Option
@@ -523,7 +520,6 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											))}
 										</Select>
 									</div>
-
 									<Select
 										isSearch
 										name='xaid'
@@ -545,11 +541,9 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
-								</div>
-								<div className={clsx(styles.col_3, styles.mt)}>
 									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' />
 									<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
-								</div>
+								</GridColumn>
 							</div>
 						</div>
 					</Form>

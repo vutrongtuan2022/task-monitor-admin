@@ -18,6 +18,7 @@ import contractorcatServices from '~/services/contractorcatServices';
 import Select, {Option} from '~/components/common/Select';
 import Loading from '~/components/common/Loading';
 import {toastWarn} from '~/common/funcs/toast';
+import GridColumn from '~/components/layouts/GridColumn';
 
 function UpdateInforContractor({}: PropsUpdateInforContractor) {
 	const router = useRouter();
@@ -150,14 +151,14 @@ function UpdateInforContractor({}: PropsUpdateInforContractor) {
 							<h4>Thông tin nhà thầu</h4>
 						</div>
 						<div className={styles.form}>
-							<div className={styles.col_2}>
+							<GridColumn col_2>
 								<p className={styles.label}>
 									Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
 								</p>
 								<p className={styles.label}>
 									Nhà thầu <span style={{color: 'red'}}>*</span>
 								</p>
-							</div>
+							</GridColumn>
 							<div>
 								{listContractor?.map((v, i) => (
 									<ItemContractorProject
@@ -260,34 +261,36 @@ function ItemContractorProject({
 	};
 
 	return (
-		<div className={clsx(styles.col_2, styles.item_contractor_project)}>
-			<Select isSearch={true} name='idGroupContractor' value={data?.idGroupContractor} placeholder='Chọn'>
-				{dropdownGroupContractor?.map((v: any) => (
-					<Option
-						key={v.uuid}
-						value={v.id}
-						title={v?.name}
-						onClick={() => handleChangeValue(index, 'idGroupContractor', v?.id)}
-					/>
-				))}
-			</Select>
-			<div className={styles.grid}>
-				<Select isSearch={true} name='uuidContractor' value={data?.uuidContractor} placeholder='Chọn'>
-					{dropdownContractor?.map((v: any) => (
+		<div className={clsx(styles.item_contractor_project)}>
+			<GridColumn col_2>
+				<Select isSearch={true} name='idGroupContractor' value={data?.idGroupContractor} placeholder='Chọn'>
+					{dropdownGroupContractor?.map((v: any) => (
 						<Option
 							key={v.uuid}
-							value={v.uuid}
+							value={v.id}
 							title={v?.name}
-							onClick={() => handleChangeValue(index, 'uuidContractor', v?.uuid)}
+							onClick={() => handleChangeValue(index, 'idGroupContractor', v?.id)}
 						/>
 					))}
 				</Select>
-				{index >= 1 && (
-					<div className={styles.delete} onClick={handleDelete}>
-						<Trash size={22} color='#fff' />
-					</div>
-				)}
-			</div>
+				<div className={styles.grid}>
+					<Select isSearch={true} name='uuidContractor' value={data?.uuidContractor} placeholder='Chọn'>
+						{dropdownContractor?.map((v: any) => (
+							<Option
+								key={v.uuid}
+								value={v.uuid}
+								title={v?.name}
+								onClick={() => handleChangeValue(index, 'uuidContractor', v?.uuid)}
+							/>
+						))}
+					</Select>
+					{index >= 1 && (
+						<div className={styles.delete} onClick={handleDelete}>
+							<Trash size={22} color='#fff' />
+						</div>
+					)}
+				</div>
+			</GridColumn>
 		</div>
 	);
 }

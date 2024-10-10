@@ -24,6 +24,7 @@ import moment from 'moment';
 import {useRouter} from 'next/router';
 import Loading from '~/components/common/Loading';
 import {toastWarn} from '~/common/funcs/toast';
+import GridColumn from '~/components/layouts/GridColumn';
 
 function CreateProject({}: PropsCreateProject) {
 	const router = useRouter();
@@ -504,7 +505,7 @@ function CreateProject({}: PropsCreateProject) {
 							<h4>Thông tin khác</h4>
 						</div>
 						<div className={styles.form}>
-							<div className={styles.col_3}>
+							<GridColumn col_3>
 								<DatePicker
 									onClean={true}
 									icon={true}
@@ -559,64 +560,80 @@ function CreateProject({}: PropsCreateProject) {
 										}))
 									}
 								/>
-							</div>
-							<div className={clsx(styles.col_3, styles.mt)}>
-								<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
-									{listProvince?.map((v: any) => (
-										<Option
-											key={v?.matp}
-											value={v?.matp}
-											title={v?.name}
-											onClick={() =>
-												setForm((prev: any) => ({
-													...prev,
-													matp: v?.matp,
-													maqh: '',
-													xaid: '',
-												}))
-											}
-										/>
-									))}
-								</Select>
-
-								<div>
-									<Select isSearch name='maqh' value={form.maqh} placeholder='Lựa chọn' label={<span>Quận/ Huyện</span>}>
-										{listDistrict?.map((v: any) => (
+							</GridColumn>
+							<div className={clsx(styles.mt)}>
+								<GridColumn col_3>
+									<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
+										{listProvince?.map((v: any) => (
 											<Option
-												key={v?.maqh}
-												value={v?.maqh}
+												key={v?.matp}
+												value={v?.matp}
 												title={v?.name}
 												onClick={() =>
 													setForm((prev: any) => ({
 														...prev,
-														maqh: v?.maqh,
+														matp: v?.matp,
+														maqh: '',
 														xaid: '',
 													}))
 												}
 											/>
 										))}
 									</Select>
-								</div>
 
-								<Select isSearch name='xaid' value={form.xaid} placeholder='Lựa chọn' label={<span>Thị trấn/ Xã </span>}>
-									{listTown?.map((v: any) => (
-										<Option
-											key={v?.xaid}
-											value={v?.xaid}
-											title={v?.name}
-											onClick={() =>
-												setForm((prev: any) => ({
-													...prev,
-													xaid: v?.xaid,
-												}))
-											}
-										/>
-									))}
-								</Select>
+									<div>
+										<Select
+											isSearch
+											name='maqh'
+											value={form.maqh}
+											placeholder='Lựa chọn'
+											label={<span>Quận/ Huyện</span>}
+										>
+											{listDistrict?.map((v: any) => (
+												<Option
+													key={v?.maqh}
+													value={v?.maqh}
+													title={v?.name}
+													onClick={() =>
+														setForm((prev: any) => ({
+															...prev,
+															maqh: v?.maqh,
+															xaid: '',
+														}))
+													}
+												/>
+											))}
+										</Select>
+									</div>
+
+									<Select
+										isSearch
+										name='xaid'
+										value={form.xaid}
+										placeholder='Lựa chọn'
+										label={<span>Thị trấn/ Xã </span>}
+									>
+										{listTown?.map((v: any) => (
+											<Option
+												key={v?.xaid}
+												value={v?.xaid}
+												title={v?.name}
+												onClick={() =>
+													setForm((prev: any) => ({
+														...prev,
+														xaid: v?.xaid,
+													}))
+												}
+											/>
+										))}
+									</Select>
+								</GridColumn>
 							</div>
-							<div className={clsx(styles.col_3, styles.mt)}>
-								<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' />
-								<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
+							<div className={clsx(styles.mt)}>
+								<GridColumn col_2>
+									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' />
+									<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
+								</GridColumn>
 							</div>
 						</div>
 					</div>

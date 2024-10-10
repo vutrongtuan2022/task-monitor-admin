@@ -94,7 +94,7 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 	});
 
 	return (
-		<Fragment>
+		<div className={styles.container}>
 			<Breadcrumb
 				listUrls={[
 					{
@@ -144,7 +144,7 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 					<div className={styles.head}>
 						<h4>Thông tin nhà thầu</h4>
 					</div>
-					<div className={styles.container}>
+					<div className={styles.main_table}>
 						<div className={styles.head_filt}>
 							<div className={styles.main_search}>
 								<div className={styles.search}>
@@ -162,115 +162,113 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 								</Button>
 							</div>
 						</div>
-						<WrapperScrollbar>
-							<DataWrapper data={[1, 1, 1]}>
-								<Table
-									data={[1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
-									column={[
-										{
-											title: 'STT',
-											render: (data: any, index: number) => <>{index + 1}</>,
-										},
-										{
-											title: 'Thuộc nhóm',
-											render: (data: any) => <>Nhà thầu thi công xây lắp</>,
-										},
-										{
-											title: 'Tên nhà thầu',
-											render: (data: any) => <>Nhà thầu số 34 HD</>,
-										},
-										{
-											title: 'Hợp đồng dự án',
-											render: (data: any) => (
-												<>
-													{data === 1 && (
-														<div className={styles.contract_link}>
-															<Link1 color='#2970FF' />
-															<Link href={`#`} className={styles.link}>
-																Hợp đồng số 3 A
-															</Link>
-														</div>
-													)}
-													{data === 2 && (
-														<div className={styles.contract_link}>
-															<Add color='#06D7A0' />
-															<Link href={`#`} className={styles.link_add}>
-																Thêm hợp đồng
-															</Link>
-														</div>
-													)}
-												</>
-											),
-										},
-										{
-											title: 'Bảo lãnh hợp đồng dự án',
-											render: (data: any) => (
-												<>
-													{data === 1 && (
-														<div className={styles.contract_link}>
-															<Link1 color='#2970FF' />
-															<Link href={`#`} className={styles.link}>
-																Hợp đồng số 3 A
-															</Link>
-														</div>
-													)}
-													{data === 2 && (
-														<div className={styles.contract_link}>
-															<Add color='#06D7A0' />
-															<Link href={`#`} className={styles.link_add}>
-																Thêm hợp đồng
-															</Link>
-														</div>
-													)}
-												</>
-											),
-										},
-										{
-											title: 'Bảo lãnh hợp đồng giải ngân',
-											render: (data: any) => (
-												<>
-													{data === 1 && (
-														<div className={styles.contract_link}>
-															<Link1 color='#2970FF' />
-															<Link href={`#`} className={styles.link}>
-																Hợp đồng số 3 A
-															</Link>
-														</div>
-													)}
-													{data === 2 && (
-														<div className={styles.contract_link}>
-															<Add color='#06D7A0' />
-															<Link href={`#`} className={styles.link_add}>
-																Thêm hợp đồng
-															</Link>
-														</div>
-													)}
-												</>
-											),
-										},
-										{
-											title: 'Hành động',
-											fixedRight: true,
-											render: (data: any) => (
-												<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-													<IconCustom
-														type='delete'
-														icon={<Trash fontSize={20} fontWeight={600} />}
-														tooltip='Xóa bỏ'
-														onClick={() => {}}
-													/>
-												</div>
-											),
-										},
-									]}
-								/>
-							</DataWrapper>
-							<Pagination currentPage={1} pageSize={20} total={20} />
-						</WrapperScrollbar>
+						<DataWrapper data={[1, 1, 1]}>
+							<Table
+								data={[1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+								column={[
+									{
+										title: 'STT',
+										render: (data: any, index: number) => <>{index + 1}</>,
+									},
+									{
+										title: 'Thuộc nhóm',
+										render: (data: any) => <>Nhà thầu thi công xây lắp</>,
+									},
+									{
+										title: 'Tên nhà thầu',
+										render: (data: any) => <>Nhà thầu số 34 HD</>,
+									},
+									{
+										title: 'Hợp đồng dự án',
+										render: (data: any) => (
+											<>
+												{data === 1 && (
+													<div className={styles.contract_link}>
+														<Link1 color='#2970FF' />
+														<Link href={`#`} className={styles.link}>
+															Hợp đồng số 3 A
+														</Link>
+													</div>
+												)}
+												{data === 2 && (
+													<div className={styles.contract_link}>
+														<Add color='#06D7A0' />
+														<Link href={`#`} className={styles.link_add}>
+															Thêm hợp đồng
+														</Link>
+													</div>
+												)}
+											</>
+										),
+									},
+									{
+										title: 'Bảo lãnh hợp đồng dự án',
+										render: (data: any) => (
+											<>
+												{data === 1 && (
+													<div className={styles.contract_link}>
+														<Link1 color='#2970FF' />
+														<Link href={`#`} className={styles.link}>
+															Hợp đồng số 3 A
+														</Link>
+													</div>
+												)}
+												{data === 2 && (
+													<div className={styles.contract_link}>
+														<Add color='#06D7A0' />
+														<Link href={`#`} className={styles.link_add}>
+															Thêm hợp đồng
+														</Link>
+													</div>
+												)}
+											</>
+										),
+									},
+									{
+										title: 'Bảo lãnh hợp đồng giải ngân',
+										render: (data: any) => (
+											<>
+												{data === 1 && (
+													<div className={styles.contract_link}>
+														<Link1 color='#2970FF' />
+														<Link href={`#`} className={styles.link}>
+															Hợp đồng số 3 A
+														</Link>
+													</div>
+												)}
+												{data === 2 && (
+													<div className={styles.contract_link}>
+														<Add color='#06D7A0' />
+														<Link href={`#`} className={styles.link_add}>
+															Thêm hợp đồng
+														</Link>
+													</div>
+												)}
+											</>
+										),
+									},
+									{
+										title: 'Hành động',
+										fixedRight: true,
+										render: (data: any) => (
+											<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+												<IconCustom
+													type='delete'
+													icon={<Trash fontSize={20} fontWeight={600} />}
+													tooltip='Xóa bỏ'
+													onClick={() => {}}
+												/>
+											</div>
+										),
+									},
+								]}
+							/>
+						</DataWrapper>
+						<Pagination currentPage={1} pageSize={20} total={20} />
 					</div>
 				</div>
 			</LayoutPages>
-		</Fragment>
+		</div>
 	);
 }
 

@@ -18,6 +18,7 @@ import Select, {Option} from '~/components/common/Select';
 import {AddCircle, Trash} from 'iconsax-react';
 import {toastWarn} from '~/common/funcs/toast';
 import Loading from '~/components/common/Loading';
+import GridColumn from '~/components/layouts/GridColumn';
 
 function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	const router = useRouter();
@@ -169,7 +170,7 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 								<h4>Thông tin kế hoạch vốn</h4>
 							</div>
 							<div className={styles.form}>
-								<div className={styles.col_2}>
+								<GridColumn col_2>
 									<Input
 										label={
 											<span>
@@ -202,8 +203,6 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 											isMoney={true}
 										/>
 									</div>
-								</div>
-								<div className={clsx(styles.mt, styles.col_2)}>
 									<Input
 										label={
 											<span>
@@ -236,14 +235,16 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 											isMoney={true}
 										/>
 									</div>
-								</div>
-								<div className={clsx(styles.mt, styles.col_2)}>
-									<p className={styles.label}>
-										Kế hoạch vốn theo năm <span style={{color: 'red'}}>*</span>
-									</p>
-									<p className={styles.label}>
-										Số tiền <span style={{color: 'red'}}>*</span>
-									</p>
+								</GridColumn>
+								<div className={clsx(styles.mt)}>
+									<GridColumn col_2>
+										<p className={styles.label}>
+											Kế hoạch vốn theo năm <span style={{color: 'red'}}>*</span>
+										</p>
+										<p className={styles.label}>
+											Số tiền <span style={{color: 'red'}}>*</span>
+										</p>
+									</GridColumn>
 								</div>
 								<div>
 									{form?.annual?.map((v, i) => (
@@ -342,30 +343,32 @@ function ItemAnnualToYear({
 	};
 
 	return (
-		<div className={clsx(styles.col_2, styles.item_annual_to_year)}>
-			<Select isSearch={true} name='year' value={data.year} placeholder='Chọn'>
-				{years?.map((v: any) => (
-					<Option key={v} value={v} title={String(v)} onClick={() => handleChangeValue(index, 'year', v, false)} />
-				))}
-			</Select>
-			<div className={styles.grid}>
-				<div className={styles.input_specification}>
-					<input
-						name='value'
-						value={data.budget}
-						type='text'
-						placeholder='Nhập thông số'
-						className={styles.input}
-						onChange={(e) => handleChangeValue(index, 'budget', e.target.value, true)}
-					/>
-					<div className={styles.unit}>VNĐ</div>
-				</div>
-				{index != 0 && (
-					<div className={styles.delete} onClick={() => handleDelete(index)}>
-						<Trash size={24} color='#fff' />
+		<div className={clsx(styles.item_annual_to_year)}>
+			<GridColumn col_2>
+				<Select isSearch={true} name='year' value={data.year} placeholder='Chọn'>
+					{years?.map((v: any) => (
+						<Option key={v} value={v} title={String(v)} onClick={() => handleChangeValue(index, 'year', v, false)} />
+					))}
+				</Select>
+				<div className={styles.grid}>
+					<div className={styles.input_specification}>
+						<input
+							name='value'
+							value={data.budget}
+							type='text'
+							placeholder='Nhập thông số'
+							className={styles.input}
+							onChange={(e) => handleChangeValue(index, 'budget', e.target.value, true)}
+						/>
+						<div className={styles.unit}>VNĐ</div>
 					</div>
-				)}
-			</div>
+					{index != 0 && (
+						<div className={styles.delete} onClick={() => handleDelete(index)}>
+							<Trash size={24} color='#fff' />
+						</div>
+					)}
+				</div>
+			</GridColumn>
 		</div>
 	);
 }

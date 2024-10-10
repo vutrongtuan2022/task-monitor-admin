@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {useState} from 'react';
 
 import {PropsMainDisbursementProgress} from './interfaces';
 import styles from './MainDisbursementProgress.module.scss';
@@ -8,7 +8,6 @@ import {useRouter} from 'next/router';
 import Button from '~/components/common/Button';
 import Pagination from '~/components/common/Pagination';
 import DataWrapper from '~/components/common/DataWrapper';
-import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import StateActive from '~/components/common/StateActive';
 import DateRangerCustom from '~/components/common/DateRangerCustom';
 import Table from '~/components/common/Table';
@@ -96,7 +95,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	});
 
 	return (
-		<Fragment>
+		<div className={styles.container}>
 			<Breadcrumb
 				listUrls={[
 					{
@@ -182,7 +181,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 					<div className={styles.head}>
 						<h4>Danh sách báo cáo số tiền giải ngân</h4>
 					</div>
-					<div className={styles.container}>
+					<div className={styles.main_table}>
 						<div className={styles.head_filt}>
 							<div className={styles.main_search}>
 								<div className={styles.search}>
@@ -210,67 +209,65 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 								</div>
 							</div>
 						</div>
-						<WrapperScrollbar>
-							<DataWrapper data={[1, 1, 1]}>
-								<Table
-									data={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
-									column={[
-										{
-											title: 'STT',
-											render: (data: any, index: number) => <>{index + 1}</>,
-										},
-										{
-											title: 'Báo cáo tháng',
-											render: (data: any) => <>{'Báo cáo tháng 10'}</>,
-										},
-										{
-											title: 'Ngày gửi báo cáo',
-											render: (data: any) => <>01/09/2024</>,
-										},
-										{
-											title: 'Số tiền giải ngân (VND)',
-											render: (data: any) => <>400.000.000</>,
-										},
-										{
-											title: 'Người báo cáo',
-											render: (data: any) => <>Vũ Thị Ngân</>,
-										},
-										{
-											title: 'Trạng thái',
-											render: (data: any) => (
-												<div className={styles.state}>
-													<StateActive
-														stateActive={2}
-														listState={[
-															{
-																state: 1,
-																text: 'Đã báo cáo',
-																textColor: '#fff',
-																backgroundColor: '#06D7A0',
-															},
-															{
-																state: 2,
-																text: 'Bị từ chối',
-																textColor: '#fff',
-																backgroundColor: '#F37277',
-															},
-														]}
-													/>
-													<Link href={``} className={styles.link_state}>
-														Gửi lại
-													</Link>
-												</div>
-											),
-										},
-									]}
-								/>
-							</DataWrapper>
-							<Pagination currentPage={1} pageSize={20} total={20} />
-						</WrapperScrollbar>
+						<DataWrapper data={[1, 1, 1]}>
+							<Table
+								data={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+								column={[
+									{
+										title: 'STT',
+										render: (data: any, index: number) => <>{index + 1}</>,
+									},
+									{
+										title: 'Báo cáo tháng',
+										render: (data: any) => <>{'Báo cáo tháng 10'}</>,
+									},
+									{
+										title: 'Ngày gửi báo cáo',
+										render: (data: any) => <>01/09/2024</>,
+									},
+									{
+										title: 'Số tiền giải ngân (VND)',
+										render: (data: any) => <>400.000.000</>,
+									},
+									{
+										title: 'Người báo cáo',
+										render: (data: any) => <>Vũ Thị Ngân</>,
+									},
+									{
+										title: 'Trạng thái',
+										render: (data: any) => (
+											<div className={styles.state}>
+												<StateActive
+													stateActive={2}
+													listState={[
+														{
+															state: 1,
+															text: 'Đã báo cáo',
+															textColor: '#fff',
+															backgroundColor: '#06D7A0',
+														},
+														{
+															state: 2,
+															text: 'Bị từ chối',
+															textColor: '#fff',
+															backgroundColor: '#F37277',
+														},
+													]}
+												/>
+												<Link href={``} className={styles.link_state}>
+													Gửi lại
+												</Link>
+											</div>
+										),
+									},
+								]}
+							/>
+						</DataWrapper>
+						<Pagination currentPage={1} pageSize={20} total={20} />
 					</div>
 				</div>
 			</LayoutPages>
-		</Fragment>
+		</div>
 	);
 }
 
