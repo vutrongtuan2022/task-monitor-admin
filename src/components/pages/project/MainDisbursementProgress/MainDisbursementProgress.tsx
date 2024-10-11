@@ -26,6 +26,7 @@ import icons from '~/constants/images/icons';
 import projectFundServices from '~/services/projectFundServices';
 import Search from '~/components/common/Search';
 import Moment from 'react-moment';
+import Noti from '~/components/common/DataWrapper/components/Noti';
 
 const generateYearsArray = (): number[] => {
 	const currentYear = new Date().getFullYear();
@@ -75,8 +76,8 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 						projectUuid: _uuid as string,
 						status: STATUS_CONFIG.ACTIVE,
 						approved: !!_approved ? Number(_approved) : null,
-						year: Number(_year) || null,
-						month: Number(_month) || null,
+						year: !!_year ? Number(_year) : null,
+						month: !!_month ? Number(_month) : null,
 					}),
 				}),
 			select(data) {
@@ -299,7 +300,11 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 								</div>
 							</div>
 						</div>
-						<DataWrapper loading={isLoading} data={listProjectFund?.items || []}>
+						<DataWrapper
+							loading={isLoading}
+							noti={<Noti title='Dữ liệu trống!' des='Danh sách trống!' />}
+							data={listProjectFund?.items || []}
+						>
 							<Table
 								data={listProjectFund?.items || []}
 								column={[
@@ -309,27 +314,27 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 									},
 									{
 										title: 'Báo cáo tháng',
-										render: (data: IProjectFund) => <>{data?.monthReport}</>,
+										render: (data: IProjectFund) => <>{data?.monthReport || '---'} </>,
 									},
 									{
 										title: 'Số tiền giải ngân (VND)',
-										render: (data: IProjectFund) => <>{convertCoin(data?.realeaseBudget)}</>,
+										render: (data: IProjectFund) => <>{convertCoin(data?.realeaseBudget) || '---'}</>,
 									},
 									{
 										title: 'Tổng mức đầu tư (VND)',
-										render: (data: IProjectFund) => <>{convertCoin(data?.totalInvest)}</>,
+										render: (data: IProjectFund) => <>{convertCoin(data?.totalInvest) || '---'}</>,
 									},
 									{
 										title: 'Kế hoạch vốn năm (VND)',
-										render: (data: IProjectFund) => <>{convertCoin(data?.annualBudget)}</>,
+										render: (data: IProjectFund) => <>{convertCoin(data?.annualBudget) || '---'}</>,
 									},
 									{
 										title: 'Lũy kế theo năm (VND)',
-										render: (data: IProjectFund) => <>{convertCoin(data?.annualAccumAmount)}</>,
+										render: (data: IProjectFund) => <>{convertCoin(data?.annualAccumAmount) || '---'}</>,
 									},
 									{
 										title: 'Lũy kế theo dự án (VND)',
-										render: (data: IProjectFund) => <>{convertCoin(data?.projectAccumAmount)}</>,
+										render: (data: IProjectFund) => <>{convertCoin(data?.projectAccumAmount) || '---'}</>,
 									},
 									{
 										title: 'Tỷ lệ giải ngân',
@@ -337,11 +342,13 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 									},
 									{
 										title: 'Ngày gửi báo cáo',
-										render: (data: IProjectFund) => <Moment date={data?.created} format='DD/MM/YYYY' />,
+										render: (data: IProjectFund) => {
+											data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---';
+										},
 									},
 									{
 										title: 'Người báo cáo',
-										render: (data: IProjectFund) => <>{data?.reporter?.fullname}</>,
+										render: (data: IProjectFund) => <>{data?.reporter?.fullname || '---'}</>,
 									},
 									{
 										title: 'Trạng thái',

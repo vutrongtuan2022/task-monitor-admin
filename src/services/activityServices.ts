@@ -17,6 +17,23 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	listUserActivities: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number | null;
+			month: number | null;
+			year: number | null;
+			state: number | null;
+			type: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/admin-get-paged-user-activities`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default activityServices;
