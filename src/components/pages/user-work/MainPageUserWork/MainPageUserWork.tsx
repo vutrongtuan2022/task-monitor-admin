@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import Tippy from '@tippyjs/react';
-import TippyHeadless from '@tippyjs/react/headless';
 
 import {IUserWork, PropsMainPageUserWork} from './interfaces';
 import styles from './MainPageUserWork.module.scss';
@@ -14,8 +13,6 @@ import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG, STATUS_REPORT_WORK, TYPE_OF_WORK} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
-import branchesServices from '~/services/branchesServices';
-import clsx from 'clsx';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import activityServices from '~/services/activityServices';
@@ -182,7 +179,7 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 							},
 							{
 								title: 'Megatype',
-								render: (data: IUserWork) => <>{'---'}</>,
+								render: (data: IUserWork) => <>{data?.megatype || '---'}</>,
 							},
 							{
 								title: 'Người báo cáo',

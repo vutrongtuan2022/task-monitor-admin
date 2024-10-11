@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import Tippy from '@tippyjs/react';
-import TippyHeadless from '@tippyjs/react/headless';
 
 import {IBranches, PropsMainPageReportDisbursement} from './interfaces';
 import styles from './MainPageReportDisbursement.module.scss';
@@ -12,10 +10,9 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG, STATUS_REPORT_WORK, TYPE_OF_WORK} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import branchesServices from '~/services/branchesServices';
-import clsx from 'clsx';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
@@ -140,7 +137,6 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							},
 							{
 								title: 'Trạng thái',
-								fixedRight: true,
 								render: (data: IBranches) => (
 									<StateActive
 										stateActive={1}
