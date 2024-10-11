@@ -17,6 +17,7 @@ import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
 import DatePicker from '~/components/common/DatePicker';
 import {timeSubmit, timeSubmitDateOnly} from '~/common/funcs/optionConvert';
+import {toastWarn} from '~/common/funcs/toast';
 
 function CreateUser({onClose}: PropsCreateUser) {
 	const queryClient = useQueryClient();
@@ -119,6 +120,15 @@ function CreateUser({onClose}: PropsCreateUser) {
 	});
 
 	const handleSubmit = async () => {
+		const today = new Date(timeSubmit(new Date())!);
+		const birthday = form.birthday ? new Date(form.birthday) : null;
+		if (!form.birthday) {
+			return toastWarn({msg: 'Vui lòng nhập ngày sinh!'});
+		}
+		if (!birthday || today < birthday) {
+			return toastWarn({msg: 'Ngày sinh không hợp lệ!'});
+		}
+
 		return funcCreateUser.mutate();
 	};
 
@@ -132,6 +142,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 						placeholder='Nhập họ và tên'
 						name='fullName'
 						type='text'
+						max={50}
 						value={form.fullName}
 						isRequired
 						label={
@@ -174,7 +185,11 @@ function CreateUser({onClose}: PropsCreateUser) {
 						<DatePicker
 							onClean={true}
 							icon={true}
-							label={<span>Ngày sinh</span>}
+							label={
+								<span>
+									Ngày sinh <span style={{color: 'red'}}>*</span>
+								</span>
+							}
 							placeholder='dd/mm/yyyy'
 							value={form?.birthday}
 							onSetValue={(birthday) =>
@@ -318,13 +333,14 @@ function CreateUser({onClose}: PropsCreateUser) {
 							placeholder='Nhập địa chỉ chi tiết'
 							name='address'
 							type='text'
+							max={255}
 							value={form.address}
 							label={<span>Địa chỉ chi tiết</span>}
 						/>
 					</div>
 
 					<div className={styles.mt}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
 					</div>
 				</div>
 				<div className={styles.group_button}>

@@ -16,6 +16,9 @@ import accountServices from '~/services/accountServices';
 import md5 from 'md5';
 import {FolderOpen} from 'iconsax-react';
 
+// Regex không cho phép tiếng Việt có dấu, space, ký tự đặc biệt
+const usernameRegex = /^[a-zA-Z0-9@.]+$/;
+
 function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount) {
 	const queryClient = useQueryClient();
 
@@ -60,6 +63,14 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 	});
 
 	const handleSubmit = async () => {
+		// Check username với regex
+		if (!usernameRegex.test(form.username)) {
+			return toastWarn({msg: 'Tên đăng nhập không hợp lệ'});
+		}
+		if (!usernameRegex.test(form.password)) {
+			return toastWarn({msg: 'Mật khẩu phải chứa ít nhất 6 ký tự, bao gồm chữ cái và số'});
+		}
+
 		if (!form?.roleUuid) {
 			return toastWarn({msg: 'Vui lòng chọn nhóm quyền'});
 		}
@@ -94,6 +105,8 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 						name='password'
 						isRequired
 						placeholder='Nhập mật khẩu'
+						min={6}
+						max={255}
 						label={
 							<span>
 								Nhập mật khẩu <span style={{color: 'var(--error)'}}>*</span>

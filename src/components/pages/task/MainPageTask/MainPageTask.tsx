@@ -68,7 +68,7 @@ function MainPageTask({}: PropsMainPageTask) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Xóa nhà thầu thành công!',
+				msgSuccess: 'Xóa nhà quy trình thành công!',
 				http: taskCatServices.updateStatusTaskCat({
 					uuid: uuidDelete,
 				}),
@@ -123,7 +123,7 @@ function MainPageTask({}: PropsMainPageTask) {
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo quy trình, ID' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên quy trình' />
 					</div>
 				</div>
 

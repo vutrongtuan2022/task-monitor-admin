@@ -57,6 +57,7 @@ function CreateGroupContractor({onClose}: PropsCreateGroupContractor) {
 						name='name'
 						type='text'
 						value={form.name}
+						max={255}
 						isRequired
 						label={
 							<span>
@@ -65,7 +66,7 @@ function CreateGroupContractor({onClose}: PropsCreateGroupContractor) {
 						}
 					/>
 					<div className={styles.note}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
 					</div>
 				</div>
 				<div className={styles.group_button}>

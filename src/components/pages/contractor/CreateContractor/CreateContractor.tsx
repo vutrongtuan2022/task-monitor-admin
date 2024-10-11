@@ -28,6 +28,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 		maqh: '',
 		xaid: '',
 		address: '',
+		code: '',
 	});
 
 	const listGroupContractor = useQuery([QUERY_KEY.dropdown_group_contractor], {
@@ -98,6 +99,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 					maqh: form.maqh,
 					xaid: form.xaid,
 					address: form.address,
+					code: form.code,
 				}),
 			});
 		},
@@ -112,6 +114,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 					maqh: '',
 					xaid: '',
 					address: '',
+					code: '',
 				});
 				queryClient.invalidateQueries([QUERY_KEY.table_contractor]);
 			}
@@ -133,14 +136,28 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 				<h4 className={styles.title}>Thêm mới nhà thầu</h4>
 				<div className={styles.form}>
 					<Input
-						placeholder='Nhập tên nhóm nhà thầu'
+						placeholder='Nhập tên nhà thầu'
 						name='name'
 						type='text'
 						value={form.name}
 						isRequired
+						max={255}
 						label={
 							<span>
 								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+							</span>
+						}
+					/>
+					<Input
+						placeholder='Nhập mã số thuế'
+						name='code'
+						type='text'
+						value={form.code}
+						isRequired
+						max={15}
+						label={
+							<span>
+								Mã số thuế <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
@@ -225,13 +242,14 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 							placeholder='Nhập địa chỉ'
 							name='address'
 							type='text'
+							max={255}
 							value={form.address}
 							label={<span>Địa chỉ chi tiết</span>}
 						/>
 					</div>
 
 					<div className={styles.mt}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
 					</div>
 				</div>
 				<div className={styles.group_button}>

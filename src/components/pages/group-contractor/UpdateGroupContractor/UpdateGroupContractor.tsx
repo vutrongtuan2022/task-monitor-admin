@@ -80,6 +80,7 @@ function UpdateGroupContractor({onClose}: PropsUpdateGroupContractor) {
 						type='text'
 						value={form.name}
 						isRequired
+						max={255}
 						label={
 							<span>
 								Tên nhóm nhà thầu <span style={{color: 'red'}}>*</span>
@@ -87,7 +88,7 @@ function UpdateGroupContractor({onClose}: PropsUpdateGroupContractor) {
 						}
 					/>
 					<div className={styles.note}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
 					</div>
 				</div>
 				<div className={styles.group_button}>

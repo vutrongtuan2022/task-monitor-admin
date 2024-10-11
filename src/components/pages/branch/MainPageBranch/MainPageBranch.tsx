@@ -85,7 +85,7 @@ function MainPageBranch({}: PropsMainPageBranch) {
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo mã, tên chi nhánh' />
 					</div>
 				</div>
 
@@ -162,33 +162,14 @@ function MainPageBranch({}: PropsMainPageBranch) {
 							{
 								title: 'Mô tả',
 								render: (data: IBranches) => (
-									<TippyHeadless
-										maxWidth={'100%'}
-										interactive
-										onClickOutside={() => setUuidDescription('')}
-										visible={uuidDescription == data?.uuid}
-										placement='bottom'
-										render={(attrs) => (
-											<div className={styles.main_description}>
-												<p>{data?.note}</p>
-											</div>
-										)}
-									>
-										<Tippy content='Xem chi tiết mô tả'>
-											<p
-												onClick={() => {
-													if (!data.note) {
-														return;
-													} else {
-														setUuidDescription(uuidDescription ? '' : data.uuid);
-													}
-												}}
-												className={clsx(styles.description, {[styles.active]: uuidDescription == data.uuid})}
-											>
-												{data?.note || '---'}
-											</p>
-										</Tippy>
-									</TippyHeadless>
+									<>
+										{(data?.note && (
+											<Tippy content={data?.note}>
+												<p className={styles.name}>{data?.note || '---'}</p>
+											</Tippy>
+										)) ||
+											'---'}
+									</>
 								),
 							},
 							{

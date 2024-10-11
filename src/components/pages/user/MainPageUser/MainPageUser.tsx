@@ -173,7 +173,7 @@ function MainPageUser({}: PropsMainPageUser) {
 								},
 								{
 									title: 'Số điện thoại',
-									render: (data: IUser) => <>{data?.email || '---'}</>,
+									render: (data: IUser) => <>{data?.phone || '---'}</>,
 								},
 								{
 									title: 'Email',

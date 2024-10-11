@@ -32,6 +32,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 		maqh: '',
 		xaid: '',
 		address: '',
+		code: '',
 	});
 
 	useQuery([QUERY_KEY.detail_contractor, _uuidContractor], {
@@ -51,6 +52,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 					maqh: data?.qh?.uuid || '',
 					xaid: data?.xa?.uuid || '',
 					address: data?.address || '',
+					code: data?.code || '',
 				});
 			}
 		},
@@ -125,6 +127,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 					maqh: form.maqh,
 					xaid: form.xaid,
 					address: form.address,
+					code: form.code,
 				}),
 			});
 		},
@@ -139,6 +142,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 					maqh: '',
 					xaid: '',
 					address: '',
+					code: '',
 				});
 				queryClient.invalidateQueries([QUERY_KEY.table_contractor]);
 			}
@@ -160,14 +164,29 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 				<h4 className={styles.title}>Chỉnh sửa nhà thầu</h4>
 				<div className={styles.form}>
 					<Input
-						placeholder='Nhập tên nhóm nhà thầu'
+						placeholder='Nhập tên nhà thầu'
 						name='name'
 						type='text'
 						value={form.name}
 						isRequired
+						max={255}
 						label={
 							<span>
 								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+							</span>
+						}
+					/>
+
+					<Input
+						placeholder='Nhập mã số thuế'
+						name='code'
+						type='text'
+						value={form.code}
+						isRequired
+						max={15}
+						label={
+							<span>
+								Mã số thuế <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
@@ -253,12 +272,13 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 							name='address'
 							type='text'
 							value={form.address}
+							max={255}
 							label={<span>Địa chỉ chi tiết</span>}
 						/>
 					</div>
 
 					<div className={styles.mt}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
 					</div>
 				</div>
 				<div className={styles.group_button}>

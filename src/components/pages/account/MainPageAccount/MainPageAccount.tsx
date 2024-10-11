@@ -29,20 +29,20 @@ function MainPageAccount({}: PropsMainPageAccount) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _roleUuid, _uuidAccount} = router.query;
+	const {_page, _pageSize, _keyword, _roleUuid, _status, _uuidAccount} = router.query;
 
 	const {infoUser} = useSelector((state: RootState) => state.user);
 	const [dataStatus, setDataStatus] = useState<IAccount | null>(null);
 	const [deleteAccount, setDeleteAccount] = useState<IAccount | null>(null);
 
-	const listAccount = useQuery([QUERY_KEY.table_list_account, _page, _pageSize, _keyword, _roleUuid], {
+	const listAccount = useQuery([QUERY_KEY.table_list_account, _page, _pageSize, _keyword, _roleUuid, _status], {
 		queryFn: () =>
 			httpRequest({
 				http: accountServices.listAccount({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
-					status: [STATUS_ACCOUNT.HAVE, STATUS_ACCOUNT.LOCK],
+					status: !!_status ? [Number(_status)] : [STATUS_ACCOUNT.HAVE, STATUS_ACCOUNT.LOCK],
 					roleUuid: (_roleUuid as string) || '',
 				}),
 			}),
@@ -107,7 +107,25 @@ function MainPageAccount({}: PropsMainPageAccount) {
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên tài khoản, ID' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên đăng nhập' />
+					</div>
+
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Trạng thái'
+							query='_status'
+							listFilter={[
+								{
+									id: STATUS_ACCOUNT.HAVE,
+									name: 'Hoạt động',
+								},
+								{
+									id: STATUS_ACCOUNT.LOCK,
+									name: 'Đã khóa',
+								},
+							]}
+						/>
 					</div>
 
 					<div className={styles.filter}>
@@ -138,20 +156,30 @@ function MainPageAccount({}: PropsMainPageAccount) {
 								render: (data: IAccount, index: number) => <>{index + 1}</>,
 							},
 							{
-								title: 'Mã tài khoản',
+								title: 'Tên tài khoản',
 								render: (data: IAccount) => <span style={{fontWeight: '600'}}>{data?.userName || '---'}</span>,
 							},
+
 							{
-								title: 'Mã nhân viên',
-								render: (data: IAccount) => <span style={{fontWeight: '600'}}>{data?.user?.code || '---'}</span>,
-							},
-							{
-								title: 'Họ tên',
-								fixedLeft: true,
+								title: 'Trạng thái tài khoản',
 								render: (data: IAccount) => (
-									<Link href={``} className={styles.link}>
-										{data?.user?.name || '---'}
-									</Link>
+									<StateActive
+										stateActive={data?.status}
+										listState={[
+											{
+												state: STATUS_CONFIG.ACTIVE,
+												text: 'Hoạt động',
+												textColor: '#fff',
+												backgroundColor: '#06D7A0',
+											},
+											{
+												state: STATUS_CONFIG.NOT_ACTIVE,
+												text: 'Đã khóa',
+												textColor: '#fff',
+												backgroundColor: '#F37277',
+											},
+										]}
+									/>
 								),
 							},
 							{
@@ -183,28 +211,6 @@ function MainPageAccount({}: PropsMainPageAccount) {
 												text: 'USER',
 												textColor: '#fff',
 												backgroundColor: '#6CD1F2',
-											},
-										]}
-									/>
-								),
-							},
-							{
-								title: 'Trạng thái tài khoản',
-								render: (data: IAccount) => (
-									<StateActive
-										stateActive={data?.status}
-										listState={[
-											{
-												state: STATUS_CONFIG.ACTIVE,
-												text: 'Hoạt động',
-												textColor: '#fff',
-												backgroundColor: '#06D7A0',
-											},
-											{
-												state: STATUS_CONFIG.NOT_ACTIVE,
-												text: 'Đã khóa',
-												textColor: '#fff',
-												backgroundColor: '#F37277',
 											},
 										]}
 									/>
@@ -267,7 +273,7 @@ function MainPageAccount({}: PropsMainPageAccount) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
 					total={listAccount?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _roleUuid]}
+					dependencies={[_pageSize, _keyword, _roleUuid, _status]}
 				/>
 			</WrapperScrollbar>
 

@@ -9,4 +9,5 @@ export interface IFormUpdateContractor {
 	maqh: string;
 	xaid: string;
 	address: string;
+	code: string;
 }

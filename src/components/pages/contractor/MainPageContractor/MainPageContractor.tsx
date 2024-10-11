@@ -26,6 +26,7 @@ import Dialog from '~/components/common/Dialog';
 import {toastWarn} from '~/common/funcs/toast';
 import Loading from '~/components/common/Loading';
 import UpdateContractor from '../UpdateContractor';
+import Tippy from '@tippyjs/react';
 
 function MainPageContractor({}: PropsMainPageContractor) {
 	const router = useRouter();
@@ -98,7 +99,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên nhà thầu' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo mã, tên nhóm nhà thầu' />
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -184,7 +185,16 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							},
 							{
 								title: 'Mô tả',
-								render: (data: IContractor) => <>{data?.note || '---'}</>,
+								render: (data: IContractor) => (
+									<>
+										{(data?.note && (
+											<Tippy content={data?.note}>
+												<p className={styles.name}>{data?.note || '---'}</p>
+											</Tippy>
+										)) ||
+											'---'}
+									</>
+								),
 							},
 
 							{
