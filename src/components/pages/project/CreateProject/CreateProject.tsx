@@ -238,9 +238,9 @@ function CreateProject({}: PropsCreateProject) {
 		if (!form?.expectEnd) {
 			return toastWarn({msg: 'Chọn thời gian kết thúc dự kiến!'});
 		}
-		if (!form?.realStart) {
-			return toastWarn({msg: 'Chọn thời gian bắt đầu dự án được phê duyệt!'});
-		}
+		// if (!form?.realStart) {
+		// 	return toastWarn({msg: 'Chọn thời gian bắt đầu dự án được phê duyệt!'});
+		// }
 		if (moment(form?.expectStart).isAfter(moment(form?.expectEnd))) {
 			return toastWarn({msg: 'Thời gian bắt đầu dự kiến phải nhỏ hơn thời gian kết thúc dự kiến!'});
 		}
@@ -548,11 +548,7 @@ function CreateProject({}: PropsCreateProject) {
 								<DatePicker
 									onClean={true}
 									icon={true}
-									label={
-										<span>
-											Thời gian bắt đầu dự án được phê duyệt <span style={{color: 'red'}}>*</span>
-										</span>
-									}
+									label={<span>Thời gian bắt đầu dự án được phê duyệt</span>}
 									name='realStart'
 									value={form.realStart}
 									placeholder='Chọn thời gian bắt đầu dự án được phê duyệt'
@@ -635,7 +631,7 @@ function CreateProject({}: PropsCreateProject) {
 							<div className={clsx(styles.mt)}>
 								<GridColumn col_2>
 									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' />
-									<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
+									<TextArea name='description' placeholder='Nhập quy mô công chình' label='Quy mô công chình' />
 								</GridColumn>
 							</div>
 						</div>

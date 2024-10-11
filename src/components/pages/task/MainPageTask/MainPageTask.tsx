@@ -68,7 +68,7 @@ function MainPageTask({}: PropsMainPageTask) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Xóa nhà quy trình thành công!',
+				msgSuccess: 'Xóa quy trình thành công!',
 				http: taskCatServices.updateStatusTaskCat({
 					uuid: uuidDelete,
 				}),
