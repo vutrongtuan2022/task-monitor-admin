@@ -241,6 +241,9 @@ function CreateProject({}: PropsCreateProject) {
 		if (!form?.realStart) {
 			return toastWarn({msg: 'Chọn thời gian bắt đầu dự án được phê duyệt!'});
 		}
+		if (moment(form?.expectStart).isAfter(moment(form?.expectEnd))) {
+			return toastWarn({msg: 'Thời gian bắt đầu dự kiến phải nhỏ hơn thời gian kết thúc dự kiến!'});
+		}
 
 		return funcCreateProject.mutate();
 	};

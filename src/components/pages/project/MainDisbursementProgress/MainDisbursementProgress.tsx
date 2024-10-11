@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {IDetailProgressFundProject, PropsMainDisbursementProgress} from './interfaces';
+import {IDetailProgressFundProject, IProjectFund, PropsMainDisbursementProgress} from './interfaces';
 import styles from './MainDisbursementProgress.module.scss';
 import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
@@ -24,12 +24,28 @@ import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, STATUS_DISBURSEMENT_PROJECT} fr
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
 import projectFundServices from '~/services/projectFundServices';
+import Search from '~/components/common/Search';
+import Moment from 'react-moment';
+
+const generateYearsArray = (): number[] => {
+	const currentYear = new Date().getFullYear();
+	const startYear = currentYear - 15;
+	const endYear = currentYear + 15;
+
+	const years = [];
+	for (let year = startYear; year <= endYear; year++) {
+		years.push(year);
+	}
+	return years;
+};
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
+	const years = generateYearsArray();
+	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_uuid, _page, _pageSize, _approved} = router.query;
+	const {_uuid, _page, _pageSize, _approved, _year, _month} = router.query;
 
 	const [openDelete, setOpenDelete] = useState<boolean>(false);
 	const [openStart, setOpenStart] = useState<boolean>(false);
@@ -48,22 +64,27 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 		enabled: !!_uuid,
 	});
 
-	const {data: listProjectFund, isLoading} = useQuery([QUERY_KEY.table_list_project_fund, _uuid, _page, _pageSize, _approved], {
-		queryFn: () =>
-			httpRequest({
-				http: projectFundServices.listProjectFund({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
-					projectUuid: _uuid as string,
-					status: STATUS_CONFIG.ACTIVE,
-					approved: !!_approved ? Number(_approved) : null,
+	const {data: listProjectFund, isLoading} = useQuery(
+		[QUERY_KEY.table_list_project_fund, _uuid, _page, _pageSize, _approved, _year, _month],
+		{
+			queryFn: () =>
+				httpRequest({
+					http: projectFundServices.listProjectFund({
+						page: Number(_page) || 1,
+						pageSize: Number(_pageSize) || 20,
+						projectUuid: _uuid as string,
+						status: STATUS_CONFIG.ACTIVE,
+						approved: !!_approved ? Number(_approved) : null,
+						year: Number(_year) || null,
+						month: Number(_month) || null,
+					}),
 				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!_uuid,
-	});
+			select(data) {
+				return data;
+			},
+			enabled: !!_uuid,
+		}
+	);
 
 	const funcDeleteProject = useMutation({
 		mutationFn: () => {
@@ -236,6 +257,28 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 								<div className={styles.filter}>
 									<FilterCustom
 										isSearch
+										name='Năm'
+										query='_year'
+										listFilter={years?.map((v) => ({
+											id: v,
+											name: `Năm ${v}`,
+										}))}
+									/>
+								</div>
+								<div className={styles.filter}>
+									<FilterCustom
+										isSearch
+										name='Tháng'
+										query='_month'
+										listFilter={months?.map((v) => ({
+											id: v,
+											name: `Tháng ${v}`,
+										}))}
+									/>
+								</div>
+								<div className={styles.filter}>
+									<FilterCustom
+										isSearch
 										name='Trạng thái'
 										query='_approved'
 										listFilter={[
@@ -262,30 +305,50 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 								column={[
 									{
 										title: 'STT',
-										render: (data: any, index: number) => <>{index + 1}</>,
+										render: (data: IProjectFund, index: number) => <>{index + 1}</>,
 									},
 									{
 										title: 'Báo cáo tháng',
-										render: (data: any) => <>{'Báo cáo tháng 10'}</>,
-									},
-									{
-										title: 'Ngày gửi báo cáo',
-										render: (data: any) => <>01/09/2024</>,
+										render: (data: IProjectFund) => <>{data?.monthReport}</>,
 									},
 									{
 										title: 'Số tiền giải ngân (VND)',
-										render: (data: any) => <>400.000.000</>,
+										render: (data: IProjectFund) => <>{convertCoin(data?.realeaseBudget)}</>,
+									},
+									{
+										title: 'Tổng mức đầu tư (VND)',
+										render: (data: IProjectFund) => <>{convertCoin(data?.totalInvest)}</>,
+									},
+									{
+										title: 'Kế hoạch vốn năm (VND)',
+										render: (data: IProjectFund) => <>{convertCoin(data?.annualBudget)}</>,
+									},
+									{
+										title: 'Lũy kế theo năm (VND)',
+										render: (data: IProjectFund) => <>{convertCoin(data?.annualAccumAmount)}</>,
+									},
+									{
+										title: 'Lũy kế theo dự án (VND)',
+										render: (data: IProjectFund) => <>{convertCoin(data?.projectAccumAmount)}</>,
+									},
+									{
+										title: 'Tỷ lệ giải ngân',
+										render: (data: IProjectFund) => <Progress percent={data?.fundProgress} width={80} />,
+									},
+									{
+										title: 'Ngày gửi báo cáo',
+										render: (data: IProjectFund) => <Moment date={data?.created} format='DD/MM/YYYY' />,
 									},
 									{
 										title: 'Người báo cáo',
-										render: (data: any) => <>Vũ Thị Ngân</>,
+										render: (data: IProjectFund) => <>{data?.reporter?.fullname}</>,
 									},
 									{
 										title: 'Trạng thái',
-										render: (data: any) => (
+										render: (data: IProjectFund) => (
 											<div className={styles.state}>
 												<StateActive
-													stateActive={2}
+													stateActive={data?.status}
 													listState={[
 														{
 															state: 1,
@@ -301,9 +364,6 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 														},
 													]}
 												/>
-												<Link href={``} className={styles.link_state}>
-													Gửi lại
-												</Link>
 											</div>
 										),
 									},
@@ -314,7 +374,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 							currentPage={Number(_page) || 1}
 							pageSize={Number(_pageSize) || 20}
 							total={listProjectFund?.pagination?.totalCount || 0}
-							dependencies={[_uuid, _pageSize, _approved]}
+							dependencies={[_uuid, _pageSize, _approved, _year, _month]}
 						/>
 					</div>
 				</div>
