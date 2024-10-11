@@ -6,6 +6,7 @@ export interface IUser {
 	isHaveAcc: number;
 	status: number;
 	fullname: string;
+	phone: number;
 	code: string;
 	uuid: string;
 }

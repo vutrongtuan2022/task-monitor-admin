@@ -167,15 +167,11 @@ function MainPageUser({}: PropsMainPageUser) {
 								{
 									title: 'Họ tên',
 									fixedLeft: true,
-									render: (data: IUser) => (
-										<Link href={``} className={styles.link}>
-											{data?.fullname || '---'}
-										</Link>
-									),
+									render: (data: IUser) => <p className={styles.link}>{data?.fullname || '---'}</p>,
 								},
 								{
 									title: 'Số điện thoại',
-									render: (data: IUser) => <>{data?.email || '---'}</>,
+									render: (data: IUser) => <>{data?.phone || '---'}</>,
 								},
 								{
 									title: 'Email',

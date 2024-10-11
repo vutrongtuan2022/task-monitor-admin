@@ -136,6 +136,7 @@ function UpdateBranch({onClose}: PropsUpdateBranch) {
 						placeholder='Nhập tên chi nhánh'
 						name='name'
 						type='text'
+						max={255}
 						value={form.name}
 						isRequired
 						label={
@@ -201,12 +202,13 @@ function UpdateBranch({onClose}: PropsUpdateBranch) {
 							placeholder='Nhập địa chỉ'
 							name='address'
 							type='text'
+							max={255}
 							value={form.address}
 							label={<span>Địa chỉ chi tiết</span>}
 						/>
 					</div>
 					<div className={styles.mt}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
 					</div>
 				</div>
 				<div className={styles.group_button}>

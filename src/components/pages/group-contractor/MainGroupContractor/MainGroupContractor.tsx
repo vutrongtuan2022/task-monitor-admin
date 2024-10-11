@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Tippy from '@tippyjs/react';
 
 import {IGroupContractor, PropsMainGroupContractor} from './interfaces';
 import styles from './MainGroupContractor.module.scss';
@@ -81,7 +82,7 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo quy trình, ID' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo mã, tên nhóm nhà thầu' />
 					</div>
 				</div>
 
@@ -153,7 +154,16 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 							},
 							{
 								title: 'Mô tả',
-								render: (data: IGroupContractor) => <span>{data?.note || '---'}</span>,
+								render: (data: IGroupContractor) => (
+									<>
+										{(data?.note && (
+											<Tippy content={data?.note}>
+												<p className={styles.name}>{data?.note || '---'}</p>
+											</Tippy>
+										)) ||
+											'---'}
+									</>
+								),
 							},
 
 							{
@@ -255,7 +265,7 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 				onClose={() => setUuidDelete('')}
 				type='error'
 				title={'Xác nhận xóa'}
-				note={'Bạn có chắc chắn muốn xóa nhân viên này?'}
+				note={'Bạn có chắc chắn muốn xóa nhóm nhà thầu này?'}
 				onSubmit={handleDeleteGroupContractor}
 			/>
 		</div>

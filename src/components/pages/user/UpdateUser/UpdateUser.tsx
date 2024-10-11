@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 import styles from './UpdateUser.module.scss';
-import Form, { FormContext, Input } from '~/components/common/Form';
-import { IoClose } from 'react-icons/io5';
+import Form, {FormContext, Input} from '~/components/common/Form';
+import {IoClose} from 'react-icons/io5';
 import Button from '~/components/common/Button';
-import Select, { Option } from '~/components/common/Select';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { httpRequest } from '~/services';
+import Select, {Option} from '~/components/common/Select';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
-import { QUERY_KEY, TYPE_GENDER } from '~/constants/config/enum';
+import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
 import provineServices from '~/services/provineServices';
 import Loading from '~/components/common/Loading';
-import { FolderOpen } from 'iconsax-react';
+import {FolderOpen} from 'iconsax-react';
 import TextArea from '~/components/common/Form/components/TextArea';
 import router from 'next/router';
-import { IUpdateUser, PropsUpdateUser } from './interfaces';
+import {IUpdateUser, PropsUpdateUser} from './interfaces';
 import DatePicker from '~/components/common/DatePicker';
-import { timeSubmit, timeSubmitDateOnly } from '~/common/funcs/optionConvert';
+import {timeSubmit, timeSubmitDateOnly} from '~/common/funcs/optionConvert';
+import {toastWarn} from '~/common/funcs/toast';
 
-function UpdateUser({ onClose }: PropsUpdateUser) {
+function UpdateUser({onClose}: PropsUpdateUser) {
 	const queryClient = useQueryClient();
 
-	const { _uuidUser } = router.query;
+	const {_uuidUser} = router.query;
 
 	const [form, setForm] = useState<IUpdateUser>({
 		uuid: '',
@@ -148,6 +149,14 @@ function UpdateUser({ onClose }: PropsUpdateUser) {
 	});
 
 	const handleSubmit = async () => {
+		const today = new Date(timeSubmit(new Date())!);
+		const birthday = form.birthday ? new Date(form.birthday) : null;
+		if (!form.birthday) {
+			return toastWarn({msg: 'Vui lòng nhập ngày sinh!'});
+		}
+		if (!birthday || today < birthday) {
+			return toastWarn({msg: 'Ngày sinh không hợp lệ!'});
+		}
 		return funcCreateUser.mutate();
 	};
 
@@ -162,10 +171,11 @@ function UpdateUser({ onClose }: PropsUpdateUser) {
 						name='fullName'
 						type='text'
 						value={form.fullName}
+						max={50}
 						isRequired
 						label={
 							<span>
-								Họ và tên <span style={{ color: 'red' }}>*</span>
+								Họ và tên <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
@@ -179,7 +189,7 @@ function UpdateUser({ onClose }: PropsUpdateUser) {
 						isRequired
 						label={
 							<span>
-								Số điện thoại <span style={{ color: 'red' }}>*</span>
+								Số điện thoại <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
@@ -193,31 +203,36 @@ function UpdateUser({ onClose }: PropsUpdateUser) {
 						value={form.email}
 						label={
 							<span>
-								Email <span style={{ color: 'red' }}>*</span>
+								Email <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
 
 					{/* <Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} /> */}
-
-					<DatePicker
-						onClean={true}
-						icon={true}
-						label={<span>Ngày sinh</span>}
-						placeholder='dd/mm/yyyy'
-						value={form?.birthday}
-						onSetValue={(birthday) =>
-							setForm((prev) => ({
-								...prev,
-								birthday: birthday,
-							}))
-						}
-						name='birthday'
-					/>
+					<div className={styles.mt}>
+						<DatePicker
+							onClean={true}
+							icon={true}
+							label={
+								<span>
+									Ngày sinh <span style={{color: 'red'}}>*</span>
+								</span>
+							}
+							placeholder='dd/mm/yyyy'
+							value={form?.birthday}
+							onSetValue={(birthday) =>
+								setForm((prev) => ({
+									...prev,
+									birthday: birthday,
+								}))
+							}
+							name='birthday'
+						/>
+					</div>
 
 					<div className={styles.gennder}>
-						<label style={{ fontSize: '16px', fontWeight: '500' }}>
-							Giới tính<span style={{ color: 'red' }}>*</span>
+						<label style={{fontSize: '16px', fontWeight: '500'}}>
+							Giới tính<span style={{color: 'red'}}>*</span>
 						</label>
 						<div className={styles.group_radio}>
 							<div className={styles.item_radio}>
@@ -340,13 +355,14 @@ function UpdateUser({ onClose }: PropsUpdateUser) {
 							placeholder='Nhập địa chỉ chi tiết'
 							name='address'
 							type='text'
+							max={255}
 							value={form.address}
 							label={<span>Địa chỉ chi tiết</span>}
 						/>
 					</div>
 
 					<div className={styles.mt}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
 					</div>
 				</div>
 				<div className={styles.group_button}>
@@ -356,7 +372,7 @@ function UpdateUser({ onClose }: PropsUpdateUser) {
 						</Button>
 					</div>
 					<FormContext.Consumer>
-						{({ isDone }) => (
+						{({isDone}) => (
 							<div className={styles.btn}>
 								<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
 									Lưu lại

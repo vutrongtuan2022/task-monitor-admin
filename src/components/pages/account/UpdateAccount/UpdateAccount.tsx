@@ -102,13 +102,23 @@ function UpdateAccount({onClose}: PropsUpdateAccount) {
 						isRequired
 						label={
 							<span>
-								Username <span style={{color: 'red'}}>*</span>
+								Tên tài khoản <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
 
 					<div className={styles.mt}>
-						<Select isSearch name='roleUuid' value={form.roleUuid} placeholder='Lựa chọn' label={<span>Nhóm quyền</span>}>
+						<Select
+							isSearch
+							name='roleUuid'
+							value={form.roleUuid}
+							placeholder='Lựa chọn'
+							label={
+								<span>
+									Nhóm quyền <span style={{color: 'red'}}>*</span>
+								</span>
+							}
+						>
 							{listRole?.data?.map((v: any) => (
 								<Option
 									key={v?.uuid}

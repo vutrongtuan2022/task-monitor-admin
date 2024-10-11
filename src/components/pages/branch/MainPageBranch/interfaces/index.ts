@@ -9,4 +9,19 @@ export interface IBranches {
 	code: string;
 	name: string;
 	uuid: string;
+	qh: {
+		code: string;
+		name: string;
+		uuid: string;
+	};
+	tp: {
+		code: string;
+		name: string;
+		uuid: string;
+	};
+	xa: {
+		code: string;
+		name: string;
+		uuid: string;
+	};
 }
