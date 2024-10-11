@@ -12,3 +12,22 @@ export interface IDetailProgressFundProject {
 		uuid: string;
 	};
 }
+
+export interface IProjectFund {
+	monthReport: string;
+	realeaseBudget: number;
+	totalInvest: number;
+	annualBudget: number;
+	annualAccumAmount: number;
+	projectAccumAmount: number;
+	fundProgress: number;
+	created: string;
+	reporter: {
+		fullname: string;
+		code: string;
+		uuid: string;
+	};
+	approved: number;
+	status: number;
+	uuid: string;
+}
