@@ -5,5 +5,4 @@ export interface PropsLayoutPages {
 		path: string;
 	}[];
 	action?: React.ReactNode;
-	bgcolor?: any;
 }

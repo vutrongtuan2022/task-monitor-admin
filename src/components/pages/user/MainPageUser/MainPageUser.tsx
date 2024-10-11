@@ -28,8 +28,6 @@ import FilterCustom from '~/components/common/FilterCustom';
 import PositionContainer from '~/components/common/PositionContainer';
 import CreateUser from '../CreateUser';
 import UpdateUser from '../UpdateUser';
-import Breadcrumb from '~/components/common/Breadcrumb';
-import {PATH} from '~/constants/config';
 
 function MainPageUser({}: PropsMainPageUser) {
 	const router = useRouter();
