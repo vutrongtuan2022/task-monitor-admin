@@ -9,6 +9,8 @@ export enum QUERY_KEY {
 	table_list_activity_project,
 	table_list_project_fund,
 	table_list_contractor_project,
+	table_list_report,
+	table_list_user_activities,
 
 	dropdown_role,
 	dropdown_group_contractor,

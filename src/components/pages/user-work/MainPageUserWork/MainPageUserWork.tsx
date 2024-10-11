@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Tippy from '@tippyjs/react';
 import TippyHeadless from '@tippyjs/react/headless';
 
-import {IBranches, PropsMainPageUserWork} from './interfaces';
+import {IUserWork, PropsMainPageUserWork} from './interfaces';
 import styles from './MainPageUserWork.module.scss';
 import Search from '~/components/common/Search';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
@@ -18,6 +18,8 @@ import branchesServices from '~/services/branchesServices';
 import clsx from 'clsx';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
+import activityServices from '~/services/activityServices';
+import Progress from '~/components/common/Progress';
 
 const generateYearsArray = (): number[] => {
 	const currentYear = new Date().getFullYear();
@@ -36,18 +38,20 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword} = router.query;
+	const {_page, _pageSize, _keyword, _year, _month, _state, _type} = router.query;
 
-	const [uuidDescription, setUuidDescription] = useState<string>('');
-
-	const listBranches = useQuery([QUERY_KEY.table_branches, _page, _pageSize, _keyword], {
+	const listUserActivities = useQuery([QUERY_KEY.table_list_user_activities, _page, _pageSize, _keyword, _year, _month, _state, _type], {
 		queryFn: () =>
 			httpRequest({
-				http: branchesServices.getListBranches({
+				http: activityServices.listUserActivities({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
+					year: !!_year ? Number(_year) : null,
+					month: !!_month ? Number(_month) : null,
+					type: !!_type ? Number(_type) : null,
+					state: !!_state ? Number(_state) : null,
 				}),
 			}),
 		select(data) {
@@ -109,7 +113,7 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 						<FilterCustom
 							isSearch
 							name='Loại công việc'
-							query='_activityType'
+							query='_type'
 							listFilter={[
 								{
 									id: TYPE_OF_WORK.ARISE,
@@ -126,90 +130,96 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={listBranches?.data?.items || []}
-					loading={listBranches.isLoading}
-					noti={<Noti title='Dữ liệu trống!' des='Danh sách công việc của nhân viên trống!' />}
+					data={listUserActivities?.data?.items || []}
+					loading={listUserActivities.isLoading}
+					noti={<Noti title='Dữ liệu trống!' des='Danh sách trống!' />}
 				>
 					<Table
 						fixedHeader={true}
-						data={listBranches?.data?.items || []}
+						data={listUserActivities?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
-								render: (data: IBranches, index: number) => <>{index + 1}</>,
+								render: (data: IUserWork, index: number) => <>{index + 1}</>,
 							},
 
 							{
 								title: 'Tháng báo cáo',
 								fixedLeft: true,
-								render: (data: IBranches) => <>{data?.code}</>,
+								render: (data: IUserWork) => (
+									<>
+										{data?.month || '---'}/{data?.year || '---'}
+									</>
+								),
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IBranches) => <>{data?.name}</>,
+								render: (data: IUserWork) => <>{data?.project?.name || '---'}</>,
 							},
 							{
 								title: 'Tên công việc',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IUserWork, index: number) => (
+									<>
+										{(data?.activity && (
+											<Tippy content={data?.activity?.name}>
+												<p className={styles.name}>{data?.activity?.name || '---'}</p>
+											</Tippy>
+										)) ||
+											'---'}
+									</>
+								),
 							},
 							{
 								title: 'Giai đoạn thực hiện',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IUserWork) => (
+									<span style={{color: '#2970FF'}}>
+										{data?.stage == -1 && '---'}
+										{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
+										{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
+										{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư xây dựng'}
+									</span>
+								),
 							},
 							{
 								title: 'Megatype',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IUserWork) => <>{'---'}</>,
 							},
 							{
 								title: 'Người báo cáo',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IUserWork) => <>{data?.reporter?.fullname || '---'}</>,
 							},
 							{
 								title: 'Loại công việc',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IUserWork) => (
+									<>
+										{data?.isInWorkFlow && 'Có kế hoạch'}
+										{!data?.isInWorkFlow && 'Phát sinh'}
+									</>
+								),
 							},
 							{
 								title: 'Khó khăn vướng mắc',
-								render: (data: IBranches) => (
-									<TippyHeadless
-										maxWidth={'100%'}
-										interactive
-										onClickOutside={() => setUuidDescription('')}
-										visible={uuidDescription == data?.uuid}
-										placement='bottom'
-										render={(attrs) => (
-											<div className={styles.main_description}>
-												<p>{data?.note}</p>
-											</div>
-										)}
-									>
-										<Tippy content='Xem chi tiết mô tả'>
-											<p
-												onClick={() => {
-													if (!data.note) {
-														return;
-													} else {
-														setUuidDescription(uuidDescription ? '' : data.uuid);
-													}
-												}}
-												className={clsx(styles.description, {[styles.active]: uuidDescription == data.uuid})}
-											>
-												{data?.note || '---'}
-											</p>
-										</Tippy>
-									</TippyHeadless>
+								render: (data: IUserWork, index: number) => (
+									<>
+										{(data?.issue && (
+											<Tippy content={data?.issue}>
+												<p className={styles.name}>{data?.issue || '---'}</p>
+											</Tippy>
+										)) ||
+											'---'}
+									</>
 								),
 							},
 							{
 								title: 'Tiến độ công việc',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IUserWork) => <Progress percent={data?.progress} width={80} />,
 							},
 							{
 								title: 'Trạng thái',
 								fixedRight: true,
-								render: (data: IBranches) => (
+								render: (data: IUserWork) => (
 									<StateActive
-										stateActive={1}
+										stateActive={data?.activity?.state}
 										listState={[
 											{
 												state: STATE_REPORT_WORK.NOT_PROCESSED,
@@ -235,10 +245,10 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 							},
 							{
 								title: 'Tình trạng',
-								render: (data: IBranches) => (
+								render: (data: IUserWork) => (
 									<StateActive
 										isBox={false}
-										stateActive={data?.status}
+										stateActive={data?.deadlineState}
 										listState={[
 											{
 												state: STATUS_REPORT_WORK.NOT_DONE,
@@ -268,8 +278,8 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 				<Pagination
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
-					total={listBranches?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword]}
+					total={listUserActivities?.data?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword, _year, _month, _state, _type]}
 				/>
 			</WrapperScrollbar>
 		</div>

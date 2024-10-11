@@ -1,12 +1,28 @@
 export interface PropsMainPageUserWork {}
 
-export interface IBranches {
-	address: string;
-	note: string;
-	updated: string;
-	created: string;
-	status: number;
-	code: string;
-	name: string;
-	uuid: string;
+export interface IUserWork {
+	activity: {
+		name: string;
+		state: number;
+		uuid: string;
+	};
+	project: {
+		code: string;
+		name: string;
+		state: number;
+		uuid: string;
+	};
+	isInWorkFlow: true;
+	month: number;
+	year: number;
+	issue: string;
+	progress: number;
+	reporter: {
+		fullname: string;
+		code: string;
+		uuid: string;
+	};
+	deadlineState: number;
+	dayDelayed: number;
+	stage: number;
 }

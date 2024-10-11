@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Tippy from '@tippyjs/react';
 import TippyHeadless from '@tippyjs/react/headless';
 
-import {IBranches, PropsMainPageReportWork} from './interfaces';
+import {IReportWork, PropsMainPageReportWork} from './interfaces';
 import styles from './MainPageReportWork.module.scss';
 import Search from '~/components/common/Search';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
@@ -20,6 +20,8 @@ import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
 import {Eye} from 'iconsax-react';
+import reportServices from '~/services/reportServices';
+import Moment from 'react-moment';
 
 const generateYearsArray = (): number[] => {
 	const currentYear = new Date().getFullYear();
@@ -38,18 +40,20 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword} = router.query;
+	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState} = router.query;
 
-	const [uuidDescription, setUuidDescription] = useState<string>('');
-
-	const listBranches = useQuery([QUERY_KEY.table_branches, _page, _pageSize, _keyword], {
+	const listReport = useQuery([QUERY_KEY.table_list_report, _page, _pageSize, _keyword, _year, _month, _state, _completeState], {
 		queryFn: () =>
 			httpRequest({
-				http: branchesServices.getListBranches({
+				http: reportServices.listReport({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
+					year: !!_year ? Number(_year) : null,
+					month: !!_month ? Number(_month) : null,
+					state: !!_state ? Number(_state) : null,
+					completeState: !!_completeState ? Number(_completeState) : null,
 				}),
 			}),
 		select(data) {
@@ -62,7 +66,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công việc, dự án' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên dự án, ID' />
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -111,7 +115,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 						<FilterCustom
 							isSearch
 							name='Tình trạng'
-							query='_status'
+							query='_completeState'
 							listFilter={[
 								{
 									id: STATUS_REPORT_WORK.NOT_DONE,
@@ -132,46 +136,58 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={listBranches?.data?.items || []}
-					loading={listBranches.isLoading}
-					noti={<Noti title='Dữ liệu trống!' des='Danh sách công việc của nhân viên trống!' />}
+					data={listReport?.data?.items || []}
+					loading={listReport.isLoading}
+					noti={<Noti title='Dữ liệu trống!' des='Danh sách trống!' />}
 				>
 					<Table
 						fixedHeader={true}
-						data={listBranches?.data?.items || []}
+						data={listReport?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
-								render: (data: IBranches, index: number) => <>{index + 1}</>,
+								render: (data: IReportWork, index: number) => <>{index + 1}</>,
 							},
 
 							{
 								title: 'Tên công trình',
 								fixedLeft: true,
-								render: (data: IBranches) => <>{data?.code}</>,
+								render: (data: IReportWork) => <>{data?.nameProject}</>,
 							},
 							{
 								title: 'Người báo cáo',
-								render: (data: IBranches) => <>{data?.name}</>,
+								render: (data: IReportWork) => <>{data?.nameReporter}</>,
 							},
 							{
 								title: 'Số công việc thực hiện',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IReportWork) => (
+									<>
+										<span style={{color: '#2970FF'}}>{data?.completedActivity}</span>/<span>{data?.totalActivity}</span>
+									</>
+								),
 							},
 							{
 								title: 'Kế hoạch tháng',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IReportWork) => (
+									<>
+										<span>
+											Tháng {data?.month} - {data?.year}
+										</span>
+									</>
+								),
 							},
 							{
 								title: 'Ngày gửi báo cáo',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IReportWork) => (
+									<>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</>
+								),
 							},
 							{
 								title: 'Trạng thái',
 								fixedRight: true,
-								render: (data: IBranches) => (
+								render: (data: IReportWork) => (
 									<StateActive
-										stateActive={1}
+										stateActive={data?.state}
 										listState={[
 											{
 												state: STATE_REPORT_WORK.NOT_PROCESSED,
@@ -197,7 +213,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							},
 							{
 								title: 'Tình trạng',
-								render: (data: IBranches) => (
+								render: (data: IReportWork) => (
 									<StateActive
 										isBox={false}
 										stateActive={data?.status}
@@ -227,9 +243,14 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: IBranches) => (
+								render: (data: IReportWork) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										<IconCustom type='edit' icon={<Eye fontSize={20} fontWeight={600} />} tooltip='Xem chi tiết' />
+										<IconCustom
+											href={`/report-work/${data?.uuid}`}
+											type='edit'
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+										/>
 									</div>
 								),
 							},
@@ -239,8 +260,8 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 				<Pagination
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
-					total={listBranches?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword]}
+					total={listReport?.data?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword, _year, _month, _state, _completeState]}
 				/>
 			</WrapperScrollbar>
 		</div>
