@@ -8,6 +8,8 @@ const projectFundServices = {
 			projectUuid: string;
 			approved: number | null;
 			status: number;
+			year: number | null;
+			month: number | null;
 		},
 		tokenAxios?: any
 	) => {
