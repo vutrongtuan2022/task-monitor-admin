@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
-import { ICreateUser, PropsCreateUser } from './interfaces';
+import {ICreateUser, PropsCreateUser} from './interfaces';
 import styles from './CreateUser.module.scss';
-import Form, { FormContext, Input } from '~/components/common/Form';
+import Form, {FormContext, Input} from '~/components/common/Form';
 import Loading from '~/components/common/Loading';
 import TextArea from '~/components/common/Form/components/TextArea';
 import Button from '~/components/common/Button';
-import { FolderOpen } from 'iconsax-react';
-import { IoClose } from 'react-icons/io5';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { httpRequest } from '~/services';
+import {FolderOpen} from 'iconsax-react';
+import {IoClose} from 'react-icons/io5';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
 import userServices from '~/services/userServices';
-import { QUERY_KEY, TYPE_GENDER } from '~/constants/config/enum';
+import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
 
-import Select, { Option } from '~/components/common/Select';
+import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
 import DatePicker from '~/components/common/DatePicker';
-import { timeSubmit, timeSubmitDateOnly } from '~/common/funcs/optionConvert';
+import {timeSubmit, timeSubmitDateOnly} from '~/common/funcs/optionConvert';
 
-function CreateUser({ onClose }: PropsCreateUser) {
+function CreateUser({onClose}: PropsCreateUser) {
 	const queryClient = useQueryClient();
 
 	const [form, setForm] = useState<ICreateUser>({
@@ -136,7 +136,7 @@ function CreateUser({ onClose }: PropsCreateUser) {
 						isRequired
 						label={
 							<span>
-								Họ và tên <span style={{ color: 'red' }}>*</span>
+								Họ và tên <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
@@ -150,7 +150,7 @@ function CreateUser({ onClose }: PropsCreateUser) {
 						isRequired
 						label={
 							<span>
-								Số điện thoại <span style={{ color: 'red' }}>*</span>
+								Số điện thoại <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
@@ -164,31 +164,32 @@ function CreateUser({ onClose }: PropsCreateUser) {
 						value={form.email}
 						label={
 							<span>
-								Email <span style={{ color: 'red' }}>*</span>
+								Email <span style={{color: 'red'}}>*</span>
 							</span>
 						}
 					/>
 
 					{/* <Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} /> */}
-
-					<DatePicker
-						onClean={true}
-						icon={true}
-						label={<span>Ngày sinh</span>}
-						placeholder='dd/mm/yyyy'
-						value={form?.birthday}
-						onSetValue={(birthday) =>
-							setForm((prev) => ({
-								...prev,
-								birthday: birthday,
-							}))
-						}
-						name='birthday'
-					/>
+					<div className={styles.mt}>
+						<DatePicker
+							onClean={true}
+							icon={true}
+							label={<span>Ngày sinh</span>}
+							placeholder='dd/mm/yyyy'
+							value={form?.birthday}
+							onSetValue={(birthday) =>
+								setForm((prev) => ({
+									...prev,
+									birthday: birthday,
+								}))
+							}
+							name='birthday'
+						/>
+					</div>
 
 					<div className={styles.gennder}>
-						<label style={{ fontSize: '16px', fontWeight: '500' }}>
-							Giới tính<span style={{ color: 'red' }}>*</span>
+						<label style={{fontSize: '16px', fontWeight: '500'}}>
+							Giới tính<span style={{color: 'red'}}>*</span>
 						</label>
 						<div className={styles.group_radio}>
 							<div className={styles.item_radio}>
@@ -333,7 +334,7 @@ function CreateUser({ onClose }: PropsCreateUser) {
 						</Button>
 					</div>
 					<FormContext.Consumer>
-						{({ isDone }) => (
+						{({isDone}) => (
 							<div className={styles.btn}>
 								<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
 									Lưu lại
