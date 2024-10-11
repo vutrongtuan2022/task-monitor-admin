@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from 'react';
 
-import {PropsMainInfoContractor} from './interfaces';
+import {IContractorProject, PropsMainInfoContractor} from './interfaces';
 import styles from './MainInfoContractor.module.scss';
 import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
@@ -16,22 +16,65 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import IconCustom from '~/components/common/IconCustom';
-import {Add, Link1, Trash} from 'iconsax-react';
+import {Add, Edit, Link1, Trash} from 'iconsax-react';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
-import {QUERY_KEY} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG} from '~/constants/config/enum';
+import {IDetailInfoProject} from '../MainInfoProject/interfaces';
+import Dialog from '~/components/common/Dialog';
+import projectContractorServices from '~/services/projectContractorServices';
+import {convertCoin} from '~/common/funcs/convertCoin';
+import Moment from 'react-moment';
+import Loading from '~/components/common/Loading';
+import PositionContainer from '~/components/common/PositionContainer';
+import FormAddContractor from '../FormAddContractor';
+import FormUpdateContractor from '../FormUpdateContractor';
 
 function MainInfoContractor({}: PropsMainInfoContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_uuid} = router.query;
+	const {_uuid, _keyword, _page, _pageSize, _action, _projectContractorUuid} = router.query;
 
 	const [openDelete, setOpenDelete] = useState<boolean>(false);
 	const [openStart, setOpenStart] = useState<boolean>(false);
 	const [openFinish, setOpenFinish] = useState<boolean>(false);
+	const [uuidDeleteContractor, setUuidDeleteContractor] = useState<string>('');
+
+	const {data: detailProject} = useQuery<IDetailInfoProject>([QUERY_KEY.detail_contractor_project, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: projectServices.detailInfoProject({
+					uuid: _uuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuid,
+	});
+
+	const {data: listContractorProject, isLoading} = useQuery(
+		[QUERY_KEY.table_list_contractor_project, _uuid, _keyword, _page, _pageSize],
+		{
+			queryFn: () =>
+				httpRequest({
+					http: projectContractorServices.listContractorProject({
+						uuid: _uuid as string,
+						keyword: (_keyword as string) || '',
+						page: Number(_page) || 1,
+						pageSize: Number(_pageSize) || 20,
+						status: STATUS_CONFIG.ACTIVE,
+					}),
+				}),
+			select(data) {
+				return data;
+			},
+			enabled: !!_uuid,
+		}
+	);
 
 	const funcDeleteProject = useMutation({
 		mutationFn: () => {
@@ -69,7 +112,7 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 		onSuccess(data) {
 			if (data) {
 				setOpenStart(false);
-				queryClient.invalidateQueries([QUERY_KEY.detail_project]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_contractor_project]);
 			}
 		},
 	});
@@ -88,13 +131,32 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 		onSuccess(data) {
 			if (data) {
 				setOpenFinish(false);
-				queryClient.invalidateQueries([QUERY_KEY.detail_project]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_contractor_project]);
+			}
+		},
+	});
+
+	const funcDeleteContractorProject = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa nhà thầu thành công!',
+				http: projectContractorServices.deleteContractorProject({
+					uuid: uuidDeleteContractor!,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setUuidDeleteContractor('');
+				queryClient.invalidateQueries([QUERY_KEY.table_list_contractor_project]);
 			}
 		},
 	});
 
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcDeleteContractorProject.isLoading} />
 			<Breadcrumb
 				listUrls={[
 					{
@@ -128,15 +190,26 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 				]}
 				action={
 					<div className={styles.group_btn}>
-						<Button p_14_24 rounded_8 primary>
-							Kết thúc dự án
-						</Button>
-						<Button p_14_24 rounded_8 light-red>
-							Xóa
-						</Button>
-						<Button p_14_24 rounded_8 primaryLinear>
-							Chỉnh sửa
-						</Button>
+						{detailProject?.state == STATE_PROJECT.PREPARE && (
+							<Button p_14_24 rounded_8 blueLinear onClick={() => setOpenStart(true)}>
+								Thực hiện dự án
+							</Button>
+						)}
+						{detailProject?.state == STATE_PROJECT.DO && (
+							<Button p_14_24 rounded_8 primary onClick={() => setOpenFinish(true)}>
+								Kết thúc dự án
+							</Button>
+						)}
+						{detailProject?.state == STATE_PROJECT.PREPARE && (
+							<Button p_14_24 rounded_8 light-red onClick={() => setOpenDelete(true)}>
+								Xóa
+							</Button>
+						)}
+						{detailProject?.state != STATE_PROJECT.FINISH && (
+							<Button p_14_24 rounded_8 primaryLinear href={`${PATH.UpdateInfoProject}?_uuid=${_uuid}`}>
+								Chỉnh sửa
+							</Button>
+						)}
 					</div>
 				}
 			>
@@ -157,92 +230,80 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 									rounded_8
 									light-blue
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												_action: 'create',
+											},
+										});
+									}}
 								>
 									Thêm mới nhà thầu
 								</Button>
 							</div>
 						</div>
-						<DataWrapper data={[1, 1, 1]}>
+						<DataWrapper loading={isLoading} data={listContractorProject?.items || []}>
 							<Table
-								data={[1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+								data={listContractorProject?.items || []}
 								column={[
 									{
 										title: 'STT',
-										render: (data: any, index: number) => <>{index + 1}</>,
+										render: (data: IContractorProject, index: number) => <>{index + 1}</>,
 									},
 									{
 										title: 'Thuộc nhóm',
-										render: (data: any) => <>Nhà thầu thi công xây lắp</>,
+										render: (data: IContractorProject) => <>{data?.contractorCategory?.name}</>,
 									},
 									{
 										title: 'Tên nhà thầu',
-										render: (data: any) => <>Nhà thầu số 34 HD</>,
+										render: (data: IContractorProject) => <>{data?.name || ''}</>,
 									},
 									{
-										title: 'Hợp đồng dự án',
-										render: (data: any) => (
+										title: 'Giá trị hợp đồng (VND)',
+										render: (data: IContractorProject) => <>{convertCoin(data?.contractAmount)}</>,
+									},
+									{
+										title: 'Thời gian THHĐ',
+										render: (data: IContractorProject) => (
 											<>
-												{data === 1 && (
-													<div className={styles.contract_link}>
-														<Link1 color='#2970FF' />
-														<Link href={`#`} className={styles.link}>
-															Hợp đồng số 3 A
-														</Link>
-													</div>
-												)}
-												{data === 2 && (
-													<div className={styles.contract_link}>
-														<Add color='#06D7A0' />
-														<Link href={`#`} className={styles.link_add}>
-															Thêm hợp đồng
-														</Link>
-													</div>
+												{data?.contractEndDate ? (
+													<Moment date={data?.contractEndDate} format='DD/MM/YYYY' />
+												) : (
+													'---'
 												)}
 											</>
 										),
 									},
 									{
-										title: 'Bảo lãnh hợp đồng dự án',
-										render: (data: any) => (
+										title: 'GTBLTHHĐ (VND)',
+										render: (data: IContractorProject) => <>{convertCoin(data?.projectGuarantee?.amount)}</>,
+									},
+									{
+										title: 'NKTBLTHHĐ',
+										render: (data: IContractorProject) => (
 											<>
-												{data === 1 && (
-													<div className={styles.contract_link}>
-														<Link1 color='#2970FF' />
-														<Link href={`#`} className={styles.link}>
-															Hợp đồng số 3 A
-														</Link>
-													</div>
-												)}
-												{data === 2 && (
-													<div className={styles.contract_link}>
-														<Add color='#06D7A0' />
-														<Link href={`#`} className={styles.link_add}>
-															Thêm hợp đồng
-														</Link>
-													</div>
+												{data?.projectGuarantee?.endDate ? (
+													<Moment date={data?.projectGuarantee?.endDate} format='DD/MM/YYYY' />
+												) : (
+													'---'
 												)}
 											</>
 										),
 									},
 									{
-										title: 'Bảo lãnh hợp đồng giải ngân',
-										render: (data: any) => (
+										title: 'Giá trị BLTƯ (VND)',
+										render: (data: IContractorProject) => <>{convertCoin(data?.disbursementGuarantee?.amount)}</>,
+									},
+									{
+										title: 'Ngày kết thúc BLTƯ',
+										render: (data: IContractorProject) => (
 											<>
-												{data === 1 && (
-													<div className={styles.contract_link}>
-														<Link1 color='#2970FF' />
-														<Link href={`#`} className={styles.link}>
-															Hợp đồng số 3 A
-														</Link>
-													</div>
-												)}
-												{data === 2 && (
-													<div className={styles.contract_link}>
-														<Add color='#06D7A0' />
-														<Link href={`#`} className={styles.link_add}>
-															Thêm hợp đồng
-														</Link>
-													</div>
+												{data?.disbursementGuarantee?.endDate ? (
+													<Moment date={data?.disbursementGuarantee?.endDate} format='DD/MM/YYYY' />
+												) : (
+													'---'
 												)}
 											</>
 										),
@@ -250,13 +311,29 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 									{
 										title: 'Hành động',
 										fixedRight: true,
-										render: (data: any) => (
+										render: (data: IContractorProject) => (
 											<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+												<IconCustom
+													type='edit'
+													icon={<Edit fontSize={20} fontWeight={600} />}
+													tooltip='Chỉnh sửa'
+													onClick={() => {
+														router.replace({
+															pathname: router.pathname,
+															query: {
+																...router.query,
+																_projectContractorUuid: data?.projectContractorUuid,
+															},
+														});
+													}}
+												/>
 												<IconCustom
 													type='delete'
 													icon={<Trash fontSize={20} fontWeight={600} />}
 													tooltip='Xóa bỏ'
-													onClick={() => {}}
+													onClick={() => {
+														setUuidDeleteContractor(data?.projectContractorUuid);
+													}}
 												/>
 											</div>
 										),
@@ -264,10 +341,103 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 								]}
 							/>
 						</DataWrapper>
-						<Pagination currentPage={1} pageSize={20} total={20} />
+						<Pagination
+							currentPage={Number(_page) || 1}
+							pageSize={Number(_pageSize) || 20}
+							total={listContractorProject?.pagination?.totalCount || 0}
+							dependencies={[_uuid, _pageSize, _keyword]}
+						/>
 					</div>
 				</div>
 			</LayoutPages>
+
+			<PositionContainer
+				open={_action == 'create'}
+				onClose={() => {
+					const {_action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FormAddContractor
+					onClose={() => {
+						const {_action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			<PositionContainer
+				open={!!_projectContractorUuid}
+				onClose={() => {
+					const {_projectContractorUuid, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FormUpdateContractor
+					onClose={() => {
+						const {_projectContractorUuid, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			<Dialog
+				type='error'
+				open={openDelete}
+				onClose={() => setOpenDelete(false)}
+				title={'Xác nhận xóa'}
+				note={'Bạn có chắc chắn muốn xóa dự án này?'}
+				onSubmit={funcDeleteProject.mutate}
+			/>
+			<Dialog
+				type='primary'
+				open={openStart}
+				icon={icons.success}
+				onClose={() => setOpenStart(false)}
+				title={'Thực hiện dự án'}
+				note={'Bạn có chắc chắn muốn thực hiện dự án này không?'}
+				onSubmit={funcStartProject.mutate}
+			/>
+			<Dialog
+				type='error'
+				open={openFinish}
+				onClose={() => setOpenFinish(false)}
+				title={'Kết thúc dự án'}
+				note={'Bạn có chắc chắn muốn kết thúc dự án này?'}
+				onSubmit={funcFinishProject.mutate}
+			/>
+			<Dialog
+				type='error'
+				open={!!uuidDeleteContractor}
+				onClose={() => setUuidDeleteContractor('')}
+				title={'Xóa nhà thầu'}
+				note={'Bạn có chắc chắn muốn xóa nhà thầu ra khỏi dự án này không?'}
+				onSubmit={funcDeleteContractorProject.mutate}
+			/>
 		</div>
 	);
 }

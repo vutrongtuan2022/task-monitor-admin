@@ -191,7 +191,6 @@ function MainPageBranch({}: PropsMainPageBranch) {
 									</TippyHeadless>
 								),
 							},
-
 							{
 								title: 'Hành động',
 								fixedRight: true,

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {PropsMainDisbursementProgress} from './interfaces';
+import {IDetailProgressFundProject, PropsMainDisbursementProgress} from './interfaces';
 import styles from './MainDisbursementProgress.module.scss';
 import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
@@ -9,30 +9,61 @@ import Button from '~/components/common/Button';
 import Pagination from '~/components/common/Pagination';
 import DataWrapper from '~/components/common/DataWrapper';
 import StateActive from '~/components/common/StateActive';
-import DateRangerCustom from '~/components/common/DateRangerCustom';
 import Table from '~/components/common/Table';
 import FilterCustom from '~/components/common/FilterCustom';
-import Search from '~/components/common/Search';
 import GridColumn from '~/components/layouts/GridColumn';
 import Progress from '~/components/common/Progress';
 import {clsx} from 'clsx';
 import Link from 'next/link';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
-import {QUERY_KEY} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, STATUS_DISBURSEMENT_PROJECT} from '~/constants/config/enum';
+import Dialog from '~/components/common/Dialog';
+import icons from '~/constants/images/icons';
+import projectFundServices from '~/services/projectFundServices';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_uuid} = router.query;
+	const {_uuid, _page, _pageSize, _approved} = router.query;
 
 	const [openDelete, setOpenDelete] = useState<boolean>(false);
 	const [openStart, setOpenStart] = useState<boolean>(false);
 	const [openFinish, setOpenFinish] = useState<boolean>(false);
+
+	const {data: detailProgressFundProject} = useQuery<IDetailProgressFundProject>([QUERY_KEY.detail_progress_fund_project, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: projectServices.detailProgressFundProject({
+					uuid: _uuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuid,
+	});
+
+	const {data: listProjectFund, isLoading} = useQuery([QUERY_KEY.table_list_project_fund, _uuid, _page, _pageSize, _approved], {
+		queryFn: () =>
+			httpRequest({
+				http: projectFundServices.listProjectFund({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 20,
+					projectUuid: _uuid as string,
+					status: STATUS_CONFIG.ACTIVE,
+					approved: !!_approved ? Number(_approved) : null,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuid,
+	});
 
 	const funcDeleteProject = useMutation({
 		mutationFn: () => {
@@ -129,15 +160,26 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 				]}
 				action={
 					<div className={styles.group_btn}>
-						<Button p_14_24 rounded_8 primary>
-							Kết thúc dự án
-						</Button>
-						<Button p_14_24 rounded_8 light-red>
-							Xóa
-						</Button>
-						<Button p_14_24 rounded_8 primaryLinear>
-							Chỉnh sửa
-						</Button>
+						{detailProgressFundProject?.categoryProjectDTO?.state == STATE_PROJECT.PREPARE && (
+							<Button p_14_24 rounded_8 blueLinear onClick={() => setOpenStart(true)}>
+								Thực hiện dự án
+							</Button>
+						)}
+						{detailProgressFundProject?.categoryProjectDTO?.state == STATE_PROJECT.DO && (
+							<Button p_14_24 rounded_8 primary onClick={() => setOpenFinish(true)}>
+								Kết thúc dự án
+							</Button>
+						)}
+						{detailProgressFundProject?.categoryProjectDTO?.state == STATE_PROJECT.PREPARE && (
+							<Button p_14_24 rounded_8 light-red onClick={() => setOpenDelete(true)}>
+								Xóa
+							</Button>
+						)}
+						{detailProgressFundProject?.categoryProjectDTO?.state != STATE_PROJECT.FINISH && (
+							<Button p_14_24 rounded_8 primaryLinear href={`${PATH.UpdateInfoProject}?_uuid=${_uuid}`}>
+								Chỉnh sửa
+							</Button>
+						)}
 					</div>
 				}
 			>
@@ -146,31 +188,38 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 						<h4>Tiến độ giải ngân</h4>
 					</div>
 					<div className={styles.progress_group}>
-						<GridColumn col_3>
-							<div className={styles.progress}>
-								<p>Trong tháng (VND)</p>
-								<div className={styles.progress_label}>
-									<Progress percent={80} width={120} isPercent={false} />
-									<div>
-										<span className={styles.value}>{convertCoin(900000000)}</span>/{convertCoin(1000000000)}
-									</div>
-								</div>
-							</div>
+						<GridColumn col_2>
 							<div className={styles.progress}>
 								<p>Trong năm (VND)</p>
 								<div className={styles.progress_label}>
-									<Progress percent={80} width={120} isPercent={false} />
+									<Progress
+										percent={
+											(Number(detailProgressFundProject?.countYearly) * 100) /
+											Number(detailProgressFundProject?.totalYearly)
+										}
+										width={120}
+										isPercent={false}
+									/>
 									<div>
-										<span className={styles.value}>{convertCoin(900000000)}</span>/{convertCoin(1000000000)}
+										<span className={styles.value}>{convertCoin(detailProgressFundProject?.countYearly || 0)}</span>/
+										{convertCoin(detailProgressFundProject?.totalYearly || 0)}
 									</div>
 								</div>
 							</div>
 							<div className={styles.progress}>
 								<p>Trong dự án (VND)</p>
 								<div className={styles.progress_label}>
-									<Progress percent={80} width={120} isPercent={false} />
+									<Progress
+										percent={
+											(Number(detailProgressFundProject?.countInProject) * 100) /
+											Number(detailProgressFundProject?.totalInProject)
+										}
+										width={120}
+										isPercent={false}
+									/>
 									<div>
-										<span className={styles.value}>{convertCoin(900000000)}</span>/{convertCoin(1000000000)}
+										<span className={styles.value}>{convertCoin(detailProgressFundProject?.countInProject || 0)}</span>/
+										{convertCoin(detailProgressFundProject?.totalInProject || 0)}
 									</div>
 								</div>
 							</div>
@@ -184,34 +233,32 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 					<div className={styles.main_table}>
 						<div className={styles.head_filt}>
 							<div className={styles.main_search}>
-								<div className={styles.search}>
-									<Search keyName='_keyword' placeholder='Tìm kiếm theo tên, người báo cáo' />
-								</div>
-								<div className={styles.filter}>
-									<DateRangerCustom titleTime='Thời gian' />
-								</div>
 								<div className={styles.filter}>
 									<FilterCustom
 										isSearch
 										name='Trạng thái'
-										query='_'
+										query='_approved'
 										listFilter={[
 											{
-												id: 1,
-												name: '1',
+												id: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+												name: 'Chưa duyệt',
 											},
 											{
-												id: 1,
-												name: '2',
+												id: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+												name: 'Đã duyệt',
+											},
+											{
+												id: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+												name: 'Bị từ chối',
 											},
 										]}
 									/>
 								</div>
 							</div>
 						</div>
-						<DataWrapper data={[1, 1, 1]}>
+						<DataWrapper loading={isLoading} data={listProjectFund?.items || []}>
 							<Table
-								data={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+								data={listProjectFund?.items || []}
 								column={[
 									{
 										title: 'STT',
@@ -263,10 +310,40 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 								]}
 							/>
 						</DataWrapper>
-						<Pagination currentPage={1} pageSize={20} total={20} />
+						<Pagination
+							currentPage={Number(_page) || 1}
+							pageSize={Number(_pageSize) || 20}
+							total={listProjectFund?.pagination?.totalCount || 0}
+							dependencies={[_uuid, _pageSize, _approved]}
+						/>
 					</div>
 				</div>
 			</LayoutPages>
+			<Dialog
+				type='error'
+				open={openDelete}
+				onClose={() => setOpenDelete(false)}
+				title={'Xác nhận xóa'}
+				note={'Bạn có chắc chắn muốn xóa dự án này?'}
+				onSubmit={funcDeleteProject.mutate}
+			/>
+			<Dialog
+				type='primary'
+				open={openStart}
+				icon={icons.success}
+				onClose={() => setOpenStart(false)}
+				title={'Thực hiện dự án'}
+				note={'Bạn có chắc chắn muốn thực hiện dự án này không?'}
+				onSubmit={funcStartProject.mutate}
+			/>
+			<Dialog
+				type='error'
+				open={openFinish}
+				onClose={() => setOpenFinish(false)}
+				title={'Kết thúc dự án'}
+				note={'Bạn có chắc chắn muốn kết thúc dự án này?'}
+				onSubmit={funcFinishProject.mutate}
+			/>
 		</div>
 	);
 }

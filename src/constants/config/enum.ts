@@ -1,7 +1,4 @@
 export enum QUERY_KEY {
-	detail_group_contractor,
-	detail_branches,
-
 	table_group_contractor,
 	table_contractor,
 	table_task_cat,
@@ -10,6 +7,8 @@ export enum QUERY_KEY {
 	table_branches,
 	table_list_account,
 	table_list_activity_project,
+	table_list_project_fund,
+	table_list_contractor_project,
 
 	dropdown_role,
 	dropdown_group_contractor,
@@ -28,9 +27,13 @@ export enum QUERY_KEY {
 	detail_task,
 	detail_project,
 	detail_progress_project,
+	detail_progress_fund_project,
 	detail_general_update_project,
 	detail_budget_project,
 	detail_contractor_project,
+	detail_update_contractor_project,
+	detail_group_contractor,
+	detail_branches,
 
 	tree_task,
 }
@@ -92,4 +95,22 @@ export enum STATUS_WORK_PROJECT {
 export enum TYPE_OF_WORK {
 	ARISE,
 	HAVE_PLAN,
+}
+
+export enum STATE_REPORT_WORK {
+	NOT_PROCESSED,
+	PROCESSING,
+	COMPLETED,
+}
+
+export enum STATUS_REPORT_WORK {
+	NOT_DONE,
+	ON_SCHEDULE,
+	SLOW_PROGRESS,
+}
+
+export enum STATUS_DISBURSEMENT_PROJECT {
+	NOT_APPROVED,
+	APPROVED,
+	REJECTED,
 }
