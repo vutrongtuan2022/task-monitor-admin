@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {useState} from 'react';
 
 import {IDetailInfoProject, PropsMainInfoProject} from './interfaces';
 import styles from './MainInfoProject.module.scss';

@@ -8,8 +8,6 @@ import StateActive from '~/components/common/StateActive';
 import {STATE_PROJECT, STATUS_REPORT_WORK} from '~/constants/config/enum';
 import GridColumn from '~/components/layouts/GridColumn';
 import clsx from 'clsx';
-import LayoutPages from '~/components/layouts/LayoutPages';
-import Button from '~/components/common/Button';
 
 function DetailReportWork({}: PropsDetailReportWork) {
 	return (
@@ -124,20 +122,10 @@ function DetailReportWork({}: PropsDetailReportWork) {
 					</div>
 				</div>
 
-				<div className={clsx(styles.basic_info_table, styles.mt)}>
-					<LayoutPages
-						bgcolor='#fff'
-						listPages={[
-							{
-								title: 'Báo cáo tháng trước',
-								path: `${PATH.ProjectInfo}?_uuid=${'---'}`,
-							},
-						]}
-					>
-						<div className={styles.head}>
-							<h4>Danh sách công việc</h4>
-						</div>
-					</LayoutPages>
+				<div className={clsx(styles.basic_info, styles.mt)}>
+					<div className={styles.head}>
+						<h4>Danh sách công việc</h4>
+					</div>
 				</div>
 			</div>
 		</div>

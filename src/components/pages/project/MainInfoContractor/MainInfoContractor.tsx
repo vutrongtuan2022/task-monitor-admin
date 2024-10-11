@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {useState} from 'react';
 
 import {IContractorProject, PropsMainInfoContractor} from './interfaces';
 import styles from './MainInfoContractor.module.scss';
@@ -6,17 +6,15 @@ import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
 import {useRouter} from 'next/router';
 import Button from '~/components/common/Button';
-import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Pagination from '~/components/common/Pagination';
-import Link from 'next/link';
 import Table from '~/components/common/Table';
 import Search from '~/components/common/Search';
 import clsx from 'clsx';
 import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import IconCustom from '~/components/common/IconCustom';
-import {Add, Edit, Link1, Trash} from 'iconsax-react';
+import {Edit, Trash} from 'iconsax-react';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';

@@ -25,4 +25,5 @@ export interface IUserWork {
 	deadlineState: number;
 	dayDelayed: number;
 	stage: number;
+	megatype: string;
 }
