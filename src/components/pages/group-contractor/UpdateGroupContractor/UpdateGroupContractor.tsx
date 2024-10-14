@@ -88,7 +88,7 @@ function UpdateGroupContractor({onClose}: PropsUpdateGroupContractor) {
 						}
 					/>
 					<div className={styles.note}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} blur />
 					</div>
 				</div>
 				<div className={styles.group_button}>

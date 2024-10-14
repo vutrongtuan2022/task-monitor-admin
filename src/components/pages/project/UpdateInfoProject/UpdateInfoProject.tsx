@@ -9,7 +9,7 @@ import Button from '~/components/common/Button';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import Form, {Input} from '~/components/common/Form';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import branchesServices from '~/services/branchesServices';
 import Select, {Option} from '~/components/common/Select';
@@ -50,7 +50,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 		description: '',
 	});
 
-	useQuery<IDetailInfoProject>([QUERY_KEY.detail_general_update_project, _uuid], {
+	const {data: detailInfoProject} = useQuery<IDetailInfoProject>([QUERY_KEY.detail_general_update_project, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: projectServices.detailInfoProject({
@@ -80,6 +80,9 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 					code: v?.code,
 				}))
 			);
+		},
+		select(data) {
+			return data;
 		},
 		enabled: !!_uuid,
 	});
@@ -194,9 +197,9 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 					employeeUuid: users?.map((v: any) => v?.uuid),
 					managerUuid: form?.managerUuid,
 					description: form?.description,
-					expectStart: moment(form?.expectStart).format('YYYY-MM-DD'),
-					expectEnd: moment(form?.expectEnd).format('YYYY-MM-DD'),
-					realStart: moment(form?.realStart).format('YYYY-MM-DD'),
+					expectStart: form.expectStart ? moment(form?.expectStart).format('YYYY-MM-DD') : '',
+					expectEnd: form.expectEnd ? moment(form?.expectEnd).format('YYYY-MM-DD') : '',
+					realStart: form.realStart ? moment(form?.realStart).format('YYYY-MM-DD') : '',
 					matp: form?.matp,
 					maqh: form?.maqh,
 					xaid: form?.xaid,
@@ -221,14 +224,8 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 		if (!form.managerUuid) {
 			return toastWarn({msg: 'Chọn lãnh đạo phụ trách!'});
 		}
-		if (!form?.expectStart) {
-			return toastWarn({msg: 'Chọn thời gian bắt đầu dự kiến!'});
-		}
-		if (!form?.expectEnd) {
-			return toastWarn({msg: 'Chọn thời gian kết thúc dự kiến!'});
-		}
-		if (!form?.realStart) {
-			return toastWarn({msg: 'Chọn thời gian bắt đầu dự án được phê duyệt!'});
+		if (!form.name) {
+			return toastWarn({msg: 'Vui lòng nhập tên công trình!'});
 		}
 		if (moment(form?.expectStart).isAfter(moment(form?.expectEnd))) {
 			return toastWarn({msg: 'Thời gian bắt đầu dự kiến phải nhỏ hơn thời gian kết thúc dự kiến!'});
@@ -342,6 +339,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											type='text'
 											placeholder='Nhập tên công trình'
 											name='name'
+											max={255}
 											value={form?.name}
 											isRequired={true}
 											blur={true}
@@ -357,6 +355,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 										name='type'
 										value={form.type}
 										placeholder='Chọn'
+										readOnly={detailInfoProject?.state == STATE_PROJECT.DO}
 									>
 										{listTasks?.map((v: any) => (
 											<Option
@@ -430,11 +429,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 									<DatePicker
 										onClean={true}
 										icon={true}
-										label={
-											<span>
-												Thời gian bắt đầu dự kiến <span style={{color: 'red'}}>*</span>
-											</span>
-										}
+										label={<span>Thời gian bắt đầu dự kiến</span>}
 										name='expectStart'
 										value={form.expectStart}
 										placeholder='Chọn thời gian bắt đầu dự kiến'
@@ -448,11 +443,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 									<DatePicker
 										onClean={true}
 										icon={true}
-										label={
-											<span>
-												Thời gian kết thúc dự kiến <span style={{color: 'red'}}>*</span>
-											</span>
-										}
+										label={<span>Thời gian kết thúc dự kiến</span>}
 										name='expectEnd'
 										value={form.expectEnd}
 										placeholder='Chọn thời gian kết thúc dự kiến'
@@ -466,11 +457,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 									<DatePicker
 										onClean={true}
 										icon={true}
-										label={
-											<span>
-												Thời gian bắt đầu dự án được phê duyệt <span style={{color: 'red'}}>*</span>
-											</span>
-										}
+										label={<span>Thời gian bắt đầu dự án được phê duyệt</span>}
 										name='realStart'
 										value={form.realStart}
 										placeholder='Chọn thời gian bắt đầu dự án được phê duyệt'
@@ -544,8 +531,14 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
-									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' />
-									<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
+									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' max={255} blur />
+									<TextArea
+										name='description'
+										placeholder='Nhập quy mô công trình'
+										label='Quy mô công trình'
+										max={255}
+										blur
+									/>
 								</GridColumn>
 							</div>
 						</div>

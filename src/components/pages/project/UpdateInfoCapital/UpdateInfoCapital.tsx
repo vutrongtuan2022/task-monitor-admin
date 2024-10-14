@@ -107,6 +107,18 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	});
 
 	const updateBudgetProject = () => {
+		if (!form.expectBudget) {
+			return toastWarn({msg: 'Vui lòng nhập trường kế hoạch đầu tư vốn!'});
+		}
+		if (!form.realBudget) {
+			return toastWarn({msg: 'Vui lòng nhập tổng dự toán!'});
+		}
+		if (!form.reserveBudget) {
+			return toastWarn({msg: 'Vui lòng nhập vốn dự phòng được duyệt!'});
+		}
+		if (!form.totalInvest) {
+			return toastWarn({msg: 'Vui lòng nhập tổng mức đầu tư dự án!'});
+		}
 		if (form?.annual?.some((v) => !v?.budget || !v?.year)) {
 			return toastWarn({msg: 'Nhập đầy đủ kế hoạch vốn theo năm!'});
 		}
