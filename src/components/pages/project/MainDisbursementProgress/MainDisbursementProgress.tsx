@@ -353,19 +353,25 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										render: (data: IProjectFund) => (
 											<div className={styles.state}>
 												<StateActive
-													stateActive={data?.status}
+													stateActive={data?.approved}
 													listState={[
 														{
-															state: 1,
-															text: 'Đã báo cáo',
-															textColor: '#fff',
-															backgroundColor: '#06D7A0',
+															state: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+															text: 'Bị từ chối',
+															textColor: '#FFFFFF',
+															backgroundColor: '#F37277',
 														},
 														{
-															state: 2,
-															text: 'Bị từ chối',
-															textColor: '#fff',
-															backgroundColor: '#F37277',
+															state: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+															text: 'Chưa xử lý',
+															textColor: '#FFFFFF',
+															backgroundColor: '#4BC9F0',
+														},
+														{
+															state: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+															text: 'Đã duyệt',
+															textColor: '#FFFFFF',
+															backgroundColor: '#06D7A0',
 														},
 													]}
 												/>

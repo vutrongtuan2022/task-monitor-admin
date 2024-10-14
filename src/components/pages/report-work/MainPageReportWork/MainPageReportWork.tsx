@@ -62,7 +62,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên dự án, ID' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công trình' />
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -148,11 +148,11 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							{
 								title: 'Tên công trình',
 								fixedLeft: true,
-								render: (data: IReportWork) => <>{data?.nameProject}</>,
+								render: (data: IReportWork) => <>{data?.project?.name}</>,
 							},
 							{
 								title: 'Người báo cáo',
-								render: (data: IReportWork) => <>{data?.nameReporter}</>,
+								render: (data: IReportWork) => <>{data?.reporter?.fullname}</>,
 							},
 							{
 								title: 'Số công việc thực hiện',
@@ -180,7 +180,6 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							},
 							{
 								title: 'Trạng thái',
-								fixedRight: true,
 								render: (data: IReportWork) => (
 									<StateActive
 										stateActive={data?.state}

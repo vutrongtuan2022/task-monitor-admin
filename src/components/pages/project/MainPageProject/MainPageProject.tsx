@@ -132,6 +132,7 @@ function MainPageProject({}: PropsMainPageProject) {
 									Thêm mới dự án
 								</Button>
 							}
+							des='Danh sách dự án trống!'
 						/>
 					}
 				>
