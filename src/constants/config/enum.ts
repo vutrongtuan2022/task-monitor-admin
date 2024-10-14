@@ -25,6 +25,7 @@ export enum QUERY_KEY {
 	dropdown_task_cat,
 	dropdown_user,
 	dropdown_manager,
+	dropdown_can_bo_chuyen_quan,
 
 	detail_contractor,
 	detail_user,

@@ -107,6 +107,7 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 						placeholder='Nhập mật khẩu'
 						min={6}
 						max={255}
+						blur
 						label={
 							<span>
 								Nhập mật khẩu <span style={{color: 'var(--error)'}}>*</span>

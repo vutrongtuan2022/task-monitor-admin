@@ -17,7 +17,7 @@ import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
 import Progress from '~/components/common/Progress';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, STATE_PROJECT} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG, STATE_PROJECT, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
 import FilterCustom from '~/components/common/FilterCustom';
@@ -27,6 +27,7 @@ import {PATH} from '~/constants/config';
 import Link from 'next/link';
 import Tippy from '@tippyjs/react';
 import {convertCoin} from '~/common/funcs/convertCoin';
+import userServices from '~/services/userServices';
 
 function MainPageProject({}: PropsMainPageProject) {
 	const router = useRouter();
@@ -34,9 +35,39 @@ function MainPageProject({}: PropsMainPageProject) {
 
 	const [deleteProject, setDeleteProject] = useState<IProject | null>(null);
 
-	const {_page, _pageSize, _keyword, _status, _managerUuid, _state} = router.query;
+	const {_page, _pageSize, _keyword, _status, _state, _userUuid, _managerUuid} = router.query;
 
-	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _managerUuid], {
+	const listUser = useQuery([QUERY_KEY.dropdown_user], {
+		queryFn: () =>
+			httpRequest({
+				http: userServices.categoryUser({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					roleUuid: '',
+					type: TYPE_ACCOUNT.USER,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	const listManager = useQuery([QUERY_KEY.dropdown_manager], {
+		queryFn: () =>
+			httpRequest({
+				http: userServices.categoryUser({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					roleUuid: '',
+					type: TYPE_ACCOUNT.MANAGER,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _userUuid, _managerUuid], {
 		queryFn: () =>
 			httpRequest({
 				http: projectServices.listProject({
@@ -45,6 +76,7 @@ function MainPageProject({}: PropsMainPageProject) {
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					state: !!_state ? Number(_state) : null,
+					userUuid: (_userUuid as string) || '',
 					managerUuid: (_managerUuid as string) || '',
 				}),
 			}),
@@ -100,6 +132,30 @@ function MainPageProject({}: PropsMainPageProject) {
 									name: 'Kết thúc',
 								},
 							]}
+						/>
+					</div>
+
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='	Lãnh đạo phụ trách'
+							query='_managerUuid'
+							listFilter={listManager?.data?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.fullname,
+							}))}
+						/>
+					</div>
+
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Cán bộ chuyên quản'
+							query='_userUuid'
+							listFilter={listUser?.data?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.fullname,
+							}))}
 						/>
 					</div>
 				</div>
@@ -238,7 +294,7 @@ function MainPageProject({}: PropsMainPageProject) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
 					total={listProject?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _status, _managerUuid, _state]}
+					dependencies={[_pageSize, _keyword, _status, _state, _userUuid, _managerUuid]}
 				/>
 			</WrapperScrollbar>
 			<Dialog

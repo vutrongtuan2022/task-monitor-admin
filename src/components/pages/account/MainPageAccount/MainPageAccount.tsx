@@ -157,7 +157,7 @@ function MainPageAccount({}: PropsMainPageAccount) {
 							},
 							{
 								title: 'Tên tài khoản',
-								render: (data: IAccount) => <span style={{fontWeight: '600'}}>{data?.userName || '---'}</span>,
+								render: (data: IAccount) => <span>{data?.userName || '---'}</span>,
 							},
 
 							{
