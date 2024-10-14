@@ -162,7 +162,7 @@ function MainPageUser({}: PropsMainPageUser) {
 								},
 								{
 									title: 'Mã nhân viên',
-									render: (data: IUser) => <span style={{fontWeight: '600'}}>{data?.code || '---'}</span>,
+									render: (data: IUser) => <span>{data?.code || '---'}</span>,
 								},
 								{
 									title: 'Họ tên',

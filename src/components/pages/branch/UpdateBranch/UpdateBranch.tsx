@@ -208,7 +208,7 @@ function UpdateBranch({onClose}: PropsUpdateBranch) {
 						/>
 					</div>
 					<div className={styles.mt}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} blur />
 					</div>
 				</div>
 				<div className={styles.group_button}>
