@@ -197,9 +197,9 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 					employeeUuid: users?.map((v: any) => v?.uuid),
 					managerUuid: form?.managerUuid,
 					description: form?.description,
-					expectStart: form.expectStart ? moment(form?.expectStart).format('YYYY-MM-DD') : '',
-					expectEnd: form.expectEnd ? moment(form?.expectEnd).format('YYYY-MM-DD') : '',
-					realStart: form.realStart ? moment(form?.realStart).format('YYYY-MM-DD') : '',
+					expectStart: form.expectStart ? moment(form?.expectStart).format('YYYY-MM-DD') : null,
+					expectEnd: form.expectEnd ? moment(form?.expectEnd).format('YYYY-MM-DD') : null,
+					realStart: form.realStart ? moment(form?.realStart).format('YYYY-MM-DD') : null,
 					matp: form?.matp,
 					maqh: form?.maqh,
 					xaid: form?.xaid,
@@ -531,7 +531,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
-									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' max={255} blur />
+									<TextArea name='address' placeholder='Nhập địa chỉ chi tiết' label='Địa chỉ chi tiết' max={255} blur />
 									<TextArea
 										name='description'
 										placeholder='Nhập quy mô công trình'
