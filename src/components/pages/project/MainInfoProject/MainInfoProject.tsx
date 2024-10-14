@@ -105,6 +105,7 @@ function MainInfoProject({}: PropsMainInfoProject) {
 			}
 		},
 	});
+	const currentYear = new Date().getFullYear();
 
 	return (
 		<div className={styles.container}>
@@ -331,14 +332,20 @@ function MainInfoProject({}: PropsMainInfoProject) {
 								</div>
 								<div className={styles.line}></div>
 								<div className={styles.item_capital}>
-									<p>Số tiền giải ngân lũy kế đến hiện tại</p>
-									<p>{convertCoin(detailProject?.accumAmount!)} VND</p>
-								</div>
-								<div className={styles.line}></div>
-								<div className={styles.item_capital}>
-									<p>Kế hoạch vốn theo năm</p>
+									<p>Kế hoạch vốn theo năm {currentYear}</p>
 									<p>{convertCoin(detailProject?.annualBudget!)} VND</p>
 								</div>
+
+								<div className={styles.line}></div>
+								<div className={styles.item_capital}>
+									<p>Số tiền giải ngân lũy kế theo năm</p>
+									<p>{convertCoin(detailProject?.annualAccumAmount!)} VND</p>
+								</div>
+								{/* <div className={styles.line}></div>
+								<div className={styles.item_capital}>
+									<p>Số tiền giải ngân lũy kế đến hiện tại</p>
+									<p>{'---'} VND</p>
+								</div> */}
 							</div>
 						</div>
 					</div>
@@ -353,7 +360,7 @@ function MainInfoProject({}: PropsMainInfoProject) {
 									<p>{detailProject?.tp?.name || '---'}</p>
 								</div>
 								<div className={styles.item}>
-									<p>Quận/huyện</p>
+									<p>Quận/Huyện</p>
 									<p>{detailProject?.qh?.name || '---'}</p>
 								</div>
 								<div className={styles.item}>
@@ -368,7 +375,7 @@ function MainInfoProject({}: PropsMainInfoProject) {
 										<p>{detailProject?.address || '---'}</p>
 									</div>
 									<div className={styles.item}>
-										<p>Ghi chú</p>
+										<p>Quy mô công trình</p>
 										<p>{detailProject?.description || '---'}</p>
 									</div>
 								</GridColumn>

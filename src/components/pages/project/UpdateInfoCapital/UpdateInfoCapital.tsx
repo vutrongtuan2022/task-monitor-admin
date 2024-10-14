@@ -251,10 +251,10 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 								<div className={clsx(styles.mt)}>
 									<GridColumn col_2>
 										<p className={styles.label}>
-											Kế hoạch vốn theo năm <span style={{color: 'red'}}>*</span>
+											Kế hoạch năm <span style={{color: 'red'}}>*</span>
 										</p>
 										<p className={styles.label}>
-											Số tiền <span style={{color: 'red'}}>*</span>
+											Kế hoạch vốn theo năm <span style={{color: 'red'}}>*</span>
 										</p>
 									</GridColumn>
 								</div>

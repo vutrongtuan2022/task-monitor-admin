@@ -476,6 +476,19 @@ function CreateProject({}: PropsCreateProject) {
 								<Input
 									label={
 										<span>
+											Tổng mức đầu tư dự án <span style={{color: 'red'}}>*</span>
+										</span>
+									}
+									placeholder='Nhập tổng mức đầu tư dự án'
+									type='text'
+									isMoney
+									name='totalInvest'
+									value={form?.totalInvest}
+									unit='VND'
+								/>
+								<Input
+									label={
+										<span>
 											Tổng dự toán <span style={{color: 'red'}}>*</span>
 										</span>
 									}
@@ -501,19 +514,6 @@ function CreateProject({}: PropsCreateProject) {
 									value={form?.reserveBudget}
 									isRequired={true}
 									blur={true}
-									unit='VND'
-								/>
-								<Input
-									label={
-										<span>
-											Tổng mức đầu tư dự án <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									placeholder='Nhập tổng mức đầu tư dự án'
-									type='text'
-									isMoney
-									name='totalInvest'
-									value={form?.totalInvest}
 									unit='VND'
 								/>
 							</div>
@@ -638,7 +638,7 @@ function CreateProject({}: PropsCreateProject) {
 							</div>
 							<div className={clsx(styles.mt)}>
 								<GridColumn col_2>
-									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' max={255} blur />
+									<TextArea name='address' placeholder='Nhập địa chỉ chi tiết' label='Địa chỉ chi tiết' max={255} blur />
 									<TextArea
 										name='description'
 										placeholder='Nhập quy mô công trình'
