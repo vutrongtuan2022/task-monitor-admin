@@ -1,11 +1,12 @@
-export interface PropsMainPageReportDisbursement {}
+export interface PropsDetailReportDisbursement {}
 
-export interface IProjectFundAll {
+export interface IDetailProjectFund {
+	uuid: string;
 	project: {
+		uuid: string;
 		code: string;
 		name: string;
 		state: number;
-		uuid: string;
 	};
 	monthReport: string;
 	realeaseBudget: number;
@@ -16,11 +17,12 @@ export interface IProjectFundAll {
 	fundProgress: number;
 	created: string;
 	reporter: {
+		uuid: string;
 		fullname: string;
 		code: string;
-		uuid: string;
 	};
 	approved: number;
+	note: string;
+	feedback: string;
 	status: number;
-	uuid: string;
 }

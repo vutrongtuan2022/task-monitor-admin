@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {IBranches, PropsMainPageReportDisbursement} from './interfaces';
+import {IProjectFundAll, PropsMainPageReportDisbursement} from './interfaces';
 import styles from './MainPageReportDisbursement.module.scss';
 import Search from '~/components/common/Search';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
@@ -10,13 +10,17 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG, STATUS_DISBURSEMENT_PROJECT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import branchesServices from '~/services/branchesServices';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
 import {Eye} from 'iconsax-react';
+import Moment from 'react-moment';
+import Progress from '~/components/common/Progress';
+import {convertCoin} from '~/common/funcs/convertCoin';
+import projectFundServices from '~/services/projectFundServices';
 
 const generateYearsArray = (): number[] => {
 	const currentYear = new Date().getFullYear();
@@ -35,18 +39,19 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword} = router.query;
+	const {_page, _pageSize, _keyword, _year, _month, _approved} = router.query;
 
-	const [uuidDescription, setUuidDescription] = useState<string>('');
-
-	const listBranches = useQuery([QUERY_KEY.table_branches, _page, _pageSize, _keyword], {
+	const listProjectFundAll = useQuery([QUERY_KEY.table_project_fund_all, _page, _pageSize, _keyword, _approved, _year, _month], {
 		queryFn: () =>
 			httpRequest({
-				http: branchesServices.getListBranches({
+				http: projectFundServices.listProjectFundAll({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
+					approved: !!_approved ? Number(_approved) : null,
+					year: !!_year ? Number(_year) : null,
+					month: !!_month ? Number(_month) : null,
 				}),
 			}),
 		select(data) {
@@ -59,7 +64,28 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công việc, dự án' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công trình' />
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Trạng thái'
+							query='_approved'
+							listFilter={[
+								{
+									id: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+									name: 'Chưa xử lý',
+								},
+								{
+									id: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+									name: 'Đã duyệt',
+								},
+								{
+									id: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+									name: 'Bị từ chối',
+								},
+							]}
+						/>
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -87,75 +113,80 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={listBranches?.data?.items || []}
-					loading={listBranches.isLoading}
-					noti={<Noti title='Dữ liệu trống!' des='Danh sách công việc của nhân viên trống!' />}
+					data={listProjectFundAll?.data?.items || []}
+					loading={listProjectFundAll.isLoading}
+					noti={<Noti title='Dữ liệu trống!' des='Danh sách báo cáo giải ngân trống!' />}
 				>
 					<Table
 						fixedHeader={true}
-						data={listBranches?.data?.items || []}
+						data={listProjectFundAll?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
-								render: (data: IBranches, index: number) => <>{index + 1}</>,
+								render: (data: IProjectFundAll, index: number) => <>{index + 1}</>,
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IBranches) => <>{data?.name}</>,
-							},
-							{
-								title: 'Tên nhà thầu',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
-							},
-							{
-								title: 'Giá trị hợp đồng (VND)',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IProjectFundAll) => <>{data?.project?.name}</>,
 							},
 							{
 								title: 'Báo cáo tháng',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IProjectFundAll) => <>{data?.monthReport || '---'}</>,
 							},
 							{
-								title: 'Số tiền giải ngân(VND)',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								title: 'Tổng mức đầu tư (VND)',
+								render: (data: IProjectFundAll) => <>{convertCoin(data?.totalInvest) || '---'}</>,
 							},
 							{
-								title: 'Lũy kế STĐGN (VND)',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								title: 'Kế hoạch vốn theo năm (VND)',
+								render: (data: IProjectFundAll) => <>{convertCoin(data?.annualBudget) || '---'}</>,
 							},
+							{
+								title: 'Số tiền giải ngân (VND)',
+								render: (data: IProjectFundAll) => <>{convertCoin(data?.realeaseBudget) || '---'}</>,
+							},
+							{
+								title: 'Lũy kế toàn bộ dự án (VND)',
+								render: (data: IProjectFundAll) => <>{convertCoin(data?.projectAccumAmount) || '---'}</>,
+							},
+							{
+								title: 'Thêm lũy kế theo năm (VND)',
+								render: (data: IProjectFundAll) => <>{convertCoin(data?.annualAccumAmount) || '---'}</>,
+							},
+
 							{
 								title: 'Tỷ lệ giải ngân',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IProjectFundAll) => <Progress percent={data?.fundProgress} width={80} />,
 							},
 							{
 								title: 'Người báo cáo',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IProjectFundAll) => <>{data?.reporter?.fullname || '---'}</>,
 							},
 							{
 								title: 'Ngày gửi báo cáo',
-								render: (data: IBranches) => <>{data?.address || '---'}</>,
+								render: (data: IProjectFundAll) => <Moment date={data?.created} format='DD/MM/YYYY' />,
 							},
 							{
 								title: 'Trạng thái',
-								render: (data: IBranches) => (
+								render: (data: IProjectFundAll) => (
 									<StateActive
-										stateActive={1}
+										stateActive={data?.approved}
 										listState={[
 											{
-												state: STATE_REPORT_WORK.NOT_PROCESSED,
-												text: 'Chưa xử lý',
+												state: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+												text: 'Bị từ chối',
 												textColor: '#FFFFFF',
 												backgroundColor: '#F37277',
 											},
 											{
-												state: STATE_REPORT_WORK.PROCESSING,
-												text: 'Đang xử lý',
+												state: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+												text: 'Chưa xử lý',
 												textColor: '#FFFFFF',
 												backgroundColor: '#4BC9F0',
 											},
 											{
-												state: STATE_REPORT_WORK.COMPLETED,
-												text: 'Đã hoàn thành',
+												state: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+												text: 'Đã duyệt',
 												textColor: '#FFFFFF',
 												backgroundColor: '#06D7A0',
 											},
@@ -166,9 +197,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: IBranches) => (
+								render: (data: IProjectFundAll) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										<IconCustom type='edit' icon={<Eye fontSize={20} fontWeight={600} />} tooltip='Xem chi tiết' />
+										<IconCustom
+											href={`/report-disbursement/${data?.uuid}`}
+											type='edit'
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+										/>
 									</div>
 								),
 							},
@@ -178,7 +214,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				<Pagination
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
-					total={listBranches?.data?.pagination?.totalCount}
+					total={listProjectFundAll?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword]}
 				/>
 			</WrapperScrollbar>

@@ -61,7 +61,7 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công việc, dự án' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công việc' />
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -129,7 +129,7 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 				<DataWrapper
 					data={listUserActivities?.data?.items || []}
 					loading={listUserActivities.isLoading}
-					noti={<Noti title='Dữ liệu trống!' des='Danh sách trống!' />}
+					noti={<Noti title='Dữ liệu trống!' des='Danh sách công việc nhân viên trống!' />}
 				>
 					<Table
 						fixedHeader={true}

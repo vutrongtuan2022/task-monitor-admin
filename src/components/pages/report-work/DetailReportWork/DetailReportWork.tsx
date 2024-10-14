@@ -1,22 +1,55 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {PropsDetailReportWork} from './interfaces';
+import {IDetailReportWork, PropsDetailReportWork} from './interfaces';
 import styles from './DetailReportWork.module.scss';
 import {PATH} from '~/constants/config';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import StateActive from '~/components/common/StateActive';
-import {STATE_PROJECT, STATUS_REPORT_WORK} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATUS_REPORT_WORK} from '~/constants/config/enum';
 import GridColumn from '~/components/layouts/GridColumn';
 import clsx from 'clsx';
+import LayoutPages from '~/components/layouts/LayoutPages';
+import TabNavLink from '~/components/common/TabNavLink';
+import {useRouter} from 'next/router';
+import LastMonthReport from './components/LastMonthReport';
+import PresentReport from './components/PresentReport';
+import {useQuery} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
+import reportServices from '~/services/reportServices';
+import Moment from 'react-moment';
 
 function DetailReportWork({}: PropsDetailReportWork) {
+	const router = useRouter();
+	const {_id, _type} = router.query;
+
+	const [dataDetailReportWork, setDataDetailReportWork] = useState<IDetailReportWork | null>(null);
+
+	const DetailReportWork = useQuery<IDetailReportWork>([QUERY_KEY.detail_report_work, _id], {
+		queryFn: () =>
+			httpRequest({
+				http: reportServices.detailReport({
+					uuid: _id as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_id,
+	});
+
+	useEffect(() => {
+		if (DetailReportWork.data) {
+			setDataDetailReportWork(DetailReportWork.data);
+		}
+	}, [DetailReportWork.data]);
+
 	return (
 		<div className={styles.container}>
 			<Breadcrumb
 				listUrls={[
 					{
 						path: PATH.ReportWork,
-						title: 'Danh sách dự án báo cáo tháng',
+						title: 'Danh sách kế hoạch tháng',
 					},
 					{
 						path: '',
@@ -31,7 +64,7 @@ function DetailReportWork({}: PropsDetailReportWork) {
 						<div className={styles.state}>
 							<p>Trạng thái dự án:</p>
 							<StateActive
-								stateActive={1}
+								stateActive={DetailReportWork?.data?.state!}
 								listState={[
 									{
 										state: STATE_PROJECT.PREPARE,
@@ -59,17 +92,19 @@ function DetailReportWork({}: PropsDetailReportWork) {
 						<GridColumn col_3>
 							<div className={styles.item}>
 								<p>Tên công trình</p>
-								<p>{'---'}</p>
+								<p>{DetailReportWork?.data?.project?.name}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Kế hoạch</p>
-								<p></p>
+								<p>
+									Tháng {DetailReportWork?.data?.month} - {DetailReportWork?.data?.year}
+								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Tình trạng</p>
 								<StateActive
 									isBox={false}
-									stateActive={1}
+									stateActive={DetailReportWork?.data?.completeState}
 									listState={[
 										{
 											state: STATUS_REPORT_WORK.NOT_DONE,
@@ -98,16 +133,19 @@ function DetailReportWork({}: PropsDetailReportWork) {
 								<div className={styles.item}>
 									<p>Công việc thực hiện</p>
 									<p>
-										<span style={{color: '#2970FF'}}>6</span>/<span>8</span>
+										<span style={{color: '#2970FF'}}>{DetailReportWork?.data?.completedActivity}</span>/
+										<span>{DetailReportWork?.data?.totalActivity}</span>
 									</p>
 								</div>
 								<div className={styles.item}>
 									<p>Ngày gửi báo cáo</p>
-									<p></p>
+									<p>
+										<Moment date={DetailReportWork?.data?.completed} format='DD/MM/YYYY' />
+									</p>
 								</div>
 								<div className={styles.item}>
 									<p>Người gửi báo cáo</p>
-									<p></p>
+									<p>{DetailReportWork?.data?.reporter?.fullname}</p>
 								</div>
 							</GridColumn>
 						</div>
@@ -115,7 +153,7 @@ function DetailReportWork({}: PropsDetailReportWork) {
 							<GridColumn col_3>
 								<div className={styles.item}>
 									<p>Lý do từ chối</p>
-									<p></p>
+									<p>{DetailReportWork?.data?.note || '---'}</p>
 								</div>
 							</GridColumn>
 						</div>
@@ -123,8 +161,19 @@ function DetailReportWork({}: PropsDetailReportWork) {
 				</div>
 
 				<div className={clsx(styles.basic_info, styles.mt)}>
-					<div className={styles.head}>
-						<h4>Danh sách công việc</h4>
+					<div className={styles.nav_link}>
+						<TabNavLink
+							query='_type'
+							listHref={[
+								{title: 'Báo cáo tháng trước', pathname: router.pathname, query: null},
+								{title: 'Báo cáo hiện tại', pathname: router.pathname, query: 'report'},
+							]}
+						/>
+					</div>
+
+					<div>
+						{!_type && <LastMonthReport dataDetailReportWork={dataDetailReportWork} />}
+						{_type == 'report' && <PresentReport dataDetailReportWork={dataDetailReportWork} />}
 					</div>
 				</div>
 			</div>
