@@ -4,7 +4,7 @@ import {IFormCreateProject, PropsCreateProject} from './interfaces';
 import styles from './CreateProject.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
-import Form, {Input} from '~/components/common/Form';
+import Form, {FormContext, Input} from '~/components/common/Form';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
@@ -264,40 +264,46 @@ function CreateProject({}: PropsCreateProject) {
 	};
 
 	return (
-		<div className={styles.container}>
-			<Loading loading={funcCreateProject.isLoading} />
-			<Breadcrumb
-				listUrls={[
-					{
-						path: PATH.Project,
-						title: 'Danh sách dự án',
-					},
-					{
-						path: '',
-						title: 'Thêm mới dự án',
-					},
-				]}
-				action={
-					<div className={styles.group_btn}>
-						<Button
-							p_14_24
-							rounded_8
-							light-red
-							onClick={(e) => {
-								e.preventDefault();
-								window.history.back();
-							}}
-						>
-							Hủy bỏ
-						</Button>
-						<Button p_14_24 rounded_8 blueLinear onClick={handleCreateProject}>
-							Lưu lại
-						</Button>
-					</div>
-				}
-			/>
-			<div className={styles.main}>
-				<Form form={form} setForm={setForm}>
+		<Form form={form} setForm={setForm} onSubmit={handleCreateProject}>
+			<div className={styles.container}>
+				<Loading loading={funcCreateProject.isLoading} />
+				<Breadcrumb
+					listUrls={[
+						{
+							path: PATH.Project,
+							title: 'Danh sách dự án',
+						},
+						{
+							path: '',
+							title: 'Thêm mới dự án',
+						},
+					]}
+					action={
+						<div className={styles.group_btn}>
+							<Button
+								p_14_24
+								rounded_8
+								light-red
+								onClick={(e) => {
+									e.preventDefault();
+									window.history.back();
+								}}
+							>
+								Hủy bỏ
+							</Button>
+							<FormContext.Consumer>
+								{({isDone}) => (
+									<div className={styles.btn}>
+										<Button disable={!isDone} p_14_24 rounded_8 blueLinear>
+											Lưu lại
+										</Button>
+									</div>
+								)}
+							</FormContext.Consumer>
+						</div>
+					}
+				/>
+				<div className={styles.main}>
 					<div className={styles.grid}>
 						<div className={styles.basic_info}>
 							<div className={styles.head}>
@@ -650,9 +656,9 @@ function CreateProject({}: PropsCreateProject) {
 							</div>
 						</div>
 					</div>
-				</Form>
+				</div>
 			</div>
-		</div>
+		</Form>
 	);
 }
 

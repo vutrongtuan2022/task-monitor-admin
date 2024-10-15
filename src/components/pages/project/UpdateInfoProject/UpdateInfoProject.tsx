@@ -7,7 +7,7 @@ import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import Form, {Input} from '~/components/common/Form';
+import Form, {FormContext, Input} from '~/components/common/Form';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
@@ -235,56 +235,62 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 	};
 
 	return (
-		<div className={styles.container}>
-			<Loading loading={funcUpdateGeneralProject.isLoading} />
-			<Breadcrumb
-				listUrls={[
-					{
-						path: PATH.Project,
-						title: 'Danh sách dự án',
-					},
-					{
-						path: '',
-						title: 'Chỉnh sửa dự án',
-					},
-				]}
-			/>
-			<LayoutPages
-				listPages={[
-					{
-						title: 'Thông tin chung',
-						path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
-					},
-					{
-						title: 'Thông tin kế hoạch vốn',
-						path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
-					},
-					{
-						title: 'Thông tin nhà thầu',
-						path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
-					},
-				]}
-				action={
-					<div className={styles.group_btn}>
-						<Button
-							p_14_24
-							rounded_8
-							light-red
-							onClick={(e) => {
-								e.preventDefault();
-								window.history.back();
-							}}
-						>
-							Hủy bỏ
-						</Button>
-						<Button p_14_24 rounded_8 blueLinear onClick={handleUpdateGeneralProject}>
-							Lưu lại
-						</Button>
-					</div>
-				}
-			>
-				<div className={styles.main}>
-					<Form form={form} setForm={setForm}>
+		<Form form={form} setForm={setForm} onSubmit={handleUpdateGeneralProject}>
+			<div className={styles.container}>
+				<Loading loading={funcUpdateGeneralProject.isLoading} />
+				<Breadcrumb
+					listUrls={[
+						{
+							path: PATH.Project,
+							title: 'Danh sách dự án',
+						},
+						{
+							path: '',
+							title: 'Chỉnh sửa dự án',
+						},
+					]}
+				/>
+				<LayoutPages
+					listPages={[
+						{
+							title: 'Thông tin chung',
+							path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
+						},
+						{
+							title: 'Thông tin kế hoạch vốn',
+							path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
+						},
+						{
+							title: 'Thông tin nhà thầu',
+							path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
+						},
+					]}
+					action={
+						<div className={styles.group_btn}>
+							<Button
+								p_14_24
+								rounded_8
+								light-red
+								onClick={(e) => {
+									e.preventDefault();
+									window.history.back();
+								}}
+							>
+								Hủy bỏ
+							</Button>
+							<FormContext.Consumer>
+								{({isDone}) => (
+									<div className={styles.btn}>
+										<Button disable={!isDone} p_14_24 rounded_8 blueLinear>
+											Lưu lại
+										</Button>
+									</div>
+								)}
+							</FormContext.Consumer>
+						</div>
+					}
+				>
+					<div className={styles.main}>
 						<div className={styles.basic_info}>
 							<div className={styles.head}>
 								<h4>Thông tin cơ bản</h4>
@@ -542,10 +548,10 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 								</GridColumn>
 							</div>
 						</div>
-					</Form>
-				</div>
-			</LayoutPages>
-		</div>
+					</div>
+				</LayoutPages>
+			</div>
+		</Form>
 	);
 }
 
