@@ -490,6 +490,7 @@ function CreateProject({}: PropsCreateProject) {
 									isMoney
 									name='totalInvest'
 									value={form?.totalInvest}
+									isRequired={true}
 									unit='VND'
 								/>
 								<Input
