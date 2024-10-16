@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
-import { PropsButtonSelectMany } from './interfaces';
+import {PropsButtonSelectMany} from './interfaces';
 import styles from './ButtonSelectMany.module.scss';
 import Popup from '../Popup';
-import { IoIosAddCircle } from 'react-icons/io';
-import { GrSearch } from 'react-icons/gr';
+import {IoIosAddCircle} from 'react-icons/io';
+import {GrSearch} from 'react-icons/gr';
 import clsx from 'clsx';
-import { IoClose } from 'react-icons/io5';
+import {IoClose} from 'react-icons/io5';
 import Button from '../Button/Button';
 import Image from 'next/image';
 import icons from '~/constants/images/icons';
-import { removeVietnameseTones } from '~/common/funcs/optionConvert';
+import {removeVietnameseTones} from '~/common/funcs/optionConvert';
 
 function ButtonSelectMany({
 	label,
@@ -51,7 +51,7 @@ function ButtonSelectMany({
 	};
 
 	const handleCheckAll = (e: any) => {
-		const { checked } = e?.target;
+		const {checked} = e?.target;
 
 		if (checked) {
 			setListChecked(dataList);
@@ -76,13 +76,12 @@ function ButtonSelectMany({
 		return dataChecked || [];
 	}, [dataChecked, listDataDisable]);
 
-
 	return (
 		<div className={styles.container}>
 			<div className={styles.title}>
 				<span>{label}</span>
 			</div>
-			<div className={clsx(styles.show_select, { [styles.readonly]: readonly })}>
+			<div className={clsx(styles.show_select, {[styles.readonly]: readonly})}>
 				<div className={styles.group_item}>
 					{dataChecked?.length == 0 ? (
 						<label className={styles.placeholder}>{placeholder}</label>
@@ -100,16 +99,17 @@ function ButtonSelectMany({
 							))}
 						</>
 					)}
-
 				</div>
-				<div className={styles.add_item}
+				<div
+					className={styles.add_item}
 					onClick={() => {
 						if (readonly) {
 							return;
 						} else {
 							setOpen(true);
 						}
-					}}>
+					}}
+				>
 					<IoIosAddCircle size={20} color='#3772FF' />
 				</div>
 			</div>
