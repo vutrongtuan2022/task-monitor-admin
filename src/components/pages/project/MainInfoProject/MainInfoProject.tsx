@@ -26,6 +26,8 @@ import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 function MainInfoProject({}: PropsMainInfoProject) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
+	const today = new Date();
+	const currentYear = today.getFullYear();
 
 	const {_uuid} = router.query;
 
@@ -105,7 +107,6 @@ function MainInfoProject({}: PropsMainInfoProject) {
 			}
 		},
 	});
-	const currentYear = new Date().getFullYear();
 
 	return (
 		<div className={styles.container}>

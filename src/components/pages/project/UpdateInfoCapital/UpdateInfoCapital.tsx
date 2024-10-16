@@ -11,7 +11,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
-import Form, {Input} from '~/components/common/Form';
+import Form, {FormContext, Input} from '~/components/common/Form';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import clsx from 'clsx';
 import Select, {Option} from '~/components/common/Select';
@@ -107,18 +107,6 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	});
 
 	const updateBudgetProject = () => {
-		if (!form.expectBudget) {
-			return toastWarn({msg: 'Vui lòng nhập trường kế hoạch đầu tư vốn!'});
-		}
-		if (!form.realBudget) {
-			return toastWarn({msg: 'Vui lòng nhập tổng dự toán!'});
-		}
-		if (!form.reserveBudget) {
-			return toastWarn({msg: 'Vui lòng nhập vốn dự phòng được duyệt!'});
-		}
-		if (!form.totalInvest) {
-			return toastWarn({msg: 'Vui lòng nhập tổng mức đầu tư dự án!'});
-		}
 		if (form?.annual?.some((v) => !v?.budget || !v?.year)) {
 			return toastWarn({msg: 'Nhập đầy đủ kế hoạch vốn theo năm!'});
 		}
@@ -127,56 +115,62 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	};
 
 	return (
-		<div className={styles.container}>
-			<Loading loading={funcUpdateBudgetProject.isLoading} />
-			<Breadcrumb
-				listUrls={[
-					{
-						path: PATH.Project,
-						title: 'Danh sách dự án',
-					},
-					{
-						path: '',
-						title: 'Chỉnh sửa dự án',
-					},
-				]}
-			/>
-			<LayoutPages
-				listPages={[
-					{
-						title: 'Thông tin chung',
-						path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
-					},
-					{
-						title: 'Thông tin kế hoạch vốn',
-						path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
-					},
-					{
-						title: 'Thông tin nhà thầu',
-						path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
-					},
-				]}
-				action={
-					<div className={styles.group_btn}>
-						<Button
-							p_14_24
-							rounded_8
-							light-red
-							onClick={(e) => {
-								e.preventDefault();
-								window.history.back();
-							}}
-						>
-							Hủy bỏ
-						</Button>
-						<Button p_14_24 rounded_8 blueLinear onClick={updateBudgetProject}>
-							Lưu lại
-						</Button>
-					</div>
-				}
-			>
-				<div className={styles.main}>
-					<Form form={form} setForm={setForm}>
+		<Form form={form} setForm={setForm}>
+			<div className={styles.container} onSubmit={updateBudgetProject}>
+				<Loading loading={funcUpdateBudgetProject.isLoading} />
+				<Breadcrumb
+					listUrls={[
+						{
+							path: PATH.Project,
+							title: 'Danh sách dự án',
+						},
+						{
+							path: '',
+							title: 'Chỉnh sửa dự án',
+						},
+					]}
+				/>
+				<LayoutPages
+					listPages={[
+						{
+							title: 'Thông tin chung',
+							path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
+						},
+						{
+							title: 'Thông tin kế hoạch vốn',
+							path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
+						},
+						{
+							title: 'Thông tin nhà thầu',
+							path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
+						},
+					]}
+					action={
+						<div className={styles.group_btn}>
+							<Button
+								p_14_24
+								rounded_8
+								light-red
+								onClick={(e) => {
+									e.preventDefault();
+									window.history.back();
+								}}
+							>
+								Hủy bỏ
+							</Button>
+							<FormContext.Consumer>
+								{({isDone}) => (
+									<div className={styles.btn}>
+										<Button disable={!isDone} p_14_24 rounded_8 blueLinear>
+											Lưu lại
+										</Button>
+									</div>
+								)}
+							</FormContext.Consumer>
+						</div>
+					}
+				>
+					<div className={styles.main}>
 						<div className={styles.basic_info}>
 							<div className={styles.head}>
 								<h4>Thông tin kế hoạch vốn</h4>
@@ -285,10 +279,10 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 								</div>
 							</div>
 						</div>
-					</Form>
-				</div>
-			</LayoutPages>
-		</div>
+					</div>
+				</LayoutPages>
+			</div>
+		</Form>
 	);
 }
 
