@@ -19,6 +19,7 @@ import {AddCircle, Trash} from 'iconsax-react';
 import {toastWarn} from '~/common/funcs/toast';
 import Loading from '~/components/common/Loading';
 import GridColumn from '~/components/layouts/GridColumn';
+import {generateYearsArray} from '~/common/funcs/selectDate';
 
 function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	const router = useRouter();
@@ -287,18 +288,6 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 }
 
 export default UpdateInfoCapital;
-
-const generateYearsArray = (): number[] => {
-	const currentYear = new Date().getFullYear();
-	const startYear = currentYear - 15;
-	const endYear = currentYear + 15;
-
-	const years = [];
-	for (let year = startYear; year <= endYear; year++) {
-		years.push(year);
-	}
-	return years;
-};
 
 function ItemAnnualToYear({
 	index,

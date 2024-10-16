@@ -20,18 +20,7 @@ import Moment from 'react-moment';
 import Progress from '~/components/common/Progress';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import projectFundServices from '~/services/projectFundServices';
-
-const generateYearsArray = (): number[] => {
-	const currentYear = new Date().getFullYear();
-	const startYear = currentYear - 15;
-	const endYear = currentYear + 15;
-
-	const years = [];
-	for (let year = startYear; year <= endYear; year++) {
-		years.push(year);
-	}
-	return years;
-};
+import {generateYearsArray} from '~/common/funcs/selectDate';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();

@@ -25,18 +25,7 @@ import icons from '~/constants/images/icons';
 import projectFundServices from '~/services/projectFundServices';
 import Moment from 'react-moment';
 import Noti from '~/components/common/DataWrapper/components/Noti';
-
-const generateYearsArray = (): number[] => {
-	const currentYear = new Date().getFullYear();
-	const startYear = currentYear - 15;
-	const endYear = currentYear + 15;
-
-	const years = [];
-	for (let year = startYear; year <= endYear; year++) {
-		years.push(year);
-	}
-	return years;
-};
+import {generateYearsArray} from '~/common/funcs/selectDate';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();

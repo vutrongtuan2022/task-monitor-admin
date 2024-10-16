@@ -17,18 +17,7 @@ import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import activityServices from '~/services/activityServices';
 import Progress from '~/components/common/Progress';
-
-const generateYearsArray = (): number[] => {
-	const currentYear = new Date().getFullYear();
-	const startYear = currentYear - 15;
-	const endYear = currentYear + 15;
-
-	const years = [];
-	for (let year = startYear; year <= endYear; year++) {
-		years.push(year);
-	}
-	return years;
-};
+import {generateYearsArray} from '~/common/funcs/selectDate';
 
 function MainPageUserWork({}: PropsMainPageUserWork) {
 	const router = useRouter();

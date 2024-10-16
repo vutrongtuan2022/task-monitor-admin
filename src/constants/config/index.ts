@@ -1,5 +1,6 @@
 import {
 	Buildings2,
+	Calendar,
 	Data,
 	DocumentForward,
 	DocumentText1,
@@ -58,6 +59,7 @@ export enum PATH {
 	UserWork = '/user-work',
 	ReportWork = '/report-work',
 	ReportDisbursement = '/report-disbursement',
+	PlanNextMonth = '/plan-next-month',
 }
 
 export const Menu: {
@@ -77,6 +79,12 @@ export const Menu: {
 		path: PATH.Project,
 		pathActive: PATH.Project,
 		icon: DocumentText1,
+	},
+	{
+		title: 'Kế hoạch tháng tới',
+		path: PATH.PlanNextMonth,
+		pathActive: PATH.PlanNextMonth,
+		icon: Calendar,
 	},
 	{
 		title: 'Công việc nhân viên',

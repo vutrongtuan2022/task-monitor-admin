@@ -14,6 +14,7 @@ export enum QUERY_KEY {
 	table_list_report_last_month,
 	table_list_report_present,
 	table_project_fund_all,
+	table_plan_next_month,
 
 	dropdown_role,
 	dropdown_group_contractor,
