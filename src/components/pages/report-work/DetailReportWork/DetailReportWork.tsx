@@ -5,10 +5,9 @@ import styles from './DetailReportWork.module.scss';
 import {PATH} from '~/constants/config';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import StateActive from '~/components/common/StateActive';
-import {QUERY_KEY, STATE_PROJECT, STATUS_REPORT_WORK} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATE_COMPLETE_REPORT} from '~/constants/config/enum';
 import GridColumn from '~/components/layouts/GridColumn';
 import clsx from 'clsx';
-import LayoutPages from '~/components/layouts/LayoutPages';
 import TabNavLink from '~/components/common/TabNavLink';
 import {useRouter} from 'next/router';
 import LastMonthReport from './components/LastMonthReport';
@@ -107,19 +106,19 @@ function DetailReportWork({}: PropsDetailReportWork) {
 									stateActive={DetailReportWork?.data?.completeState}
 									listState={[
 										{
-											state: STATUS_REPORT_WORK.NOT_DONE,
+											state: STATE_COMPLETE_REPORT.NOT_DONE,
 											text: 'Chưa thực hiện',
 											textColor: '#FF852C',
 											backgroundColor: '#FF852C',
 										},
 										{
-											state: STATUS_REPORT_WORK.ON_SCHEDULE,
+											state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
 											text: 'Đúng tiến độ',
 											textColor: '#005994',
 											backgroundColor: '#005994',
 										},
 										{
-											state: STATUS_REPORT_WORK.SLOW_PROGRESS,
+											state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
 											text: 'Chậm tiến độ',
 											textColor: '#EE464C',
 											backgroundColor: '#EE464C',

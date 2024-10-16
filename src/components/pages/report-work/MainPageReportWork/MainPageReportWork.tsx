@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {IReportWork, PropsMainPageReportWork} from './interfaces';
 import styles from './MainPageReportWork.module.scss';
@@ -10,7 +10,7 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG, STATUS_REPORT_WORK} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_REPORT, STATUS_CONFIG, STATE_COMPLETE_REPORT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
@@ -93,16 +93,20 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							query='_state'
 							listFilter={[
 								{
-									id: STATE_REPORT_WORK.NOT_PROCESSED,
-									name: 'Chưa xử lý',
+									id: STATE_REPORT.REJECTED,
+									name: 'Bị từ chối',
 								},
 								{
-									id: STATE_REPORT_WORK.PROCESSING,
-									name: 'Đang xử lý',
+									id: STATE_REPORT.PLANNING,
+									name: 'Lên kế hoạch',
 								},
 								{
-									id: STATE_REPORT_WORK.COMPLETED,
-									name: 'Đã hoàn thành',
+									id: STATE_REPORT.REPORTED,
+									name: 'Đã báo cáo',
+								},
+								{
+									id: STATE_REPORT.IN_PROGRESS,
+									name: 'Đang thực hiện',
 								},
 							]}
 						/>
@@ -114,15 +118,15 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							query='_completeState'
 							listFilter={[
 								{
-									id: STATUS_REPORT_WORK.NOT_DONE,
+									id: STATE_COMPLETE_REPORT.NOT_DONE,
 									name: 'Chưa thực hiện',
 								},
 								{
-									id: STATUS_REPORT_WORK.ON_SCHEDULE,
+									id: STATE_COMPLETE_REPORT.ON_SCHEDULE,
 									name: 'Đúng tiến độ',
 								},
 								{
-									id: STATUS_REPORT_WORK.SLOW_PROGRESS,
+									id: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
 									name: 'Chậm tiến độ',
 								},
 							]}
@@ -185,22 +189,28 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 										stateActive={data?.state}
 										listState={[
 											{
-												state: STATE_REPORT_WORK.NOT_PROCESSED,
-												text: 'Chưa xử lý',
-												textColor: '#FFFFFF',
-												backgroundColor: '#F37277',
+												state: STATE_REPORT.REJECTED,
+												text: 'Bị từ chối',
+												textColor: '#fff',
+												backgroundColor: '#EE464C',
 											},
 											{
-												state: STATE_REPORT_WORK.PROCESSING,
-												text: 'Đang xử lý',
-												textColor: '#FFFFFF',
-												backgroundColor: '#4BC9F0',
+												state: STATE_REPORT.PLANNING,
+												text: 'Lên kế hoạch',
+												textColor: '#fff',
+												backgroundColor: '#5B70B3',
 											},
 											{
-												state: STATE_REPORT_WORK.COMPLETED,
-												text: 'Đã hoàn thành',
-												textColor: '#FFFFFF',
-												backgroundColor: '#06D7A0',
+												state: STATE_REPORT.REPORTED,
+												text: 'Đã báo cáo',
+												textColor: '#fff',
+												backgroundColor: '#16C1F3',
+											},
+											{
+												state: STATE_REPORT.IN_PROGRESS,
+												text: 'Đang thực hiện',
+												textColor: '#fff',
+												backgroundColor: '#FF852C',
 											},
 										]}
 									/>
@@ -214,19 +224,19 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 										stateActive={data?.status}
 										listState={[
 											{
-												state: STATUS_REPORT_WORK.NOT_DONE,
+												state: STATE_COMPLETE_REPORT.NOT_DONE,
 												text: 'Chưa thực hiện',
 												textColor: '#FF852C',
 												backgroundColor: '#FF852C',
 											},
 											{
-												state: STATUS_REPORT_WORK.ON_SCHEDULE,
+												state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
 												text: 'Đúng tiến độ',
 												textColor: '#005994',
 												backgroundColor: '#005994',
 											},
 											{
-												state: STATUS_REPORT_WORK.SLOW_PROGRESS,
+												state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
 												text: 'Chậm tiến độ',
 												textColor: '#EE464C',
 												backgroundColor: '#EE464C',

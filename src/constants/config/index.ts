@@ -11,7 +11,6 @@ import {
 	TagUser,
 	UserOctagon,
 } from 'iconsax-react';
-import icons from '../images/icons';
 import {TYPE_DATE} from './enum';
 
 export const MAXIMUM_FILE = 10; //MB

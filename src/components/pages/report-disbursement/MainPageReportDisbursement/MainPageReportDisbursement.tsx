@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {IProjectFundAll, PropsMainPageReportDisbursement} from './interfaces';
 import styles from './MainPageReportDisbursement.module.scss';
@@ -10,9 +10,8 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG, STATUS_DISBURSEMENT_PROJECT} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG, STATE_REPORT_DISBURSEMENT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
-import branchesServices from '~/services/branchesServices';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
@@ -73,15 +72,15 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							query='_approved'
 							listFilter={[
 								{
-									id: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+									id: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
 									name: 'Chưa xử lý',
 								},
 								{
-									id: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+									id: STATE_REPORT_DISBURSEMENT.APPROVED,
 									name: 'Đã duyệt',
 								},
 								{
-									id: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+									id: STATE_REPORT_DISBURSEMENT.REJECTED,
 									name: 'Bị từ chối',
 								},
 							]}
@@ -173,19 +172,19 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 										stateActive={data?.approved}
 										listState={[
 											{
-												state: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+												state: STATE_REPORT_DISBURSEMENT.REJECTED,
 												text: 'Bị từ chối',
 												textColor: '#FFFFFF',
 												backgroundColor: '#F37277',
 											},
 											{
-												state: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+												state: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
 												text: 'Chưa xử lý',
 												textColor: '#FFFFFF',
 												backgroundColor: '#4BC9F0',
 											},
 											{
-												state: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+												state: STATE_REPORT_DISBURSEMENT.APPROVED,
 												text: 'Đã duyệt',
 												textColor: '#FFFFFF',
 												backgroundColor: '#06D7A0',
