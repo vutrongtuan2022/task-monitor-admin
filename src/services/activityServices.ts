@@ -27,6 +27,7 @@ const activityServices = {
 			year: number | null;
 			state: number | null;
 			type: number | null;
+			reporterUuid: string;
 		},
 		tokenAxios?: any
 	) => {

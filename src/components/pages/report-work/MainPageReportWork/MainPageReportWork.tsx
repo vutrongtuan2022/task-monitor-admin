@@ -28,6 +28,21 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 
 	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState, _reporterUuid} = router.query;
 
+	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
+		queryFn: () =>
+			httpRequest({
+				http: userServices.categoryUser({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					roleUuid: '',
+					type: TYPE_ACCOUNT.USER,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
 	const listReport = useQuery(
 		[QUERY_KEY.table_list_report, _page, _pageSize, _keyword, _year, _month, _state, _completeState, _reporterUuid],
 		{
@@ -50,21 +65,6 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			},
 		}
 	);
-
-	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
-		queryFn: () =>
-			httpRequest({
-				http: userServices.categoryUser({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					roleUuid: '',
-					type: TYPE_ACCOUNT.USER,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
 
 	return (
 		<div className={styles.container}>

@@ -1,37 +1,3 @@
-.container {
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-}
-
-.main {
-	flex: 1;
-	overflow: auto;
-}
-
-.layout {
-	background-color: #fff;
-}
-
-.group_btn {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 10px;
-}
-
-.basic_info {
-	background-color: #fff;
-	border-radius: 12px;
-	padding: 12px 0;
-}
-
-.nav_link {
-	padding: 0 20px;
-	border-bottom: 1px solid #eaedf2;
-	margin-bottom: 6px;
-}
-
 .head {
 	border-left: 4px solid #005994;
 	padding: 0 20px;
@@ -46,10 +12,6 @@
 	}
 }
 
-.progress_group {
-	padding: 20px;
-}
-
 .state {
 	display: flex;
 	align-items: center;
@@ -60,6 +22,10 @@
 		font-size: 14px;
 		font-weight: 500;
 	}
+}
+
+.progress_group {
+	padding: 20px;
 }
 
 .item {
@@ -87,24 +53,4 @@
 			}
 		}
 	}
-}
-
-.mt {
-	margin-top: 20px;
-}
-
-.main_tab {
-	padding: 0 20px;
-}
-
-.line {
-	width: 100%;
-	height: 1px;
-	background: #eaedf2;
-	margin-bottom: 10px;
-}
-
-.main_table {
-	padding: 0 20px;
-	margin-top: 16px;
 }

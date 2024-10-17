@@ -17,6 +17,8 @@ export enum QUERY_KEY {
 	table_plan_next_month,
 	table_list_report_work_last_month,
 	table_list_work_report,
+	table_work_report_overview,
+	table_next_plan_report_overview,
 
 	dropdown_role,
 	dropdown_group_contractor,
@@ -45,6 +47,9 @@ export enum QUERY_KEY {
 	detail_group_contractor,
 	detail_branches,
 	detail_report_work,
+	detail_report_overview,
+	detail_project_report_overview,
+	detail_disbursement_report_overview,
 	detail_plan_next_month,
 	detail_project_fund,
 
