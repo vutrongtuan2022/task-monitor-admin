@@ -11,6 +11,7 @@ const reportServices = {
 			year: number | null;
 			state: number | null;
 			completeState: number | null;
+			reporterUuid: string;
 		},
 		tokenAxios?: any
 	) => {
@@ -27,6 +28,7 @@ const reportServices = {
 			month: number | null;
 			year: number | null;
 			completeState: number | null;
+			reporterUuid: string;
 		},
 		tokenAxios?: any
 	) => {

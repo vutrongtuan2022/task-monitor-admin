@@ -40,14 +40,12 @@ const activityServices = {
 			page: number;
 			keyword: string;
 			status: number | null;
-			projectUuid: string;
-			month: number | null;
-			year: number | null;
 			state: number | null;
+			uuid: string;
 		},
 		tokenAxios?: any
 	) => {
-		return axiosClient.post(`/Activity/get-page-list-activity-last-month`, data, {
+		return axiosClient.post(`/Activity/get-page-list-user-activity-last-month`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
