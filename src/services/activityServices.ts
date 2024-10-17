@@ -10,6 +10,7 @@ const activityServices = {
 			projectUuid: string;
 			activityType: number | null;
 			state: number | null;
+			deadLine: number | null;
 		},
 		tokenAxios?: any
 	) => {
