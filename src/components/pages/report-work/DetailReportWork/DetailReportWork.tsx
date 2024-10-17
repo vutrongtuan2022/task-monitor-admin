@@ -65,9 +65,15 @@ function DetailReportWork({}: PropsDetailReportWork) {
 									},
 									{
 										state: STATE_REPORT.REPORTED,
-										text: 'Đã báo cáo',
+										text: 'Đã duyệt',
 										textColor: '#fff',
 										backgroundColor: '#16C1F3',
+									},
+									{
+										state: STATE_REPORT.PENDING_APPROVAL,
+										text: 'Đã báo cáo',
+										textColor: '#fff',
+										backgroundColor: '#06D7A0',
 									},
 									{
 										state: STATE_REPORT.IN_PROGRESS,
