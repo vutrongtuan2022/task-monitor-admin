@@ -29,6 +29,7 @@ export enum QUERY_KEY {
 	dropdown_user,
 	dropdown_manager,
 	dropdown_can_bo_chuyen_quan,
+	table_overview_report,
 
 	detail_contractor,
 	detail_user,
