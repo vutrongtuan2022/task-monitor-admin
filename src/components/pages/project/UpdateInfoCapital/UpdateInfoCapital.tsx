@@ -115,8 +115,8 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	};
 
 	return (
-		<Form form={form} setForm={setForm}>
-			<div className={styles.container} onSubmit={updateBudgetProject}>
+		<Form form={form} setForm={setForm} onSubmit={updateBudgetProject}>
+			<div className={styles.container}>
 				<Loading loading={funcUpdateBudgetProject.isLoading} />
 				<Breadcrumb
 					listUrls={[
