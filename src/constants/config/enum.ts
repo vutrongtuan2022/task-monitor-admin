@@ -14,6 +14,7 @@ export enum QUERY_KEY {
 	table_list_report_last_month,
 	table_list_report_present,
 	table_project_fund_all,
+	table_plan_next_month,
 
 	dropdown_role,
 	dropdown_group_contractor,
@@ -111,13 +112,27 @@ export enum STATE_REPORT_WORK {
 	COMPLETED,
 }
 
-export enum STATUS_REPORT_WORK {
+export enum STATE_REPORT {
+	REJECTED,
+	REPORTED,
+	PLANNING,
+	PENDING_APPROVAL,
+	IN_PROGRESS,
+}
+
+export enum STATE_COMPLETE_REPORT {
 	NOT_DONE,
 	ON_SCHEDULE,
 	SLOW_PROGRESS,
 }
 
 export enum STATUS_DISBURSEMENT_PROJECT {
+	NOT_APPROVED,
+	APPROVED,
+	REJECTED,
+}
+
+export enum STATE_REPORT_DISBURSEMENT {
 	NOT_APPROVED,
 	APPROVED,
 	REJECTED,

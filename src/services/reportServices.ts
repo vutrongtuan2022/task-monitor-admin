@@ -18,7 +18,22 @@ const reportServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-
+	listReportPlanNextMonth: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number | null;
+			month: number | null;
+			year: number | null;
+			completeState: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Report/admin-get-page-list-planning-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	detailReport: (
 		data: {
 			uuid: string;

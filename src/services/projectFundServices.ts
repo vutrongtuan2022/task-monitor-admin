@@ -33,7 +33,7 @@ const projectFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-	detaulProjectFund: (
+	detailProjectFund: (
 		data: {
 			uuid: string;
 		},

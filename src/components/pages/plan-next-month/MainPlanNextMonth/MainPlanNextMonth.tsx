@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {IReportWork, PropsMainPageReportWork} from './interfaces';
-import styles from './MainPageReportWork.module.scss';
+import {IReportWork, PropsMainPlanNextMonth} from './interfaces';
+import styles from './MainPlanNextMonth.module.scss';
 import Search from '~/components/common/Search';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
@@ -20,24 +20,23 @@ import reportServices from '~/services/reportServices';
 import Moment from 'react-moment';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 
-function MainPageReportWork({}: PropsMainPageReportWork) {
+function MainPlanNextMonth({}: PropsMainPlanNextMonth) {
 	const router = useRouter();
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState} = router.query;
+	const {_page, _pageSize, _keyword, _year, _month, _completeState} = router.query;
 
-	const listReport = useQuery([QUERY_KEY.table_list_report, _page, _pageSize, _keyword, _year, _month, _state, _completeState], {
+	const listReport = useQuery([QUERY_KEY.table_plan_next_month, _page, _pageSize, _keyword, _year, _month, _completeState], {
 		queryFn: () =>
 			httpRequest({
-				http: reportServices.listReport({
+				http: reportServices.listReportPlanNextMonth({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					year: !!_year ? Number(_year) : null,
 					month: !!_month ? Number(_month) : null,
-					state: !!_state ? Number(_state) : null,
 					completeState: !!_completeState ? Number(_completeState) : null,
 				}),
 			}),
@@ -73,27 +72,6 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 								id: v,
 								name: `Tháng ${v}`,
 							}))}
-						/>
-					</div>
-					<div className={styles.filter}>
-						<FilterCustom
-							isSearch
-							name='Trạng thái'
-							query='_state'
-							listFilter={[
-								{
-									id: STATE_REPORT.REJECTED,
-									name: 'Bị từ chối',
-								},
-								{
-									id: STATE_REPORT.REPORTED,
-									name: 'Đã báo cáo',
-								},
-								{
-									id: STATE_REPORT.IN_PROGRESS,
-									name: 'Đang thực hiện',
-								},
-							]}
 						/>
 					</div>
 					<div className={styles.filter}>
@@ -174,22 +152,10 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 										stateActive={data?.state}
 										listState={[
 											{
-												state: STATE_REPORT.REJECTED,
-												text: 'Bị từ chối',
+												state: STATE_REPORT.PLANNING,
+												text: 'Lên kế hoạch',
 												textColor: '#fff',
-												backgroundColor: '#EE464C',
-											},
-											{
-												state: STATE_REPORT.REPORTED,
-												text: 'Đã báo cáo',
-												textColor: '#fff',
-												backgroundColor: '#16C1F3',
-											},
-											{
-												state: STATE_REPORT.IN_PROGRESS,
-												text: 'Đang thực hiện',
-												textColor: '#fff',
-												backgroundColor: '#FF852C',
+												backgroundColor: '#5B70B3',
 											},
 										]}
 									/>
@@ -245,11 +211,11 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
 					total={listReport?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _year, _month, _state, _completeState]}
+					dependencies={[_pageSize, _keyword, _year, _month, _completeState]}
 				/>
 			</WrapperScrollbar>
 		</div>
 	);
 }
 
-export default MainPageReportWork;
+export default MainPlanNextMonth;

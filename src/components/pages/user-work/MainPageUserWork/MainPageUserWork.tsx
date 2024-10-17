@@ -11,24 +11,13 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG, STATUS_REPORT_WORK, TYPE_OF_WORK} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG, STATE_COMPLETE_REPORT, TYPE_OF_WORK} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import activityServices from '~/services/activityServices';
 import Progress from '~/components/common/Progress';
-
-const generateYearsArray = (): number[] => {
-	const currentYear = new Date().getFullYear();
-	const startYear = currentYear - 15;
-	const endYear = currentYear + 15;
-
-	const years = [];
-	for (let year = startYear; year <= endYear; year++) {
-		years.push(year);
-	}
-	return years;
-};
+import {generateYearsArray} from '~/common/funcs/selectDate';
 
 function MainPageUserWork({}: PropsMainPageUserWork) {
 	const router = useRouter();
@@ -248,19 +237,19 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 										stateActive={data?.deadlineState}
 										listState={[
 											{
-												state: STATUS_REPORT_WORK.NOT_DONE,
+												state: STATE_COMPLETE_REPORT.NOT_DONE,
 												text: 'Chưa thực hiện',
 												textColor: '#FF852C',
 												backgroundColor: '#FF852C',
 											},
 											{
-												state: STATUS_REPORT_WORK.ON_SCHEDULE,
+												state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
 												text: 'Đúng tiến độ',
 												textColor: '#005994',
 												backgroundColor: '#005994',
 											},
 											{
-												state: STATUS_REPORT_WORK.SLOW_PROGRESS,
+												state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
 												text: 'Chậm tiến độ',
 												textColor: '#EE464C',
 												backgroundColor: '#EE464C',

@@ -19,24 +19,13 @@ import Breadcrumb from '~/components/common/Breadcrumb';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
-import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, STATUS_DISBURSEMENT_PROJECT} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, STATE_REPORT_DISBURSEMENT} from '~/constants/config/enum';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
 import projectFundServices from '~/services/projectFundServices';
 import Moment from 'react-moment';
 import Noti from '~/components/common/DataWrapper/components/Noti';
-
-const generateYearsArray = (): number[] => {
-	const currentYear = new Date().getFullYear();
-	const startYear = currentYear - 15;
-	const endYear = currentYear + 15;
-
-	const years = [];
-	for (let year = startYear; year <= endYear; year++) {
-		years.push(year);
-	}
-	return years;
-};
+import {generateYearsArray} from '~/common/funcs/selectDate';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
@@ -282,15 +271,15 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										query='_approved'
 										listFilter={[
 											{
-												id: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+												id: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
 												name: 'Chưa duyệt',
 											},
 											{
-												id: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+												id: STATE_REPORT_DISBURSEMENT.APPROVED,
 												name: 'Đã duyệt',
 											},
 											{
-												id: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+												id: STATE_REPORT_DISBURSEMENT.REJECTED,
 												name: 'Bị từ chối',
 											},
 										]}
@@ -356,19 +345,19 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 													stateActive={data?.approved}
 													listState={[
 														{
-															state: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+															state: STATE_REPORT_DISBURSEMENT.REJECTED,
 															text: 'Bị từ chối',
 															textColor: '#FFFFFF',
 															backgroundColor: '#F37277',
 														},
 														{
-															state: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+															state: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
 															text: 'Chưa xử lý',
 															textColor: '#FFFFFF',
 															backgroundColor: '#4BC9F0',
 														},
 														{
-															state: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+															state: STATE_REPORT_DISBURSEMENT.APPROVED,
 															text: 'Đã duyệt',
 															textColor: '#FFFFFF',
 															backgroundColor: '#06D7A0',
