@@ -1,4 +1,5 @@
 import {
+	ArchiveBook,
 	Buildings2,
 	Calendar,
 	Data,
@@ -60,6 +61,8 @@ export enum PATH {
 	ReportWork = '/report-work',
 	ReportDisbursement = '/report-disbursement',
 	PlanNextMonth = '/plan-next-month',
+
+	ReportOverview = '/report-overview',
 }
 
 export const Menu: {
@@ -103,6 +106,12 @@ export const Menu: {
 		path: PATH.ReportDisbursement,
 		pathActive: PATH.ReportDisbursement,
 		icon: Moneys,
+	},
+	{
+		title: 'Báo cáo tổng hợp',
+		path: PATH.ReportOverview,
+		pathActive: PATH.ReportOverview,
+		icon: ArchiveBook,
 	},
 	{
 		title: 'Quản lý quy trình',
