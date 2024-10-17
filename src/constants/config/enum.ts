@@ -45,6 +45,7 @@ export enum QUERY_KEY {
 	detail_group_contractor,
 	detail_branches,
 	detail_report_work,
+	detail_plan_next_month,
 	detail_project_fund,
 
 	tree_task,

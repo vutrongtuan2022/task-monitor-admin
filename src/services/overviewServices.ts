@@ -9,6 +9,7 @@ const overviewServices = {
 			status: number;
 			year: number | null;
 			month: number | null;
+			reporterUuid: string;
 		},
 		tokenAxios?: any
 	) => {

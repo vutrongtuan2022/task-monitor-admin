@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {IDetailProjectFund, PropsDetailReportDisbursement} from './interfaces';
 import styles from './DetailReportDisbursement.module.scss';
@@ -17,19 +17,19 @@ import Progress from '~/components/common/Progress';
 
 function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 	const router = useRouter();
-	const {_id} = router.query;
+	const {_uuid} = router.query;
 
-	const {data: detailProjectFund} = useQuery<IDetailProjectFund>([QUERY_KEY.detail_project_fund, _id], {
+	const {data: detailProjectFund} = useQuery<IDetailProjectFund>([QUERY_KEY.detail_project_fund, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: projectFundServices.detailProjectFund({
-					uuid: _id as string,
+					uuid: _uuid as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!_id,
+		enabled: !!_uuid,
 	});
 
 	return (

@@ -20,6 +20,7 @@ import reportServices from '~/services/reportServices';
 import Moment from 'react-moment';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import userServices from '~/services/userServices';
+import {PATH} from '~/constants/config';
 
 function MainPlanNextMonth({}: PropsMainPlanNextMonth) {
 	const router = useRouter();
@@ -227,7 +228,7 @@ function MainPlanNextMonth({}: PropsMainPlanNextMonth) {
 								render: (data: IReportWork) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
-											href={`/report-work/${data?.uuid}`}
+											href={`${PATH.PlanNextMonth}/${data?.uuid}`}
 											type='edit'
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'

@@ -173,7 +173,7 @@ function MainPageTask({}: PropsMainPageTask) {
 								title: 'Tên quy trình',
 								render: (data: ITaskCat) => (
 									<Tippy content='Chi tiết quy trình'>
-										<Link href={`${PATH.Task}/${data?.uuid}?_id=${data?.id}`} className={styles.link}>
+										<Link href={`${PATH.Task}/${data?.uuid}?_uuid=${data?.id}`} className={styles.link}>
 											{data?.name}
 										</Link>
 									</Tippy>

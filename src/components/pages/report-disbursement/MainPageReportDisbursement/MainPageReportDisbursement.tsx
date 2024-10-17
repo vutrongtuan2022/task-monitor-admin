@@ -10,7 +10,7 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, STATE_REPORT_DISBURSEMENT} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG, STATE_REPORT_DISBURSEMENT, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
@@ -21,31 +21,51 @@ import Progress from '~/components/common/Progress';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import projectFundServices from '~/services/projectFundServices';
 import {generateYearsArray} from '~/common/funcs/selectDate';
+import userServices from '~/services/userServices';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _year, _month, _approved} = router.query;
+	const {_page, _pageSize, _keyword, _year, _month, _approved, _reporterUuid} = router.query;
 
-	const listProjectFundAll = useQuery([QUERY_KEY.table_project_fund_all, _page, _pageSize, _keyword, _approved, _year, _month], {
+	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
 			httpRequest({
-				http: projectFundServices.listProjectFundAll({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
-					keyword: (_keyword as string) || '',
+				http: userServices.categoryUser({
+					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					approved: !!_approved ? Number(_approved) : null,
-					year: !!_year ? Number(_year) : null,
-					month: !!_month ? Number(_month) : null,
+					roleUuid: '',
+					type: TYPE_ACCOUNT.USER,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
 	});
+
+	const listProjectFundAll = useQuery(
+		[QUERY_KEY.table_project_fund_all, _page, _pageSize, _keyword, _approved, _year, _month, _reporterUuid],
+		{
+			queryFn: () =>
+				httpRequest({
+					http: projectFundServices.listProjectFundAll({
+						page: Number(_page) || 1,
+						pageSize: Number(_pageSize) || 20,
+						keyword: (_keyword as string) || '',
+						status: STATUS_CONFIG.ACTIVE,
+						approved: !!_approved ? Number(_approved) : null,
+						year: !!_year ? Number(_year) : null,
+						month: !!_month ? Number(_month) : null,
+						reporterUuid: _reporterUuid as string,
+					}),
+				}),
+			select(data) {
+				return data;
+			},
+		}
+	);
 
 	return (
 		<div className={styles.container}>
@@ -94,6 +114,17 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							listFilter={months?.map((v) => ({
 								id: v,
 								name: `Tháng ${v}`,
+							}))}
+						/>
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Người báo cáo'
+							query='_reporterUuid'
+							listFilter={listUser?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.fullname,
 							}))}
 						/>
 					</div>
@@ -203,7 +234,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
 					total={listProjectFundAll?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword]}
+					dependencies={[_pageSize, _keyword, _approved, _year, _month, _reporterUuid]}
 				/>
 			</WrapperScrollbar>
 		</div>

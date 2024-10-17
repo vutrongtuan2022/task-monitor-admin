@@ -15,23 +15,23 @@ import clsx from 'clsx';
 function TreeStepTask({index, level, task}: PropsTreeStepTask) {
 	const router = useRouter();
 
-	const {_id} = router.query;
+	const {_uuid} = router.query;
 
 	const [open, setOpen] = useState<boolean>(false);
 
-	const {data: listTreeTask, isLoading} = useQuery([QUERY_KEY.tree_task, _id, task?.uuid, task.stt, task.stage, open], {
+	const {data: listTreeTask, isLoading} = useQuery([QUERY_KEY.tree_task, _uuid, task?.uuid, task.stt, task.stage, open], {
 		queryFn: () =>
 			httpRequest({
 				http: taskServices.listParentTask({
 					uuid: task?.uuid || '',
 					stage: task?.stt || task.stage,
-					type: Number(_id),
+					type: Number(_uuid),
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!_id && open,
+		enabled: !!_uuid && open,
 	});
 
 	return (

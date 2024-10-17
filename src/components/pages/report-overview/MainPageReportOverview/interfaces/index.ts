@@ -1,6 +1,6 @@
 export interface PropsMainPageReportOverview {}
 
-export interface IOverviewAll {
+export interface IReportOverview {
 	uuid: string;
 	month: number;
 	year: number;

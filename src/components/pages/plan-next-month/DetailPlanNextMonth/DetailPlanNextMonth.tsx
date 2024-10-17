@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {IDetailReportWork, PropsDetailReportWork} from './interfaces';
-import styles from './DetailReportWork.module.scss';
+import {IDetailPlanNextMonth, PropsDetailPlanNextMonth} from './interfaces';
+import styles from './DetailPlanNextMonth.module.scss';
 import {PATH} from '~/constants/config';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import StateActive from '~/components/common/StateActive';
@@ -17,11 +17,11 @@ import Moment from 'react-moment';
 import TableReportWorkLastMonth from '../TableReportWorkLastMonth';
 import TableReportWorkCurrent from '../TableReportWorkCurrent';
 
-function DetailReportWork({}: PropsDetailReportWork) {
+function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 	const router = useRouter();
 	const {_uuid, _type} = router.query;
 
-	const {data: detailReportWork} = useQuery<IDetailReportWork>([QUERY_KEY.detail_report_work, _uuid], {
+	const {data: DetailPlanNextMonth} = useQuery<IDetailPlanNextMonth>([QUERY_KEY.detail_plan_next_month, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: reportServices.detailReport({
@@ -39,12 +39,12 @@ function DetailReportWork({}: PropsDetailReportWork) {
 			<Breadcrumb
 				listUrls={[
 					{
-						path: PATH.ReportWork,
-						title: 'Danh sách kế hoạch tháng',
+						path: PATH.PlanNextMonth,
+						title: 'Kế hoạch tháng tới',
 					},
 					{
 						path: '',
-						title: 'Chi tiết báo cáo',
+						title: 'Chi tiết kế hoạch',
 					},
 				]}
 			/>
@@ -55,25 +55,13 @@ function DetailReportWork({}: PropsDetailReportWork) {
 						<div className={styles.state}>
 							<p>Trạng thái báo cáo:</p>
 							<StateActive
-								stateActive={detailReportWork?.state!}
+								stateActive={DetailPlanNextMonth?.state!}
 								listState={[
 									{
-										state: STATE_REPORT.REJECTED,
-										text: 'Bị từ chối',
+										state: STATE_REPORT.PLANNING,
+										text: 'Lên kế hoạch',
 										textColor: '#fff',
-										backgroundColor: '#EE464C',
-									},
-									{
-										state: STATE_REPORT.REPORTED,
-										text: 'Đã báo cáo',
-										textColor: '#fff',
-										backgroundColor: '#16C1F3',
-									},
-									{
-										state: STATE_REPORT.IN_PROGRESS,
-										text: 'Đang thực hiện',
-										textColor: '#fff',
-										backgroundColor: '#FF852C',
+										backgroundColor: '#5B70B3',
 									},
 								]}
 							/>
@@ -83,19 +71,19 @@ function DetailReportWork({}: PropsDetailReportWork) {
 						<GridColumn col_3>
 							<div className={styles.item}>
 								<p>Tên công trình</p>
-								<p>{detailReportWork?.project?.name}</p>
+								<p>{DetailPlanNextMonth?.project?.name}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Kế hoạch</p>
 								<p>
-									Tháng {detailReportWork?.month} - {detailReportWork?.year}
+									Tháng {DetailPlanNextMonth?.month} - {DetailPlanNextMonth?.year}
 								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Tình trạng</p>
 								<StateActive
 									isBox={false}
-									stateActive={detailReportWork?.completeState}
+									stateActive={DetailPlanNextMonth?.completeState}
 									listState={[
 										{
 											state: STATE_COMPLETE_REPORT.NOT_DONE,
@@ -121,23 +109,23 @@ function DetailReportWork({}: PropsDetailReportWork) {
 							<div className={styles.item}>
 								<p>Công việc thực hiện</p>
 								<p>
-									<span style={{color: '#2970FF'}}>{detailReportWork?.completedActivity}</span>/
-									<span>{detailReportWork?.totalActivity}</span>
+									<span style={{color: '#2970FF'}}>{DetailPlanNextMonth?.completedActivity}</span>/
+									<span>{DetailPlanNextMonth?.totalActivity}</span>
 								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày gửi báo cáo</p>
 								<p>
-									<Moment date={detailReportWork?.completed} format='DD/MM/YYYY' />
+									<Moment date={DetailPlanNextMonth?.completed} format='DD/MM/YYYY' />
 								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Người gửi báo cáo</p>
-								<p>{detailReportWork?.reporter?.fullname}</p>
+								<p>{DetailPlanNextMonth?.reporter?.fullname}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Lý do từ chối</p>
-								<p>{detailReportWork?.note || '---'}</p>
+								<p>{DetailPlanNextMonth?.note || '---'}</p>
 							</div>
 						</GridColumn>
 					</div>
@@ -176,4 +164,4 @@ function DetailReportWork({}: PropsDetailReportWork) {
 	);
 }
 
-export default DetailReportWork;
+export default DetailPlanNextMonth;

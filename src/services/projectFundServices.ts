@@ -26,6 +26,7 @@ const projectFundServices = {
 			month: number | null;
 			approved: number | null;
 			status: number;
+			reporterUuid: string;
 		},
 		tokenAxios?: any
 	) => {
