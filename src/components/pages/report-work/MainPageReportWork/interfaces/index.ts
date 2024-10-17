@@ -17,6 +17,7 @@ export interface IReportWork {
 	completed: string;
 	created: string;
 	totalActivity: number;
+	completeState: number;
 	completedActivity: number;
 	title: string;
 	state: number;
