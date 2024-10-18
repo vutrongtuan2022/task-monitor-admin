@@ -198,7 +198,7 @@ function MainPlanNextMonth({}: PropsMainPlanNextMonth) {
 								render: (data: IReportWork) => (
 									<StateActive
 										isBox={false}
-										stateActive={data?.status}
+										stateActive={data?.completeState}
 										listState={[
 											{
 												state: STATE_COMPLETE_REPORT.NOT_DONE,

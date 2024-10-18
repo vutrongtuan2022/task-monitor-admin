@@ -52,6 +52,8 @@ export enum QUERY_KEY {
 	detail_disbursement_report_overview,
 	detail_plan_next_month,
 	detail_project_fund,
+	detail_profile,
+	detail_profile_update,
 
 	tree_task,
 }

@@ -15,7 +15,6 @@ const userServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-
 	updateStatus: (
 		data: {
 			uuid: string;
