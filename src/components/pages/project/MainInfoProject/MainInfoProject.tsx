@@ -342,11 +342,11 @@ function MainInfoProject({}: PropsMainInfoProject) {
 									<p>Số tiền giải ngân lũy kế theo năm</p>
 									<p>{convertCoin(detailProject?.annualAccumAmount!)} VND</p>
 								</div>
-								{/* <div className={styles.line}></div>
+								<div className={styles.line}></div>
 								<div className={styles.item_capital}>
 									<p>Số tiền giải ngân lũy kế đến hiện tại</p>
-									<p>{'---'} VND</p>
-								</div> */}
+									<p>{convertCoin(detailProject?.accumAmount!)} VND</p>
+								</div>
 							</div>
 						</div>
 					</div>
