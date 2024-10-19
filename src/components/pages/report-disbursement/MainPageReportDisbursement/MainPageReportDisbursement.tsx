@@ -169,7 +169,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 								render: (data: IProjectFundAll) => <>{convertCoin(data?.projectAccumAmount) || '---'}</>,
 							},
 							{
-								title: 'Thêm lũy kế theo năm (VND)',
+								title: 'Lũy kế theo năm (VND)',
 								render: (data: IProjectFundAll) => <>{convertCoin(data?.annualAccumAmount) || '---'}</>,
 							},
 
