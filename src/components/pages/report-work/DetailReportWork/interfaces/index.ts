@@ -1,6 +1,8 @@
 export interface PropsDetailReportWork {}
 
 export interface IDetailReportWork {
+	note: string;
+	brachFeedback: any;
 	project: {
 		code: string;
 		name: string;
@@ -23,5 +25,4 @@ export interface IDetailReportWork {
 	state: number;
 	status: number;
 	uuid: string;
-	note: string;
 }
