@@ -229,21 +229,21 @@ function CreateProject({}: PropsCreateProject) {
 		if (!form.managerUuid) {
 			return toastWarn({msg: 'Chọn lãnh đạo phụ trách!'});
 		}
-		if (!form.expectBudget) {
-			return toastWarn({msg: 'Vui lòng nhập trường kế hoạch đầu tư vốn!'});
-		}
-		if (!form.realBudget) {
-			return toastWarn({msg: 'Vui lòng nhập tổng dự toán!'});
-		}
-		if (!form.reserveBudget) {
-			return toastWarn({msg: 'Vui lòng nhập vốn dự phòng được duyệt!'});
-		}
-		if (!form.totalInvest) {
-			return toastWarn({msg: 'Vui lòng nhập tổng mức đầu tư dự án!'});
-		}
-		if (!form.name) {
-			return toastWarn({msg: 'Vui lòng nhập tên công trình!'});
-		}
+		// if (!form.expectBudget) {
+		// 	return toastWarn({msg: 'Vui lòng nhập trường kế hoạch đầu tư vốn!'});
+		// }
+		// if (!form.realBudget) {
+		// 	return toastWarn({msg: 'Vui lòng nhập tổng dự toán!'});
+		// }
+		// if (!form.reserveBudget) {
+		// 	return toastWarn({msg: 'Vui lòng nhập vốn dự phòng được duyệt!'});
+		// }
+		// if (!form.totalInvest) {
+		// 	return toastWarn({msg: 'Vui lòng nhập tổng mức đầu tư dự án!'});
+		// }
+		// if (!form.name) {
+		// 	return toastWarn({msg: 'Vui lòng nhập tên công trình!'});
+		// }
 		// if (listContractor?.some((v) => v.uuidContractor == '')) {
 		// 	return toastWarn({msg: 'Chọn đầy đủ nhà thầu!'});
 		// }
@@ -493,21 +493,7 @@ function CreateProject({}: PropsCreateProject) {
 									isRequired={true}
 									unit='VND'
 								/>
-								<Input
-									label={
-										<span>
-											Tổng dự toán <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									type='text'
-									placeholder='Nhập tổng dự toán'
-									isMoney
-									name='realBudget'
-									value={form?.realBudget}
-									isRequired={true}
-									blur={true}
-									unit='VND'
-								/>
+
 								<Input
 									label={
 										<span>
@@ -520,6 +506,16 @@ function CreateProject({}: PropsCreateProject) {
 									name='reserveBudget'
 									value={form?.reserveBudget}
 									isRequired={true}
+									blur={true}
+									unit='VND'
+								/>
+								<Input
+									label={<span>Tổng dự toán</span>}
+									type='text'
+									placeholder='Nhập tổng dự toán'
+									isMoney
+									name='realBudget'
+									value={form?.realBudget}
 									blur={true}
 									unit='VND'
 								/>
