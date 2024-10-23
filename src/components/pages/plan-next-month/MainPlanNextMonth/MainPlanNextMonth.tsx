@@ -172,7 +172,7 @@ function MainPlanNextMonth({}: PropsMainPlanNextMonth) {
 								),
 							},
 							{
-								title: 'Ngày gửi báo cáo',
+								title: 'Ngày tạo báo cáo',
 								render: (data: IReportWork) => (
 									<>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</>
 								),

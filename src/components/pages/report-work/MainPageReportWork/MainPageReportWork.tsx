@@ -199,7 +199,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							{
 								title: 'Ngày gửi báo cáo',
 								render: (data: IReportWork) => (
-									<>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</>
+									<>{data?.completed ? <Moment date={data?.completed} format='DD/MM/YYYY' /> : '---'}</>
 								),
 							},
 							{
