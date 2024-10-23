@@ -114,19 +114,25 @@ function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Ngày gửi báo cáo</p>
+								<p>Ngày tạo báo cáo</p>
 								<p>
-									<Moment date={DetailPlanNextMonth?.completed} format='DD/MM/YYYY' />
+									{DetailPlanNextMonth?.created ? (
+										<Moment date={DetailPlanNextMonth?.created} format='DD/MM/YYYY' />
+									) : (
+										'---'
+									)}
 								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Người gửi báo cáo</p>
 								<p>{DetailPlanNextMonth?.reporter?.fullname}</p>
 							</div>
-							<div className={styles.item}>
-								<p>Lý do từ chối</p>
-								<p>{DetailPlanNextMonth?.note || '---'}</p>
-							</div>
+							{DetailPlanNextMonth?.state === STATE_REPORT.REJECTED && (
+								<div className={styles.item}>
+									<p>Lý do từ chối</p>
+									<p>{DetailPlanNextMonth?.note || '---'}</p>
+								</div>
+							)}
 						</GridColumn>
 					</div>
 				</div>
