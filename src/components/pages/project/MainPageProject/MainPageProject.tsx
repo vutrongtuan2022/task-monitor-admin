@@ -275,11 +275,12 @@ function MainPageProject({}: PropsMainPageProject) {
 											disnable={data?.state == STATE_PROJECT.FINISH}
 											href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
 										/>
+
 										<IconCustom
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
 											tooltip='Xóa bỏ'
-											disnable={data?.state == STATE_PROJECT.DO}
+											disnable={data?.state == STATE_PROJECT.DO || data?.state == STATE_PROJECT.FINISH}
 											onClick={() => {
 												setDeleteProject(data);
 											}}
