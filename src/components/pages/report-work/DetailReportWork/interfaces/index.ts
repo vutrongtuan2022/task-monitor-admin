@@ -3,6 +3,7 @@ export interface PropsDetailReportWork {}
 export interface IDetailReportWork {
 	note: string;
 	brachFeedback: any;
+	rejectedReason: string;
 	project: {
 		code: string;
 		name: string;

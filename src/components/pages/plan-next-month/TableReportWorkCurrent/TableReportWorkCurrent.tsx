@@ -109,7 +109,7 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 						},
 						{
 							title: 'Megatype',
-							render: (data: any) => <>{data?.megaType || '---'}</>,
+							render: (data: any) => <>{data?.megatype || '---'}</>,
 						},
 						{
 							title: 'Trạng thái',

@@ -12,20 +12,20 @@ import taskServices from '~/services/taskServices';
 import {RiLoader4Fill} from 'react-icons/ri';
 import clsx from 'clsx';
 
-function TreeStepTask({index, level, task}: PropsTreeStepTask) {
+function TreeStepTask({index, type, level, task}: PropsTreeStepTask) {
 	const router = useRouter();
 
 	const {_uuid} = router.query;
 
 	const [open, setOpen] = useState<boolean>(false);
 
-	const {data: listTreeTask, isLoading} = useQuery([QUERY_KEY.tree_task, _uuid, task?.uuid, task.stt, task.stage, open], {
+	const {data: listTreeTask, isLoading} = useQuery([QUERY_KEY.tree_task, _uuid, task?.uuid, task.stt, task.stage, type, open], {
 		queryFn: () =>
 			httpRequest({
 				http: taskServices.listParentTask({
 					uuid: task?.uuid || '',
 					stage: task?.stt || task.stage,
-					type: Number(_uuid),
+					type: type,
 				}),
 			}),
 		select(data) {
@@ -93,7 +93,7 @@ function TreeStepTask({index, level, task}: PropsTreeStepTask) {
 					) : (
 						<>
 							{listTreeTask?.map((v: any, index: number) => (
-								<TreeStepTask key={v.uuid} task={v} index={index} level={level + 1} />
+								<TreeStepTask key={v.uuid} task={v} index={index} type={type} level={level + 1} />
 							))}
 						</>
 					)}

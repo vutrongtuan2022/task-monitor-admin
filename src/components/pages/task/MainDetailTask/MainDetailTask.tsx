@@ -64,6 +64,7 @@ function MainDetailTask({}: PropsMainDetailTask) {
 
 		return funcDeleteTaskCat.mutate();
 	};
+
 	return (
 		<div className={styles.container}>
 			<Loading loading={funcDeleteTaskCat.isLoading} />
@@ -116,7 +117,7 @@ function MainDetailTask({}: PropsMainDetailTask) {
 				</div>
 				<div className={styles.progress_group}>
 					{detailTask?.stages?.map((stage: any, index) => (
-						<TreeStepTask key={index} index={index} level={1} task={stage} />
+						<TreeStepTask key={index} index={index} type={detailTask?.id} level={1} task={stage} />
 					))}
 				</div>
 			</div>

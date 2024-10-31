@@ -156,10 +156,17 @@ function MainPageAccount({}: PropsMainPageAccount) {
 								render: (data: IAccount, index: number) => <>{index + 1}</>,
 							},
 							{
+								title: 'Mã nhân viên',
+								render: (data: IAccount) => <span>{data?.user?.code || '---'}</span>,
+							},
+							{
+								title: 'Tên nhân viên',
+								render: (data: IAccount) => <span>{data?.user?.fullname || '---'}</span>,
+							},
+							{
 								title: 'Tên tài khoản',
 								render: (data: IAccount) => <span>{data?.userName || '---'}</span>,
 							},
-
 							{
 								title: 'Trạng thái tài khoản',
 								render: (data: IAccount) => (
