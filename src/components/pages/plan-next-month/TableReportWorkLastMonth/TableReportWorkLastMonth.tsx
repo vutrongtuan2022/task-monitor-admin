@@ -85,8 +85,8 @@ function TableReportWorkLastMonth({}: PropsTableReportWorkLastMonth) {
 						{
 							title: 'Tên công việc',
 							render: (data: IReportWorkLastMonth) => (
-								<Tippy content={data?.name}>
-									<p className={styles.name}>{data?.name || '---'}</p>
+								<Tippy content={data?.activity?.name}>
+									<p className={styles.name}>{data?.activity?.name || '---'}</p>
 								</Tippy>
 							),
 						},
@@ -112,13 +112,13 @@ function TableReportWorkLastMonth({}: PropsTableReportWorkLastMonth) {
 						},
 						{
 							title: 'Megatype',
-							render: (data: IReportWorkLastMonth) => <>{data?.megaType || '---'}</>,
+							render: (data: IReportWorkLastMonth) => <>{data?.megatype || '---'}</>,
 						},
 						{
 							title: 'Trạng thái',
 							render: (data: IReportWorkLastMonth) => (
 								<StateActive
-									stateActive={data?.state}
+									stateActive={data?.activity?.state}
 									listState={[
 										{
 											state: STATE_WORK_PROJECT.NOT_PROCESSED,
