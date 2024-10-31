@@ -1,29 +1,38 @@
 export interface PropsMainPageUserWork {}
 
 export interface IUserWork {
+	report: {
+		title: string;
+		state: number | null;
+		status: number;
+		month: number;
+		year: number;
+		project: {
+			code: string;
+			name: string;
+			state: number;
+			uuid: string;
+		};
+		reporter: {
+			fullname: string;
+			code: string;
+			uuid: string;
+		};
+		uuid: string;
+	};
 	activity: {
 		name: string;
 		state: number;
 		uuid: string;
 	};
-	project: {
-		code: string;
-		name: string;
-		state: number;
-		uuid: string;
-	};
-	isInWorkFlow: true;
-	month: number;
-	year: number;
+	type: number;
+	isInWorkflow: boolean;
 	issue: string;
 	progress: number;
-	reporter: {
-		fullname: string;
-		code: string;
-		uuid: string;
-	};
 	deadlineState: number;
 	dayDelayed: number;
+	activityState: number;
+	digitalizedState: number;
+	activityStatus: number;
 	stage: number;
-	megatype: string;
 }

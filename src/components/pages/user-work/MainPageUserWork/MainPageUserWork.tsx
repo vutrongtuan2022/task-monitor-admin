@@ -11,7 +11,15 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_REPORT_WORK, STATUS_CONFIG, STATE_COMPLETE_REPORT, TYPE_OF_WORK, TYPE_ACCOUNT} from '~/constants/config/enum';
+import {
+	QUERY_KEY,
+	STATE_REPORT_WORK,
+	STATUS_CONFIG,
+	STATE_COMPLETE_REPORT,
+	TYPE_OF_WORK,
+	TYPE_ACCOUNT,
+	TYPE_WORK,
+} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
@@ -19,13 +27,14 @@ import activityServices from '~/services/activityServices';
 import Progress from '~/components/common/Progress';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import userServices from '~/services/userServices';
+import projectServices from '~/services/projectServices';
 
 function MainPageUserWork({}: PropsMainPageUserWork) {
 	const router = useRouter();
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _type} = router.query;
+	const {_page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _type, _project} = router.query;
 
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
@@ -42,21 +51,35 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 		},
 	});
 
+	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
+		queryFn: () =>
+			httpRequest({
+				http: projectServices.categoryProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
 	const listUserActivities = useQuery(
-		[QUERY_KEY.table_list_user_activities, _page, _pageSize, _keyword, _year, _month, _state, _type, _reporterUuid],
+		[QUERY_KEY.table_list_user_activities, _page, _pageSize, _keyword, _year, _month, _state, _type, _reporterUuid, _project],
 		{
 			queryFn: () =>
 				httpRequest({
-					http: activityServices.listUserActivities({
+					http: activityServices.listActivityForActionNew({
 						page: Number(_page) || 1,
 						pageSize: Number(_pageSize) || 20,
 						keyword: (_keyword as string) || '',
 						status: STATUS_CONFIG.ACTIVE,
+						state: !!_state ? Number(_state) : null,
 						year: !!_year ? Number(_year) : null,
 						month: !!_month ? Number(_month) : null,
 						type: !!_type ? Number(_type) : null,
-						state: !!_state ? Number(_state) : null,
-						reporterUuid: _reporterUuid as string,
+						projectUuid: (_project as string) || '',
+						userUuid: '',
 					}),
 				}),
 			select(data) {
@@ -71,6 +94,17 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 				<div className={styles.main_search}>
 					<div className={styles.search}>
 						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công việc' />
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Dự án'
+							query='_project'
+							listFilter={listProject?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.name,
+							}))}
+						/>
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -159,58 +193,58 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 								title: 'STT',
 								render: (data: IUserWork, index: number) => <>{index + 1}</>,
 							},
-
 							{
 								title: 'Tháng báo cáo',
 								fixedLeft: true,
 								render: (data: IUserWork) => (
 									<>
-										{data?.month || '---'}/{data?.year || '---'}
+										Tháng <span>{data?.report?.month}</span> - <span>{data?.report?.year}</span>
 									</>
 								),
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IUserWork) => <>{data?.project?.name || '---'}</>,
+								render: (data: IUserWork) => <>{data?.report?.project?.name}</>,
 							},
 							{
 								title: 'Tên công việc',
-								render: (data: IUserWork, index: number) => (
-									<>
-										{(data?.activity && (
-											<Tippy content={data?.activity?.name}>
-												<p className={styles.name}>{data?.activity?.name || '---'}</p>
-											</Tippy>
-										)) ||
-											'---'}
-									</>
+								render: (data: IUserWork) => (
+									<Tippy content={data?.activity?.name}>
+										<p className={styles.name}>{data?.activity?.name}</p>
+									</Tippy>
 								),
 							},
 							{
 								title: 'Giai đoạn thực hiện',
 								render: (data: IUserWork) => (
 									<span style={{color: '#2970FF'}}>
-										{data?.stage == -1 && '---'}
+										{data?.stage == -1 || (!data?.stage && '---')}
 										{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 										{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
-										{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư xây dựng'}
+										{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư'}
 									</span>
 								),
 							},
 							{
 								title: 'Megatype',
-								render: (data: IUserWork) => <>{data?.megatype || '---'}</>,
+								render: (data: IUserWork) => (
+									<p>
+										{data?.type == TYPE_WORK.TASK && 'Task'}
+										{data?.type == TYPE_WORK.SUB_TASK && 'Subtask'}
+										{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}
+									</p>
+								),
 							},
 							{
 								title: 'Người báo cáo',
-								render: (data: IUserWork) => <>{data?.reporter?.fullname || '---'}</>,
+								render: (data: IUserWork) => <>{data?.report?.reporter?.fullname || '---'}</>,
 							},
 							{
 								title: 'Loại công việc',
 								render: (data: IUserWork) => (
 									<>
-										{data?.isInWorkFlow && 'Có kế hoạch'}
-										{!data?.isInWorkFlow && 'Phát sinh'}
+										{!data?.isInWorkflow && 'Phát sinh'}
+										{data?.isInWorkflow && 'Có kế hoạch'}
 									</>
 								),
 							},
@@ -296,7 +330,7 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
 					total={listUserActivities?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _year, _month, _state, _type, _reporterUuid]}
+					dependencies={[_pageSize, _keyword, _year, _month, _state, _type, _reporterUuid, _project]}
 				/>
 			</WrapperScrollbar>
 		</div>

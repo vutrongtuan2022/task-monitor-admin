@@ -32,6 +32,7 @@ export enum QUERY_KEY {
 	dropdown_manager,
 	dropdown_can_bo_chuyen_quan,
 	table_overview_report,
+	dropdown_project,
 
 	detail_contractor,
 	detail_user,
@@ -147,4 +148,10 @@ export enum STATE_REPORT_DISBURSEMENT {
 	NOT_APPROVED,
 	APPROVED,
 	REJECTED,
+}
+
+export enum TYPE_WORK {
+	TASK,
+	SUB_TASK,
+	SUB_SUB_TASK,
 }
