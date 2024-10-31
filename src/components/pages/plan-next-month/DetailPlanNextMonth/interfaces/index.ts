@@ -24,4 +24,5 @@ export interface IDetailPlanNextMonth {
 	status: number;
 	uuid: string;
 	note: string;
+	rejectedReason: string;
 }

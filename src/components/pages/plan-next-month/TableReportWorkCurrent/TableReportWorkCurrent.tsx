@@ -82,8 +82,8 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 						{
 							title: 'Tên công việc',
 							render: (data: any) => (
-								<Tippy content={data?.name}>
-									<p className={styles.name}>{data?.name || '---'}</p>
+								<Tippy content={data?.activity?.name}>
+									<p className={styles.name}>{data?.activity?.name || '---'}</p>
 								</Tippy>
 							),
 						},
@@ -115,7 +115,7 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 							title: 'Trạng thái',
 							render: (data: any) => (
 								<StateActive
-									stateActive={data?.state}
+									stateActive={data?.activity?.state}
 									listState={[
 										{
 											state: STATE_WORK_PROJECT.NOT_PROCESSED,

@@ -127,6 +127,10 @@ function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 								<p>Người gửi báo cáo</p>
 								<p>{DetailPlanNextMonth?.reporter?.fullname}</p>
 							</div>
+							<div className={styles.item}>
+								<p>Mô tả</p>
+								<p>{DetailPlanNextMonth?.rejectedReason || '---'}</p>
+							</div>
 							{DetailPlanNextMonth?.state === STATE_REPORT.REJECTED && (
 								<div className={styles.item}>
 									<p>Lý do từ chối</p>
