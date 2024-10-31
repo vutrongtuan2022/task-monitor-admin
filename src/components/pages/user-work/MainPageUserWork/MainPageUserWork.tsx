@@ -79,7 +79,7 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 						month: !!_month ? Number(_month) : null,
 						type: !!_type ? Number(_type) : null,
 						projectUuid: (_project as string) || '',
-						userUuid: '',
+						userUuid: (_reporterUuid as string) || '',
 					}),
 				}),
 			select(data) {
@@ -103,6 +103,17 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 							listFilter={listProject?.map((v: any) => ({
 								id: v?.uuid,
 								name: v?.name,
+							}))}
+						/>
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Người báo cáo'
+							query='_reporterUuid'
+							listFilter={listUser?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.fullname,
 							}))}
 						/>
 					</div>
@@ -164,17 +175,6 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 									name: 'Có kế hoạch',
 								},
 							]}
-						/>
-					</div>
-					<div className={styles.filter}>
-						<FilterCustom
-							isSearch
-							name='Người báo cáo'
-							query='_reporterUuid'
-							listFilter={listUser?.map((v: any) => ({
-								id: v?.uuid,
-								name: v?.fullname,
-							}))}
 						/>
 					</div>
 				</div>
