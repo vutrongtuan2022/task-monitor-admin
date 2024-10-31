@@ -1,6 +1,7 @@
 export interface PropsTreeStepTask {
 	index: number;
 	level: number;
+	type: number;
 	task: {
 		parentUuid: string | null;
 		priority: string | null;
