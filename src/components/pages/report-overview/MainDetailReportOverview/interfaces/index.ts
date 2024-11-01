@@ -1,48 +1,42 @@
 export interface PropsMainDetailReportOverview {}
 
 export interface IDetailReportOverview {
-	nextYear: number;
-	nextMonth: number;
+	uuid: string;
 	month: number;
 	year: number;
 	project: {
+		uuid: string;
 		code: string;
 		name: string;
 		state: number;
-		uuid: string;
 	};
 	report: {
-		project: {
-			code: string;
-			name: string;
-			state: number;
-			uuid: string;
-		};
-		reporter: {
-			fullname: string;
-			code: string;
-			uuid: string;
-		};
-		month: number;
-		year: number;
-		completeState: number | null;
-		completed: number | null;
-		created: string;
-		totalActivity: number;
-		completedActivity: number;
+		uuid: string;
 		title: string;
 		state: number;
 		status: number;
-		uuid: string;
-	};
-	fundReport: {
+		month: number;
+		year: number;
 		project: {
+			uuid: string;
 			code: string;
 			name: string;
 			state: number;
-			uuid: string;
 		};
-		monthReport: string | null;
+		reporter: {
+			uuid: string;
+			fullname: string;
+			code: string;
+		};
+		completeState: number;
+		completed: string;
+		created: string;
+		totalActivity: number;
+		completedActivity: number;
+	};
+	fundReport: {
+		uuid: string;
+		monthReport: string;
 		realeaseBudget: number;
 		totalInvest: number;
 		annualBudget: number;
@@ -51,21 +45,29 @@ export interface IDetailReportOverview {
 		fundProgress: number;
 		created: string;
 		reporter: {
+			uuid: string;
 			fullname: string;
 			code: string;
-			uuid: string;
 		};
 		approved: number;
 		status: number;
-		uuid: string;
+		note: string;
+		feedback: string;
+		project: {
+			uuid: string;
+			code: string;
+			name: string;
+			state: number;
+		};
 	};
 	reporter: {
+		uuid: string;
 		fullname: string;
 		code: string;
-		uuid: string;
 	};
-	updated: string | null;
+	updated: string;
 	created: string;
 	status: number;
-	uuid: string;
+	nextYear: number;
+	nextMonth: number;
 }
