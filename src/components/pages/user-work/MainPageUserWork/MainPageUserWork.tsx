@@ -271,7 +271,7 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 								fixedRight: true,
 								render: (data: IUserWork) => (
 									<StateActive
-										stateActive={data?.activity?.state}
+										stateActive={data?.activityState}
 										listState={[
 											{
 												state: STATE_REPORT_WORK.NOT_PROCESSED,
