@@ -129,12 +129,12 @@ function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 							</div>
 							<div className={styles.item}>
 								<p>Mô tả</p>
-								<p>{DetailPlanNextMonth?.rejectedReason || '---'}</p>
+								<p>{DetailPlanNextMonth?.note || '---'}</p>
 							</div>
 							{DetailPlanNextMonth?.state === STATE_REPORT.REJECTED && (
 								<div className={styles.item}>
 									<p>Lý do từ chối</p>
-									<p>{DetailPlanNextMonth?.note || '---'}</p>
+									<p>{DetailPlanNextMonth?.rejectedReason || '---'}</p>
 								</div>
 							)}
 						</GridColumn>
