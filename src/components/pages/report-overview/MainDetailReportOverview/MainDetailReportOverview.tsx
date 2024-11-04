@@ -83,10 +83,10 @@ function MainDetailReportOverview({}: PropsMainDetailReportOverview) {
 									)}
 								</p>
 							</div>
-							<div className={styles.item}>
+							{/* <div className={styles.item}>
 								<p>Mô tả</p>
 								<p>{detailReportOverview?.fundReport?.note || ''}</p>
-							</div>
+							</div> */}
 						</GridColumn>
 					</div>
 				</div>
