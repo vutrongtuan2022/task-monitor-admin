@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 
 import {IDetailReportOverview, PropsMainDetailReportOverview} from './interfaces';
 import styles from './MainDetailReportOverview.module.scss';
@@ -17,6 +17,7 @@ import ProjectReportOverview from '../ProjectReportOverview';
 import WorkReportOverview from '../WorkReportOverview';
 import DisbursementReportOverview from '../DisbursementReportOverview';
 import PlanReportOverview from '../PlanReportOverview';
+import TableContracfund from '../TableContracfund';
 
 function MainDetailReportOverview({}: PropsMainDetailReportOverview) {
 	const router = useRouter();
@@ -59,7 +60,7 @@ function MainDetailReportOverview({}: PropsMainDetailReportOverview) {
 						<GridColumn col_3>
 							<div className={styles.item}>
 								<p>Tên công trình</p>
-								<p>{detailReportOverview?.project?.name}</p>
+								<p>{detailReportOverview?.project?.name || '---'}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Báo cáo tổng hợp tháng</p>
@@ -122,7 +123,12 @@ function MainDetailReportOverview({}: PropsMainDetailReportOverview) {
 					<div className={styles.main_table}>
 						{!_type && <ProjectReportOverview />}
 						{_type == 'work' && <WorkReportOverview />}
-						{_type == 'disbursement' && <DisbursementReportOverview />}
+						{_type == 'disbursement' && (
+							<Fragment>
+								<DisbursementReportOverview />
+								<TableContracfund />
+							</Fragment>
+						)}
 						{_type == 'plan' && <PlanReportOverview />}
 					</div>
 				</div>
