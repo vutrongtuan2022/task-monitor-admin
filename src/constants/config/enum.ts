@@ -19,6 +19,10 @@ export enum QUERY_KEY {
 	table_list_work_report,
 	table_work_report_overview,
 	table_next_plan_report_overview,
+	table_list_report_disbursement,
+	table_contract_fund_detail,
+	table_contract_report_disbursement,
+	table_contract_for_project,
 
 	dropdown_role,
 	dropdown_group_contractor,
@@ -55,6 +59,9 @@ export enum QUERY_KEY {
 	detail_project_fund,
 	detail_profile,
 	detail_profile_update,
+	detail_contract,
+	detail_report_disbursement,
+	detail_progress_contract_fund_project,
 
 	tree_task,
 }
@@ -145,6 +152,13 @@ export enum STATUS_DISBURSEMENT_PROJECT {
 }
 
 export enum STATE_REPORT_DISBURSEMENT {
+	NOT_REPORT, // Chưa báo cáo
+	REPORTED, // Đã báo cáo || Chưa duyệt
+	APPROVED, // Đã duyệt
+	REJECTED, // Đã từ chối
+}
+
+export enum STATE_REPORT_DISBURSEMENT_OVERVIEW {
 	NOT_APPROVED,
 	APPROVED,
 	REJECTED,

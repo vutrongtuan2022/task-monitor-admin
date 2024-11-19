@@ -4,7 +4,7 @@ import {IDisbursementReportOverview, PropsDisbursementReportOverview} from './in
 import styles from './DisbursementReportOverview.module.scss';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_REPORT_DISBURSEMENT} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_REPORT_DISBURSEMENT_OVERVIEW} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import overviewServices from '~/services/overviewServices';
 import StateActive from '~/components/common/StateActive';
@@ -44,19 +44,19 @@ function DisbursementReportOverview({}: PropsDisbursementReportOverview) {
 						stateActive={disbursementReportOverview?.approved!}
 						listState={[
 							{
-								state: STATE_REPORT_DISBURSEMENT.REJECTED,
+								state: STATE_REPORT_DISBURSEMENT_OVERVIEW.REJECTED,
 								text: 'Bị từ chối',
 								textColor: '#FFFFFF',
 								backgroundColor: '#F37277',
 							},
 							{
-								state: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
+								state: STATE_REPORT_DISBURSEMENT_OVERVIEW.NOT_APPROVED,
 								text: 'Chưa xử lý',
 								textColor: '#FFFFFF',
 								backgroundColor: '#4BC9F0',
 							},
 							{
-								state: STATE_REPORT_DISBURSEMENT.APPROVED,
+								state: STATE_REPORT_DISBURSEMENT_OVERVIEW.APPROVED,
 								text: 'Đã duyệt',
 								textColor: '#FFFFFF',
 								backgroundColor: '#06D7A0',
@@ -119,7 +119,7 @@ function DisbursementReportOverview({}: PropsDisbursementReportOverview) {
 						<p>Mô tả</p>
 						<p>{disbursementReportOverview?.note || '---'}</p>
 					</div>
-					{disbursementReportOverview?.approved == STATE_REPORT_DISBURSEMENT.REJECTED && (
+					{disbursementReportOverview?.approved == STATE_REPORT_DISBURSEMENT_OVERVIEW.REJECTED && (
 						<div className={styles.item}>
 							<p>Lý do từ chối báo cáo giải ngân</p>
 							<p>{disbursementReportOverview?.feedback || '---'}</p>
