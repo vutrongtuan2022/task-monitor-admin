@@ -23,6 +23,7 @@ export enum QUERY_KEY {
 	table_contract_fund_detail,
 	table_contract_report_disbursement,
 	table_contract_for_project,
+	table_contract_fund_for_overview,
 
 	dropdown_role,
 	dropdown_group_contractor,
