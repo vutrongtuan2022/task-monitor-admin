@@ -170,3 +170,8 @@ export enum TYPE_WORK {
 	SUB_TASK,
 	SUB_SUB_TASK,
 }
+
+export enum SORT_TYPE {
+	DECREASE = 1,
+	INCREASE,
+}
