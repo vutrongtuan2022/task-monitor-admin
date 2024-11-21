@@ -40,7 +40,7 @@ function MainPageAccount({}: PropsMainPageAccount) {
 			httpRequest({
 				http: accountServices.listAccount({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
 					status: !!_status ? [Number(_status)] : [STATUS_ACCOUNT.HAVE, STATUS_ACCOUNT.LOCK],
 					roleUuid: (_roleUuid as string) || '',
@@ -278,7 +278,7 @@ function MainPageAccount({}: PropsMainPageAccount) {
 				</DataWrapper>
 				<Pagination
 					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 20}
+					pageSize={Number(_pageSize) || 10}
 					total={listAccount?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword, _roleUuid, _status]}
 				/>

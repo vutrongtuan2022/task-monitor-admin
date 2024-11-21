@@ -43,7 +43,7 @@ function MainPageUser({}: PropsMainPageUser) {
 			httpRequest({
 				http: userServices.listUser({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
 					status: 1,
 					isHaveAcc: !!_isHaveAcc ? Number(_isHaveAcc) : null,
@@ -249,7 +249,7 @@ function MainPageUser({}: PropsMainPageUser) {
 					</DataWrapper>
 					<Pagination
 						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
+						pageSize={Number(_pageSize) || 10}
 						total={listUser?.data?.pagination?.totalCount}
 						dependencies={[_pageSize, _keyword, _status, _roleUuid, _isHaveAcc]}
 					/>

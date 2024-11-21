@@ -39,7 +39,7 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 			httpRequest({
 				http: contractorcatServices.getListContractorCat({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 				}),
@@ -200,7 +200,7 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 				</DataWrapper>
 				<Pagination
 					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 20}
+					pageSize={Number(_pageSize) || 10}
 					total={listContractorCat?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword]}
 				/>

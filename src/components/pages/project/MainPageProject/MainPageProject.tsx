@@ -72,7 +72,7 @@ function MainPageProject({}: PropsMainPageProject) {
 			httpRequest({
 				http: projectServices.listProject({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					state: !!_state ? Number(_state) : null,
@@ -213,7 +213,11 @@ function MainPageProject({}: PropsMainPageProject) {
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IProject) => <>{data?.name}</>,
+								render: (data: IProject) => (
+									<Tippy content={data?.name}>
+										<p className={styles.name}>{data?.name}</p>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Quy trình áp dụng',
@@ -293,7 +297,7 @@ function MainPageProject({}: PropsMainPageProject) {
 				</DataWrapper>
 				<Pagination
 					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 20}
+					pageSize={Number(_pageSize) || 10}
 					total={listProject?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword, _status, _state, _userUuid, _managerUuid]}
 				/>

@@ -20,6 +20,7 @@ import reportServices from '~/services/reportServices';
 import Moment from 'react-moment';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import userServices from '~/services/userServices';
+import Tippy from '@tippyjs/react';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
@@ -50,7 +51,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 				httpRequest({
 					http: reportServices.listReport({
 						page: Number(_page) || 1,
-						pageSize: Number(_pageSize) || 20,
+						pageSize: Number(_pageSize) || 10,
 						keyword: (_keyword as string) || '',
 						status: STATUS_CONFIG.ACTIVE,
 						year: !!_year ? Number(_year) : null,
@@ -172,7 +173,11 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							{
 								title: 'Tên công trình',
 								fixedLeft: true,
-								render: (data: IReportWork) => <>{data?.project?.name}</>,
+								render: (data: IReportWork) => (
+									<Tippy content={data?.project?.name}>
+										<p className={styles.name}>{data?.project?.name}</p>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Người báo cáo',
@@ -284,7 +289,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 				</DataWrapper>
 				<Pagination
 					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 20}
+					pageSize={Number(_pageSize) || 10}
 					total={listReport?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword, _year, _month, _state, _completeState, _reporterUuid]}
 				/>

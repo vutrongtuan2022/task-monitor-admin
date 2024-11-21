@@ -41,7 +41,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			httpRequest({
 				http: contractorServices.listContractor({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
 					type: Number(_type) || null,
 					status: STATUS_CONFIG.ACTIVE,
@@ -231,7 +231,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 				</DataWrapper>
 				<Pagination
 					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 20}
+					pageSize={Number(_pageSize) || 10}
 					total={listContractor?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword, _type]}
 				/>
