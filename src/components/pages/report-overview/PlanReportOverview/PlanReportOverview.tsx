@@ -26,7 +26,7 @@ function PlanReportOverview({}: PropsPlanReportOverview) {
 				http: overviewServices.nextReportOverview({
 					uuid: _uuid as string,
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
 				}),
@@ -93,8 +93,8 @@ function PlanReportOverview({}: PropsPlanReportOverview) {
 									title: 'Loại công việc',
 									render: (data: IPlanReportOverview) => (
 										<>
-											{data?.isInWorkFlow && 'Có kế hoạch'}
-											{!data?.isInWorkFlow && 'Phát sinh'}
+											{data?.isWorkFlow == 1 && 'Có kế hoạch'}
+											{data?.isWorkFlow == 0 && 'Phát sinh'}
 										</>
 									),
 								},
@@ -165,7 +165,7 @@ function PlanReportOverview({}: PropsPlanReportOverview) {
 					</DataWrapper>
 					<Pagination
 						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
+						pageSize={Number(_pageSize) || 10}
 						total={nextPlanReport?.pagination?.totalCount}
 						dependencies={[_uuid, _pageSize]}
 					/>

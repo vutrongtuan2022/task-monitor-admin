@@ -42,7 +42,7 @@ function MainPageTask({}: PropsMainPageTask) {
 			httpRequest({
 				http: taskCatServices.listTaskCat({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 				}),
@@ -208,7 +208,7 @@ function MainPageTask({}: PropsMainPageTask) {
 				</DataWrapper>
 				<Pagination
 					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 20}
+					pageSize={Number(_pageSize) || 10}
 					total={listTaskCat?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword]}
 				/>
