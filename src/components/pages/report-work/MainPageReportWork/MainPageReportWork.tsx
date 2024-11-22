@@ -116,7 +116,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 								},
 								{
 									id: STATE_REPORT.IN_PROGRESS,
-									name: 'Đang thực hiện',
+									name: 'Chưa báo cáo',
 								},
 							]}
 						/>
@@ -180,12 +180,12 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 								),
 							},
 							{
-								title: 'Lãnh đạo phụ trách',
-								render: (data: IReportWork) => <>{data?.project?.leader?.fullname}</>,
-							},
-							{
 								title: 'Người báo cáo',
 								render: (data: IReportWork) => <>{data?.reporter?.fullname}</>,
+							},
+							{
+								title: 'Lãnh đạo phụ trách',
+								render: (data: IReportWork) => <>{data?.project?.leader?.fullname}</>,
 							},
 							{
 								title: 'Số công việc thực hiện',
@@ -237,7 +237,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 											},
 											{
 												state: STATE_REPORT.IN_PROGRESS,
-												text: 'Đang thực hiện',
+												text: 'Chưa báo cáo',
 												textColor: '#fff',
 												backgroundColor: '#FF852C',
 											},
