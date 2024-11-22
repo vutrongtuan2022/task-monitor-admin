@@ -212,6 +212,10 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 								),
 							},
 							{
+								title: 'Lãnh đạo phụ trách',
+								render: (data: IUserWork) => <>{data?.report?.project?.leader?.fullname}</>,
+							},
+							{
 								title: 'Tên công việc',
 								render: (data: IUserWork) => (
 									<Tippy content={data?.activity?.name}>
@@ -234,9 +238,11 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 								title: 'Megatype',
 								render: (data: IUserWork) => (
 									<p>
-										{data?.type == TYPE_WORK.TASK && 'Task'}
-										{data?.type == TYPE_WORK.SUB_TASK && 'Subtask'}
-										{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}
+										<span style={{color: '#2970FF', fontWeight: 700}}>{data?.type == TYPE_WORK.TASK && 'Task'}</span>
+										<span style={{color: '#16C1F3', fontWeight: 600}}>
+											{data?.type == TYPE_WORK.SUB_TASK && 'Subtask'}
+										</span>
+										<span style={{fontWeight: 500}}>{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}</span>
 									</p>
 								),
 							},

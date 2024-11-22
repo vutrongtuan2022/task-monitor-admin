@@ -99,7 +99,7 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 								title: 'Tên công trình',
 								render: (data: IReportOverview) => (
 									<Tippy content={data?.project?.name}>
-										<p className={styles.name}>{data?.project?.name || '---'}</p>
+										<p className={styles.name}>{data?.project?.name || ''}</p>
 									</Tippy>
 								),
 							},
@@ -113,7 +113,7 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 								),
 							},
 							{
-								title: 'Hợp đồng giải ngân',
+								title: 'Số hợp đồng giải ngân',
 								render: (data: IReportOverview) => <>{data?.fund?.totalContracts}</>,
 							},
 							{

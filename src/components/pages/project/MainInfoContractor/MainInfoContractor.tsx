@@ -299,14 +299,14 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 									},
 									{
 										title: 'Tên nhà thầu',
-										render: (data: IContractorProject) => <>{data?.contractor?.name || ''}</>,
+										render: (data: IContractorProject) => <>{data?.contractor?.name || '---'}</>,
 									},
 									{
 										title: 'Số lượng hợp đồng',
-										render: (data: IContractorProject) => <>{data?.totalContract || ''}</>,
+										render: (data: IContractorProject) => <>{data?.totalContract || 0}</>,
 									},
 									{
-										title: 'Tổng giá trị hợp đồng (VND',
+										title: 'Tổng giá trị hợp đồng (VND)',
 										render: (data: IContractorProject) => <>{convertCoin(data?.amount)}</>,
 									},
 								]}
