@@ -178,15 +178,12 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							},
 							{
 								title: 'Tên công trình',
+								fixedLeft: true,
 								render: (data: IReportDisbursement) => (
 									<Tippy content={data?.project?.name}>
 										<p className={styles.name}>{data?.project?.name}</p>
 									</Tippy>
 								),
-							},
-							{
-								title: 'Lãnh đạo phụ trách',
-								render: (data: IReportDisbursement) => <>{data?.project?.leader?.fullname}</>,
 							},
 							{
 								title: 'Báo cáo tháng',
@@ -195,6 +192,10 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							{
 								title: 'Người báo cáo',
 								render: (data: IReportDisbursement) => <>{data?.creator?.fullname || '---'}</>,
+							},
+							{
+								title: 'Lãnh đạo phụ trách',
+								render: (data: IReportDisbursement) => <>{data?.project?.leader?.fullname}</>,
 							},
 							{
 								title: 'Vốn dự phòng (VND)',

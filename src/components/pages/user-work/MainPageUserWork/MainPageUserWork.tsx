@@ -192,41 +192,81 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 						column={[
 							{
 								title: 'STT',
-								render: (data: IUserWork, index: number) => <>{index + 1}</>,
+								render: (data: IUserWork, index: number) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{index + 1}
+									</p>
+								),
 							},
 							{
 								title: 'Tháng báo cáo',
 								fixedLeft: true,
 								render: (data: IUserWork) => (
-									<>
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
 										Tháng <span>{data?.report?.month}</span> - <span>{data?.report?.year}</span>
-									</>
+									</p>
 								),
 							},
 							{
 								title: 'Tên công trình',
 								render: (data: IUserWork) => (
 									<Tippy content={data?.report?.project?.name}>
-										<p className={styles.name}>{data?.report?.project?.name}</p>
+										<p
+											className={styles.name}
+											style={{
+												color:
+													data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+											}}
+										>
+											{data?.report?.project?.name}
+										</p>
 									</Tippy>
 								),
 							},
 							{
 								title: 'Lãnh đạo phụ trách',
-								render: (data: IUserWork) => <>{data?.report?.project?.leader?.fullname}</>,
+								render: (data: IUserWork) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{data?.report?.project?.leader?.fullname}
+									</p>
+								),
 							},
 							{
 								title: 'Tên công việc',
 								render: (data: IUserWork) => (
 									<Tippy content={data?.activity?.name}>
-										<p className={styles.name}>{data?.activity?.name}</p>
+										<p
+											className={styles.name}
+											style={{
+												color:
+													data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+											}}
+										>
+											{data?.activity?.name}
+										</p>
 									</Tippy>
 								),
 							},
 							{
 								title: 'Giai đoạn thực hiện',
 								render: (data: IUserWork) => (
-									<span style={{color: '#2970FF'}}>
+									<span
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
 										{data?.stage == -1 || (!data?.stage && '---')}
 										{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 										{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
@@ -238,25 +278,35 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 								title: 'Megatype',
 								render: (data: IUserWork) => (
 									<p>
-										<span style={{color: '#2970FF', fontWeight: 700}}>{data?.type == TYPE_WORK.TASK && 'Task'}</span>
-										<span style={{color: '#16C1F3', fontWeight: 600}}>
-											{data?.type == TYPE_WORK.SUB_TASK && 'Subtask'}
-										</span>
-										<span style={{fontWeight: 500}}>{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}</span>
+										<span style={{color: '#2970FF'}}>{data?.type == TYPE_WORK.TASK && 'Task'}</span>
+										<span>{data?.type == TYPE_WORK.SUB_TASK && 'Subtask'}</span>
+										<span>{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}</span>
 									</p>
 								),
 							},
 							{
 								title: 'Người báo cáo',
-								render: (data: IUserWork) => <>{data?.report?.reporter?.fullname || '---'}</>,
+								render: (data: IUserWork) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{data?.report?.reporter?.fullname || '---'}
+									</p>
+								),
 							},
 							{
 								title: 'Loại công việc',
 								render: (data: IUserWork) => (
-									<>
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
 										{!data?.isInWorkflow && 'Phát sinh'}
 										{data?.isInWorkflow && 'Có kế hoạch'}
-									</>
+									</p>
 								),
 							},
 							{
@@ -265,7 +315,19 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 									<>
 										{(data?.issue && (
 											<Tippy content={data?.issue}>
-												<p className={styles.name}>{data?.issue || '---'}</p>
+												<p
+													className={styles.name}
+													style={{
+														color:
+															data?.type == TYPE_WORK.TASK
+																? '#2970FF'
+																: data?.type == TYPE_WORK.SUB_TASK
+																? ''
+																: '',
+													}}
+												>
+													{data?.issue || '---'}
+												</p>
 											</Tippy>
 										)) ||
 											'---'}
@@ -280,58 +342,83 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 								title: 'Trạng thái',
 								fixedRight: true,
 								render: (data: IUserWork) => (
-									<StateActive
-										stateActive={data?.activityState}
-										listState={[
-											{
-												state: STATE_REPORT_WORK.NOT_PROCESSED,
-												text: 'Chưa xử lý',
-												textColor: '#FFFFFF',
-												backgroundColor: '#F37277',
-											},
-											{
-												state: STATE_REPORT_WORK.PROCESSING,
-												text: 'Đang xử lý',
-												textColor: '#FFFFFF',
-												backgroundColor: '#4BC9F0',
-											},
-											{
-												state: STATE_REPORT_WORK.COMPLETED,
-												text: 'Đã hoàn thành',
-												textColor: '#FFFFFF',
-												backgroundColor: '#06D7A0',
-											},
-										]}
-									/>
+									<div
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										<StateActive
+											stateActive={data?.activityState}
+											listState={[
+												{
+													state: STATE_REPORT_WORK.NOT_PROCESSED,
+													text: 'Chưa xử lý',
+													textColor: '#FFFFFF',
+													backgroundColor: '#F37277',
+												},
+												{
+													state: STATE_REPORT_WORK.PROCESSING,
+													text: 'Đang xử lý',
+													textColor: '#FFFFFF',
+													backgroundColor: '#4BC9F0',
+												},
+												{
+													state: STATE_REPORT_WORK.COMPLETED,
+													text: 'Đã hoàn thành',
+													textColor: '#FFFFFF',
+													backgroundColor: '#06D7A0',
+												},
+											]}
+										/>
+									</div>
 								),
 							},
 							{
 								title: 'Tình trạng',
 								render: (data: IUserWork) => (
-									<StateActive
-										isBox={false}
-										stateActive={data?.deadlineState}
-										listState={[
-											{
-												state: STATE_COMPLETE_REPORT.NOT_DONE,
-												text: 'Chưa thực hiện',
-												textColor: '#FF852C',
-												backgroundColor: '#FF852C',
-											},
-											{
-												state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
-												text: 'Đúng tiến độ',
-												textColor: '#005994',
-												backgroundColor: '#005994',
-											},
-											{
-												state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
-												text: 'Chậm tiến độ',
-												textColor: '#EE464C',
-												backgroundColor: '#EE464C',
-											},
-										]}
-									/>
+									<div
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										<StateActive
+											isBox={false}
+											stateActive={data?.deadlineState}
+											listState={[
+												{
+													state: STATE_COMPLETE_REPORT.NOT_DONE,
+													text: 'Chưa thực hiện',
+													textColor: '#FF852C',
+													backgroundColor: '#FF852C',
+												},
+												{
+													state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
+													text: 'Đúng tiến độ',
+													textColor: '#005994',
+													backgroundColor: '#005994',
+												},
+												{
+													state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
+													text: 'Chậm tiến độ',
+													textColor: '#EE464C',
+													backgroundColor: '#EE464C',
+												},
+											]}
+										/>
+									</div>
+								),
+							},
+							{
+								title: 'Số hóa',
+								render: (data: IUserWork) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{data?.digitalizedState == 0 && 'Chưa số hóa'}
+										{data?.digitalizedState == 1 && 'Đã số hóa'}
+									</p>
 								),
 							},
 						]}
