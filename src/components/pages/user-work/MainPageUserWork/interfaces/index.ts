@@ -13,6 +13,11 @@ export interface IUserWork {
 			code: string;
 			name: string;
 			state: number;
+			leader: {
+				fullname: string;
+				code: string;
+				uuid: string;
+			};
 		};
 		reporter: {
 			uuid: string;

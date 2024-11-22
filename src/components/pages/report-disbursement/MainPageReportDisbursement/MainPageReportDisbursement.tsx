@@ -185,6 +185,10 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 								),
 							},
 							{
+								title: 'Lãnh đạo phụ trách',
+								render: (data: IReportDisbursement) => <>{data?.project?.leader?.fullname}</>,
+							},
+							{
 								title: 'Báo cáo tháng',
 								render: (data: IReportDisbursement) => <>{`Tháng ${data?.releasedMonth} - ${data?.releasedYear}`}</>,
 							},

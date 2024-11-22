@@ -180,6 +180,10 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 								),
 							},
 							{
+								title: 'Lãnh đạo phụ trách',
+								render: (data: IReportWork) => <>{data?.project?.leader?.fullname}</>,
+							},
+							{
 								title: 'Người báo cáo',
 								render: (data: IReportWork) => <>{data?.reporter?.fullname}</>,
 							},
