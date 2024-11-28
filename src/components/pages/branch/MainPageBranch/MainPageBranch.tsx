@@ -79,8 +79,6 @@ function MainPageBranch({}: PropsMainPageBranch) {
 		return funcDeleteBranches.mutate();
 	};
 
-	console.log(1);
-
 	return (
 		<div className={styles.container}>
 			<Loading loading={funcDeleteBranches.isLoading} />
