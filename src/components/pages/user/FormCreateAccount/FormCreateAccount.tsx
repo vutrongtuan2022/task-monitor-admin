@@ -64,9 +64,9 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 
 	const handleSubmit = async () => {
 		// Check username với regex
-		if (!usernameRegex.test(form.username)) {
-			return toastWarn({msg: 'Tên đăng nhập không hợp lệ'});
-		}
+		// if (!usernameRegex.test(form.username)) {
+		// 	return toastWarn({msg: 'Tên đăng nhập không hợp lệ'});
+		// }
 		// Check password với regex
 		if (!passwordRegex.test(form.password)) {
 			return toastWarn({msg: 'Mật khẩu phải chứa ít nhất 6 ký tự, bao gồm chữ cái và số'});
