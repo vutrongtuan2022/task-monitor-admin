@@ -131,6 +131,7 @@ const projectServices = {
 			annual: {
 				year: number;
 				budget: number;
+				annualNote: string;
 			}[];
 		},
 		tokenAxios?: any

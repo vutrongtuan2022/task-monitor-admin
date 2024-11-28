@@ -140,7 +140,15 @@ function ImportExcel({name, file, pathTemplate, setDataReadFile, setFile, onClos
 				</div>
 				<div className={styles.groupBtn}>
 					<div>
-						<Button p_14_24 rounded_8 light-red onClick={onClose}>
+						<Button
+							p_14_24
+							rounded_8
+							light-red
+							onClick={() => {
+								setFile(null);
+								onClose();
+							}}
+						>
 							Đóng
 						</Button>
 					</div>

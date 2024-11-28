@@ -11,6 +11,7 @@ import empty from '../../../public/static/images/icon-empty.svg';
 import folder_open from '../../../public/static/images/folder_open.svg';
 import XSL from '../../../public/static/images/XSL.svg';
 import success from '../../../public/static/images/success.svg';
+import exportExcel from '../../../public/static/images/export_excel.svg';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -27,4 +28,5 @@ export default {
 	folder_open,
 	XSL,
 	success,
+	exportExcel,
 };

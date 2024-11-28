@@ -54,7 +54,7 @@ function MainPageTask({}: PropsMainPageTask) {
 
 	const handleCloseImport = () => {
 		const {_action, ...rest} = router.query;
-
+		setFile(null);
 		router.replace({
 			pathname: router.pathname,
 			query: {
