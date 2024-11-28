@@ -188,12 +188,12 @@ function MainPageTask({}: PropsMainPageTask) {
 								fixedRight: true,
 								render: (data: ITaskCat) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										<IconCustom
+										{/* <IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
 											href={`${PATH.UpdateTask}?_uuid=${data?.uuid}`}
-										/>
+										/> */}
 										<IconCustom
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}
