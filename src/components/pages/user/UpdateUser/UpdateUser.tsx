@@ -15,9 +15,8 @@ import {FolderOpen} from 'iconsax-react';
 import TextArea from '~/components/common/Form/components/TextArea';
 import router from 'next/router';
 import {IUpdateUser, PropsUpdateUser} from './interfaces';
-import DatePicker from '~/components/common/DatePicker';
-import {timeSubmit, timeSubmitDateOnly} from '~/common/funcs/optionConvert';
 import {toastWarn} from '~/common/funcs/toast';
+import moment from 'moment';
 
 function UpdateUser({onClose}: PropsUpdateUser) {
 	const queryClient = useQueryClient();
@@ -52,7 +51,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 				email: data?.email,
 				gender: data?.gender,
 				phone: data?.phone,
-				birthday: data?.birthday ? new Date(data.birthday) : null,
+				birthday: data?.birthday|| null,
 				address: data?.address || '',
 				matp: data?.tp?.uuid || '',
 				maqh: data?.qh?.uuid || '',
@@ -78,7 +77,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 					email: form.email,
 					gender: form.gender,
 					phone: form.phone,
-					birthday: !!form.birthday ? timeSubmitDateOnly(form.birthday) : null,
+					birthday: !!form.birthday ? moment(form?.birthday).format('YYYY-MM-DD') : null,
 					address: form.address,
 					matp: form.matp,
 					maqh: form.maqh,
@@ -149,11 +148,13 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 	});
 
 	const handleSubmit = async () => {
-		const today = new Date(timeSubmit(new Date())!);
-		const birthday = form.birthday ? new Date(form.birthday) : null;
-		if (!birthday != null && today < birthday!) {
+		const today = new Date();
+		const birthday = new Date(form?.birthday!);
+
+		if (!!birthday && today < birthday!) {
 			return toastWarn({msg: 'Ngày sinh không hợp lệ!'});
 		}
+		
 		return funcCreateUser.mutate();
 	};
 
@@ -200,8 +201,8 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 						}
 					/>
 
-					{/* <Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} /> */}
-					<div className={styles.mt}>
+					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
+					{/* <div className={styles.mt}>
 						<DatePicker
 							onClean={true}
 							icon={true}
@@ -216,7 +217,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 							}
 							name='birthday'
 						/>
-					</div>
+					</div> */}
 
 					<div className={styles.gennder}>
 						<label style={{fontSize: '16px', fontWeight: '500'}}>

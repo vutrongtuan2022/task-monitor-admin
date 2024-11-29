@@ -15,9 +15,8 @@ import {QUERY_KEY, TYPE_GENDER} from '~/constants/config/enum';
 
 import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
-import DatePicker from '~/components/common/DatePicker';
-import {timeSubmit, timeSubmitDateOnly} from '~/common/funcs/optionConvert';
 import {toastWarn} from '~/common/funcs/toast';
+import moment from 'moment';
 
 function CreateUser({onClose}: PropsCreateUser) {
 	const queryClient = useQueryClient();
@@ -48,7 +47,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 					email: form.email,
 					gender: form.gender,
 					phone: form.phone,
-					birthday: !!form.birthday ? timeSubmitDateOnly(form.birthday) : null,
+					birthday: !!form.birthday ? moment(form?.birthday).format('YYYY-MM-DD') : null,
 					address: form.address,
 					matp: form.matp,
 					maqh: form.maqh,
@@ -120,12 +119,13 @@ function CreateUser({onClose}: PropsCreateUser) {
 	});
 
 	const handleSubmit = async () => {
-		const today = new Date(timeSubmit(new Date())!);
-		const birthday = form.birthday ? new Date(form.birthday) : null;
+		const today = new Date();
+		const birthday = new Date(form?.birthday!);
 
-		if (!birthday != null && today < birthday!) {
+		if (!!birthday && today < birthday!) {
 			return toastWarn({msg: 'Ngày sinh không hợp lệ!'});
 		}
+
 		return funcCreateUser.mutate();
 	};
 
@@ -172,8 +172,8 @@ function CreateUser({onClose}: PropsCreateUser) {
 						}
 					/>
 
-					{/* <Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} /> */}
-					<div className={styles.mt}>
+					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
+					{/* <div className={styles.mt}>
 						<DatePicker
 							onClean={true}
 							icon={true}
@@ -188,7 +188,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 							}
 							name='birthday'
 						/>
-					</div>
+					</div> */}
 
 					<div className={styles.gennder}>
 						<label style={{fontSize: '16px', fontWeight: '500'}}>
