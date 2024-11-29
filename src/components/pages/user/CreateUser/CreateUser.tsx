@@ -48,7 +48,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 					email: form.email,
 					gender: form.gender,
 					phone: form.phone,
-					birthday: form.birthday ? timeSubmitDateOnly(form.birthday) : '',
+					birthday: !!form.birthday ? timeSubmitDateOnly(form.birthday) : null,
 					address: form.address,
 					matp: form.matp,
 					maqh: form.maqh,
@@ -122,10 +122,10 @@ function CreateUser({onClose}: PropsCreateUser) {
 	const handleSubmit = async () => {
 		const today = new Date(timeSubmit(new Date())!);
 		const birthday = form.birthday ? new Date(form.birthday) : null;
-		if (!birthday || today < birthday) {
+
+		if (!birthday != null && today < birthday!) {
 			return toastWarn({msg: 'Ngày sinh không hợp lệ!'});
 		}
-
 		return funcCreateUser.mutate();
 	};
 
