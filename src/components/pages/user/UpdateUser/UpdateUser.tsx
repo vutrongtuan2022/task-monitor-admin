@@ -151,9 +151,6 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 	const handleSubmit = async () => {
 		const today = new Date(timeSubmit(new Date())!);
 		const birthday = form.birthday ? new Date(form.birthday) : null;
-		if (!form.birthday) {
-			return toastWarn({msg: 'Vui lòng nhập ngày sinh!'});
-		}
 		if (!birthday || today < birthday) {
 			return toastWarn({msg: 'Ngày sinh không hợp lệ!'});
 		}
@@ -186,7 +183,6 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 						type='number'
 						isPhone
 						value={form.phone}
-						isRequired
 						label={<span>Số điện thoại</span>}
 					/>
 
