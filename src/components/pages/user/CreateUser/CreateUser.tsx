@@ -172,8 +172,8 @@ function CreateUser({onClose}: PropsCreateUser) {
 						}
 					/>
 
-					{/* <Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} /> */}
-					<div className={styles.mt}>
+					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
+					{/* <div className={styles.mt}>
 						<DatePicker
 							onClean={true}
 							icon={true}
@@ -188,7 +188,7 @@ function CreateUser({onClose}: PropsCreateUser) {
 							}
 							name='birthday'
 						/>
-					</div>
+					</div> */}
 
 					<div className={styles.gennder}>
 						<label style={{fontSize: '16px', fontWeight: '500'}}>
