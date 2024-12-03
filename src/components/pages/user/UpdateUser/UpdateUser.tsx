@@ -201,7 +201,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 						}
 					/>
 
-					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form.birthday} label={<span>Ngày sinh</span>} />
+					<Input placeholder='Nhập ngày sinh' name='birthday' type='date' value={form?.birthday} label={<span>Ngày sinh</span>} />
 					{/* <div className={styles.mt}>
 						<DatePicker
 							onClean={true}
