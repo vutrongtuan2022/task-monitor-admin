@@ -3,6 +3,7 @@ export interface PropsMainDisbursementProgress {}
 export interface IDetailProgressContractFund {
 	totalContract: number;
 	countRelease: number;
+	totalAccumAmountThisYear: number;
 	totalContractAmount: number;
 	categoryProjectDTO: {
 		code: string;
