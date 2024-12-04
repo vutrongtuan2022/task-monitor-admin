@@ -138,15 +138,15 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 							},
 							{
 								title: 'Số hợp đồng giải ngân',
-								render: (data: IReportOverview) => <>{data?.fund?.totalContracts}</>,
+								render: (data: IReportOverview) => <>{data?.fund?.totalContracts || 0}</>,
 							},
 							{
 								title: 'Số tiền giải ngân (VND)',
-								render: (data: IReportOverview) => <>{convertCoin(data?.fund?.totalFunds) || '---'}</>,
+								render: (data: IReportOverview) => <>{convertCoin(data?.fund?.totalFunds) || 0}</>,
 							},
 							{
 								title: 'Tổng mức đầu tư (VND)',
-								render: (data: IReportOverview) => <>{convertCoin(data?.totalInvest) || '---'}</>,
+								render: (data: IReportOverview) => <>{convertCoin(data?.totalInvest) || 0}</>,
 							},
 							{
 								title: 'Ngày gửi báo cáo',

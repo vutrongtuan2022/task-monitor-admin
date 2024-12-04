@@ -105,8 +105,17 @@ function TableContracfund({}: PropsTableContracFund) {
 								render: (data: IContractFund) => <>{data?.contractor?.name}</>,
 							},
 							{
-								title: 'mô tả',
-								render: (data: IContractFund) => <>{data?.note || '---'}</>,
+								title: 'Mô tả',
+								render: (data: IContractFund) => (
+									<>
+										{(data?.note && (
+											<Tippy content={data?.note}>
+												<p className={styles.name}>{data?.note || '---'}</p>
+											</Tippy>
+										)) ||
+											'---'}
+									</>
+								),
 							},
 						]}
 					/>
