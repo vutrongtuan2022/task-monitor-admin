@@ -107,7 +107,7 @@ function MainPageAccount({}: PropsMainPageAccount) {
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên đăng nhập' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên tài khoản' />
 					</div>
 
 					<div className={styles.filter}>
