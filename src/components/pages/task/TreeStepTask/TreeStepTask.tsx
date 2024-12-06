@@ -11,6 +11,7 @@ import {httpRequest} from '~/services';
 import taskServices from '~/services/taskServices';
 import {RiLoader4Fill} from 'react-icons/ri';
 import clsx from 'clsx';
+import Tippy from '@tippyjs/react';
 
 function TreeStepTask({index, type, level, task}: PropsTreeStepTask) {
 	const router = useRouter();
@@ -51,16 +52,18 @@ function TreeStepTask({index, type, level, task}: PropsTreeStepTask) {
 						</>
 					)}
 				</div>
-				<div className={styles.box_input}>
-					<div className={styles.index}>
-						{level == 1 && convertToRoman(index + 1)}
-						{level == 2 && `${index + 1}`}
-						{level == 3 && '#'}
-						{level == 4 && '##'}
-					</div>
-					<input value={task?.name} placeholder='Nhập tên công việc' className={styles.input} disabled={true} />
-				</div>
+				<Tippy content={task?.name}>
+					<div className={styles.box_input}>
+						<div className={styles.index}>
+							{level == 1 && convertToRoman(index + 1)}
+							{level == 2 && `${index + 1}`}
+							{level == 3 && '#'}
+							{level == 4 && '##'}
+						</div>
 
+						<input value={task?.name} placeholder='Nhập tên công việc' className={styles.input} disabled={true} />
+					</div>
+				</Tippy>
 				<div className={styles.list_task}>
 					{level == 1 && (
 						<>
