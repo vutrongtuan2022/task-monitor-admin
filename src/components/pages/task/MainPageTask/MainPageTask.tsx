@@ -31,7 +31,7 @@ import ImportExcel from '~/components/common/ImportExcel';
 function MainPageTask({}: PropsMainPageTask) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-
+	const [isImportPopupOpen, setImportPopupOpen] = useState(false);
 	const {_page, _pageSize, _keyword, _action} = router.query;
 
 	const [uuidDelete, setUuidDelete] = useState<string>('');
@@ -52,16 +52,16 @@ function MainPageTask({}: PropsMainPageTask) {
 		},
 	});
 
-	const handleCloseImport = () => {
-		const {_action, ...rest} = router.query;
-		setFile(null);
-		router.replace({
-			pathname: router.pathname,
-			query: {
-				...rest,
-			},
-		});
-	};
+	// const handleCloseImport = () => {
+	// 	const {_action, ...rest} = router.query;
+	// 	setFile(null);
+	// 	router.replace({
+	// 		pathname: router.pathname,
+	// 		query: {
+	// 			...rest,
+	// 		},
+	// 	});
+	// };
 
 	const funcDeleteTaskCat = useMutation({
 		mutationFn: () => {
@@ -117,6 +117,14 @@ function MainPageTask({}: PropsMainPageTask) {
 		return fucnImportExcel.mutate();
 	};
 
+	const handleCloseImport = () => {
+		setImportPopupOpen(false);
+	};
+
+	const handleOpenImport = () => {
+		setImportPopupOpen(true);
+	};
+
 	return (
 		<div className={styles.container}>
 			<Loading loading={funcDeleteTaskCat.isLoading || fucnImportExcel.isLoading} />
@@ -128,6 +136,10 @@ function MainPageTask({}: PropsMainPageTask) {
 				</div>
 
 				<div className={styles.btn}>
+					<Button rounded_8 w_fit p_8_16 green onClick={handleOpenImport}>
+						{/* <Image src={icons.XSL} alt='icon down' width={20} height={20} /> */}
+						Nhập file
+					</Button>
 					<Button
 						p_10_24
 						rounded_8
@@ -223,7 +235,7 @@ function MainPageTask({}: PropsMainPageTask) {
 				onSubmit={handleDeleteTaskCat}
 			/>
 
-			<Popup open={_action == 'import'} onClose={handleCloseImport}>
+			<Popup open={isImportPopupOpen} onClose={handleCloseImport}>
 				<ImportExcel
 					name='file-tast'
 					file={file}

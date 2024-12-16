@@ -102,7 +102,7 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 						}}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 					>
-						Thêm mới nhà thầu
+						Thêm mới nhóm nhà thầu
 					</Button>
 				</div>
 			</div>
@@ -128,7 +128,7 @@ function MainGroupContractor({}: PropsMainGroupContractor) {
 									}}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 								>
-									Thêm mới nhà thầu
+									Thêm mới nhóm nhà thầu
 								</Button>
 							}
 						/>

@@ -11,6 +11,12 @@
 	gap: 12px;
 	flex-wrap: wrap;
 	margin-bottom: 16px;
+	.btn {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 10px;
+	}
 }
 .search {
 	min-width: 400px;
