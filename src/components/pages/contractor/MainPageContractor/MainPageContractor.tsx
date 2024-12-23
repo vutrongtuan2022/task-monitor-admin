@@ -99,7 +99,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo mã, tên nhóm nhà thầu' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo nhà thầu' />
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
