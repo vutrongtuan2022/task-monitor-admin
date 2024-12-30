@@ -28,6 +28,9 @@ import Progress from '~/components/common/Progress';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import userServices from '~/services/userServices';
 import projectServices from '~/services/projectServices';
+import IconCustom from '~/components/common/IconCustom';
+import { Eye } from 'iconsax-react';
+import { PATH } from '~/constants/config';
 
 function MainPageUserWork({}: PropsMainPageUserWork) {
 	const router = useRouter();
@@ -419,6 +422,20 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 										{data?.digitalizedState == 0 && 'Chưa số hóa'}
 										{data?.digitalizedState == 1 && 'Đã số hóa'}
 									</p>
+								),
+							},
+							{
+								title: 'Hành động',
+								fixedRight: true,
+								render: (data: IUserWork) => (
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										<IconCustom
+											color='#005994'
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+											href={`${PATH.UserWork}/${data?.activity?.uuid}`}
+										/>
+									</div>
 								),
 							},
 						]}
