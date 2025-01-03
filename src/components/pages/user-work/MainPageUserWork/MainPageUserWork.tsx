@@ -429,12 +429,15 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 								fixedRight: true,
 								render: (data: IUserWork) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										<IconCustom
+										{data?.type == TYPE_WORK.TASK && (
+											<IconCustom
 											color='#005994'
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 											href={`${PATH.UserWork}/${data?.activity?.uuid}`}
 										/>
+										)}
+										
 									</div>
 								),
 							},
