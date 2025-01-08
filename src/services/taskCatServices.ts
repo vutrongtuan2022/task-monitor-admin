@@ -81,6 +81,17 @@ const taskCatServices = {
 			},
 		});
 	},
+	updateTaskCat: (
+		data: {
+			uuid: string;
+			name: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/TaskCat/update-task-cat`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default taskCatServices;

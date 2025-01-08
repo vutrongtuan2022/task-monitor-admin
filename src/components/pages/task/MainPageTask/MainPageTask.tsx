@@ -52,17 +52,6 @@ function MainPageTask({}: PropsMainPageTask) {
 		},
 	});
 
-	// const handleCloseImport = () => {
-	// 	const {_action, ...rest} = router.query;
-	// 	setFile(null);
-	// 	router.replace({
-	// 		pathname: router.pathname,
-	// 		query: {
-	// 			...rest,
-	// 		},
-	// 	});
-	// };
-
 	const funcDeleteTaskCat = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -137,7 +126,6 @@ function MainPageTask({}: PropsMainPageTask) {
 
 				<div className={styles.btn}>
 					<Button rounded_8 w_fit p_8_16 green onClick={handleOpenImport}>
-						{/* <Image src={icons.XSL} alt='icon down' width={20} height={20} /> */}
 						Nhập file
 					</Button>
 					<Button
@@ -200,12 +188,12 @@ function MainPageTask({}: PropsMainPageTask) {
 								fixedRight: true,
 								render: (data: ITaskCat) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										{/* <IconCustom
+										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
 											href={`${PATH.UpdateTask}?_uuid=${data?.uuid}`}
-										/> */}
+										/>
 										<IconCustom
 											type='delete'
 											icon={<Trash fontSize={20} fontWeight={600} />}

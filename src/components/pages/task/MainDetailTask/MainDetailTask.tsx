@@ -84,9 +84,9 @@ function MainDetailTask({}: PropsMainDetailTask) {
 						<Button p_14_24 rounded_8 light-red onClick={() => setOpenDelete(true)}>
 							Xóa
 						</Button>
-						{/* <Button p_14_24 rounded_8 primaryLinear href={`${PATH.UpdateTask}?_uuid=${_uuid}`}>
+						<Button p_14_24 rounded_8 primaryLinear href={`${PATH.UpdateTask}?_uuid=${_uuid}`}>
 							Chỉnh sửa
-						</Button> */}
+						</Button>
 					</div>
 				}
 			/>
