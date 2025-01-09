@@ -40,6 +40,30 @@
 		.select {
 			margin-top: 16px;
 		}
+
+		.type_special {
+			cursor: pointer;
+			user-select: none;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-top: 16px;
+
+			input {
+				cursor: pointer;
+				width: 18px;
+				height: 18px;
+			}
+
+			label {
+				cursor: pointer;
+				font-size: 16px;
+				font-style: normal;
+				font-weight: 500;
+				line-height: 24px;
+			}
+		}
+
 		.group_button {
 			display: flex;
 			justify-content: center;

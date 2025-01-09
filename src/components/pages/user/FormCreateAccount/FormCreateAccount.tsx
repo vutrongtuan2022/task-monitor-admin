@@ -9,7 +9,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {toastWarn} from '~/common/funcs/toast';
 import {RiCloseFill} from 'react-icons/ri';
 import {httpRequest} from '~/services';
-import {QUERY_KEY} from '~/constants/config/enum';
+import {QUERY_KEY, TYPE_SPECIAL} from '~/constants/config/enum';
 import Loading from '~/components/common/Loading';
 import roleServices from '~/services/roleServices';
 import accountServices from '~/services/accountServices';
@@ -27,7 +27,8 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 		username: string;
 		password: string;
 		roleUuid: string;
-	}>({userUuid: '', username: '', roleUuid: '', password: ''});
+		special: TYPE_SPECIAL;
+	}>({userUuid: '', username: '', roleUuid: '', password: '', special: TYPE_SPECIAL.NORMAL});
 
 	const listRole = useQuery([QUERY_KEY.dropdown_role], {
 		queryFn: () =>
@@ -52,6 +53,7 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 					username: form.username || '',
 					roleUuid: form.roleUuid || '',
 					password: md5(`${form?.password}${process.env.NEXT_PUBLIC_KEY_PASS}`),
+					special: form?.special,
 				}),
 			}),
 		onSuccess(data) {
@@ -140,6 +142,32 @@ function FormCreateAccount({dataCreateAccount, onClose}: PropsFormCreateAccount)
 							))}
 						</Select>
 					</div>
+					{listRole?.data?.find((v: any) => v?.uuid == form?.roleUuid)?.code == 'R1' && (
+						<div className={styles.type_special}>
+							<input
+								type='checkbox'
+								name='type_special'
+								id='type_special'
+								checked={form?.special == TYPE_SPECIAL.SENIOR}
+								onChange={(e) => {
+									const {checked} = e.target;
+
+									if (checked) {
+										setForm((prev) => ({
+											...prev,
+											special: TYPE_SPECIAL.SENIOR,
+										}));
+									} else {
+										setForm((prev) => ({
+											...prev,
+											special: TYPE_SPECIAL.NORMAL,
+										}));
+									}
+								}}
+							/>
+							<label htmlFor='type_special'>Nhân viên cấp cao</label>
+						</div>
+					)}
 					<div className={styles.group_button}>
 						<div className={styles.btn}>
 							<div>

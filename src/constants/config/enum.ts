@@ -198,3 +198,8 @@ export enum TYPE_NOTIFY {
 	OVERVIEW,
 	CONTRACT_FUND,
 }
+
+export enum TYPE_SPECIAL {
+	NORMAL,
+	SENIOR,
+}
