@@ -1,3 +1,0 @@
-include:
-  - project: 'config/pipeline'
-    file: 'viettinbank-admin.yml'
