@@ -57,7 +57,8 @@ const contractorServices = {
 		data: {
 			keyword: string;
 			status: number;
-			type: number | null;
+			type: string;
+			uuid?: string;
 		},
 		tokenAxios?: any
 	) => {
