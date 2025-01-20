@@ -20,7 +20,7 @@ function GroupContractor({data, listContractor, setListContractor}: PropsGroupCo
 				http: contractorServices.categoryContractor({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					type: data?.idGroupContractor,
+					type: data?.uuidGroupContractor,
 				}),
 			}),
 		select(data) {
