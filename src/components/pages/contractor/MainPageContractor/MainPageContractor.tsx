@@ -43,7 +43,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
-					type: Number(_type) || null,
+					type: (_type as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 				}),
 			}),
@@ -58,6 +58,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
+					uuid: '',
 				}),
 			}),
 		select(data) {
@@ -107,7 +108,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							name='Nhóm nhà thầu'
 							query='_type'
 							listFilter={listGroupContractor.data?.map((v: any) => ({
-								id: v?.id,
+								id: v?.uuid,
 								name: v?.name,
 							}))}
 						/>
@@ -177,7 +178,24 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							},
 							{
 								title: 'Nhóm nhà thầu',
-								render: (data: IContractor) => <>{data?.contractorCat?.name || '---'}</>,
+								render: (data: IContractor) => (
+									<>
+										{data?.contractorCat?.[0]?.name}
+										{data?.contractorCat?.length! > 1 && (
+											<Tippy
+												content={
+													<ol style={{paddingLeft: '16px'}}>
+														{[...data?.contractorCat!]?.slice(1)?.map((v, i) => (
+															<li key={i}>{v?.name}</li>
+														))}
+													</ol>
+												}
+											>
+												<span className={styles.link}> và {data?.contractorCat?.length! - 1} nhóm khác</span>
+											</Tippy>
+										)}
+									</>
+								),
 							},
 							{
 								title: 'Địa chỉ',
