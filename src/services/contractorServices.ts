@@ -6,7 +6,7 @@ const contractorServices = {
 			pageSize: number;
 			page: number;
 			keyword: string;
-			type: number | null;
+			type: string;
 			status: number | null;
 		},
 		tokenAxios?: any
@@ -39,13 +39,13 @@ const contractorServices = {
 		data: {
 			uuid: string;
 			name: string;
-			type: number | null;
 			note: string;
 			matp: string;
 			maqh: string;
 			xaid: string;
 			address: string;
 			code: string;
+			lstType: string[];
 		},
 		tokenAxios?: any
 	) => {

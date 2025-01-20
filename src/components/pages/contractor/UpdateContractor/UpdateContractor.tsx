@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {IFormUpdateContractor, PropsUpdateContractor} from './interfaces';
+import {IDetailContractor, IFormUpdateContractor, PropsUpdateContractor} from './interfaces';
 import styles from './UpdateContractor.module.scss';
 import {IoClose} from 'react-icons/io5';
 import Button from '~/components/common/Button';
@@ -17,17 +17,17 @@ import Select, {Option} from '~/components/common/Select';
 import provineServices from '~/services/provineServices';
 import contractorcatServices from '~/services/contractorcatServices';
 import {toastWarn} from '~/common/funcs/toast';
+import SelectMany from '~/components/common/SelectMany';
 
 function UpdateContractor({onClose}: PropsUpdateContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const {_uuidContractor} = router.query;
-
+	const [contractorCat, setContractorCat] = useState<any[]>([]);
 	const [form, setForm] = useState<IFormUpdateContractor>({
 		name: '',
 		note: '',
-		type: null,
 		matp: '',
 		maqh: '',
 		xaid: '',
@@ -35,7 +35,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 		code: '',
 	});
 
-	useQuery([QUERY_KEY.detail_contractor, _uuidContractor], {
+	useQuery<IDetailContractor>([QUERY_KEY.detail_contractor, _uuidContractor], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorServices.detailContractor({
@@ -43,28 +43,33 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 				}),
 			}),
 		onSuccess(data) {
-			if (data) {
-				setForm({
-					name: data?.name || '',
-					note: data?.note || '',
-					type: data?.contractorCat?.id || null,
-					matp: data?.tp?.uuid || '',
-					maqh: data?.qh?.uuid || '',
-					xaid: data?.xa?.uuid || '',
-					address: data?.address || '',
-					code: data?.code || '',
-				});
-			}
+			setForm({
+				name: data?.name || '',
+				note: data?.note || '',
+				matp: data?.tp?.uuid || '',
+				maqh: data?.qh?.uuid || '',
+				xaid: data?.xa?.uuid || '',
+				address: data?.address || '',
+				code: data?.code || '',
+			});
+			setContractorCat(
+				data?.contractorCat?.map((v) => ({
+					uuid: v?.uuid,
+					title: v?.name,
+					code: v?.code,
+				}))
+			);
 		},
 		enabled: !!_uuidContractor,
 	});
 
-	const listGroupContractor = useQuery([QUERY_KEY.dropdown_group_contractor], {
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
+					uuid: '',
 				}),
 			}),
 		select(data) {
@@ -121,7 +126,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 				http: contractorServices.upsertContractor({
 					uuid: _uuidContractor as string,
 					name: form.name,
-					type: form.type,
+					lstType: contractorCat?.map((v: any) => v?.uuid),
 					note: form.note,
 					matp: form.matp,
 					maqh: form.maqh,
@@ -137,7 +142,6 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 				setForm({
 					name: '',
 					note: '',
-					type: null,
 					matp: '',
 					maqh: '',
 					xaid: '',
@@ -150,7 +154,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 	});
 
 	const handleSubmit = () => {
-		if (!form.type) {
+		if (contractorCat?.length == 0) {
 			return toastWarn({msg: 'Vui lòng chọn nhóm nhà thầu!'});
 		}
 
@@ -192,7 +196,28 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 					/>
 
 					<div className={styles.mt}>
-						<Select
+						<SelectMany
+							placeholder='Chọn'
+							label={
+								<span>
+									Thuộc nhóm nhà thầu <span style={{color: 'red'}}>*</span>
+								</span>
+							}
+							value={contractorCat}
+							setValue={(contractorcat) =>
+								setContractorCat(
+									contractorCat?.find((v: any) => v?.uuid == contractorcat.uuid)
+										? contractorCat?.filter((v: any) => v?.uuid != contractorcat.uuid)
+										: [...contractorCat, contractorcat]
+								)
+							}
+							listData={listGroupContractor?.map((v: any) => ({
+								uuid: v?.uuid,
+								title: v?.name,
+								code: v?.code,
+							}))}
+						/>
+						{/* <Select
 							isSearch
 							name='type'
 							value={form.type}
@@ -212,7 +237,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 							{listGroupContractor?.data?.map((v: any) => (
 								<Option key={v?.id} title={v?.name} value={v?.id} />
 							))}
-						</Select>
+						</Select> */}
 
 						<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
 							{listProvince?.data?.map((v: any) => (
