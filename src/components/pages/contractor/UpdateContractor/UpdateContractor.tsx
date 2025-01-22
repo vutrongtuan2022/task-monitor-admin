@@ -217,27 +217,6 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 								code: v?.code,
 							}))}
 						/>
-						{/* <Select
-							isSearch
-							name='type'
-							value={form.type}
-							placeholder='Lựa chọn'
-							onChange={(e) =>
-								setForm((prev) => ({
-									...prev,
-									type: e.target.value,
-								}))
-							}
-							label={
-								<span>
-									Thuộc nhóm nhà thầu<span style={{color: 'red'}}>*</span>
-								</span>
-							}
-						>
-							{listGroupContractor?.data?.map((v: any) => (
-								<Option key={v?.id} title={v?.name} value={v?.id} />
-							))}
-						</Select> */}
 
 						<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
 							{listProvince?.data?.map((v: any) => (
