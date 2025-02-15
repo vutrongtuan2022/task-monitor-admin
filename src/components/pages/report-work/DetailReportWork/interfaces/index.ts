@@ -9,6 +9,11 @@ export interface IDetailReportWork {
 		name: string;
 		state: number;
 		uuid: string;
+		branch: {
+			code: string;
+			name: string;
+			uuid: string;
+		};
 	};
 	reporter: {
 		fullname: string;

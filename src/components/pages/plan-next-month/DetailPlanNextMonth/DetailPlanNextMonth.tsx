@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {IDetailPlanNextMonth, PropsDetailPlanNextMonth} from './interfaces';
-import styles from './DetailPlanNextMonth.module.scss';
+import styles from './detailPlanNextMonth.module.scss';
 import {PATH} from '~/constants/config';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import StateActive from '~/components/common/StateActive';
@@ -21,7 +21,7 @@ function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 	const router = useRouter();
 	const {_uuid, _type} = router.query;
 
-	const {data: DetailPlanNextMonth} = useQuery<IDetailPlanNextMonth>([QUERY_KEY.detail_plan_next_month, _uuid], {
+	const {data: detailPlanNextMonth} = useQuery<IDetailPlanNextMonth>([QUERY_KEY.detail_plan_next_month, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: reportServices.detailReport({
@@ -55,7 +55,7 @@ function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 						<div className={styles.state}>
 							<p>Trạng thái báo cáo:</p>
 							<StateActive
-								stateActive={DetailPlanNextMonth?.state!}
+								stateActive={detailPlanNextMonth?.state!}
 								listState={[
 									{
 										state: STATE_REPORT.PLANNING,
@@ -71,19 +71,19 @@ function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 						<GridColumn col_3>
 							<div className={styles.item}>
 								<p>Tên công trình</p>
-								<p>{DetailPlanNextMonth?.project?.name}</p>
+								<p>{detailPlanNextMonth?.project?.name}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Kế hoạch</p>
 								<p>
-									Tháng {DetailPlanNextMonth?.month} - {DetailPlanNextMonth?.year}
+									Tháng {detailPlanNextMonth?.month} - {detailPlanNextMonth?.year}
 								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Tình trạng</p>
 								<StateActive
 									isBox={false}
-									stateActive={DetailPlanNextMonth?.completeState}
+									stateActive={detailPlanNextMonth?.completeState}
 									listState={[
 										{
 											state: STATE_COMPLETE_REPORT.NOT_DONE,
@@ -107,17 +107,24 @@ function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 								/>
 							</div>
 							<div className={styles.item}>
+								<p>Chi nhánh</p>
+								<p>
+									<span style={{color: '#2970FF'}}>{detailPlanNextMonth?.project?.branch?.code || '---'}</span> -
+									<span style={{marginLeft: '4px'}}>{detailPlanNextMonth?.project?.branch?.name || '---'}</span>
+								</p>
+							</div>
+							<div className={styles.item}>
 								<p>Công việc thực hiện</p>
 								<p>
-									<span style={{color: '#2970FF'}}>{DetailPlanNextMonth?.completedActivity}</span>/
-									<span>{DetailPlanNextMonth?.totalActivity}</span>
+									<span style={{color: '#2970FF'}}>{detailPlanNextMonth?.completedActivity}</span>/
+									<span>{detailPlanNextMonth?.totalActivity}</span>
 								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày tạo báo cáo</p>
 								<p>
-									{DetailPlanNextMonth?.created ? (
-										<Moment date={DetailPlanNextMonth?.created} format='DD/MM/YYYY' />
+									{detailPlanNextMonth?.created ? (
+										<Moment date={detailPlanNextMonth?.created} format='DD/MM/YYYY' />
 									) : (
 										'---'
 									)}
@@ -125,16 +132,16 @@ function DetailPlanNextMonth({}: PropsDetailPlanNextMonth) {
 							</div>
 							<div className={styles.item}>
 								<p>Người gửi báo cáo</p>
-								<p>{DetailPlanNextMonth?.reporter?.fullname}</p>
+								<p>{detailPlanNextMonth?.reporter?.fullname}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Mô tả</p>
-								<p>{DetailPlanNextMonth?.note || '---'}</p>
+								<p>{detailPlanNextMonth?.note || '---'}</p>
 							</div>
-							{DetailPlanNextMonth?.state === STATE_REPORT.REJECTED && (
+							{detailPlanNextMonth?.state === STATE_REPORT.REJECTED && (
 								<div className={styles.item}>
 									<p>Lý do từ chối</p>
-									<p>{DetailPlanNextMonth?.rejectedReason || '---'}</p>
+									<p>{detailPlanNextMonth?.rejectedReason || '---'}</p>
 								</div>
 							)}
 						</GridColumn>

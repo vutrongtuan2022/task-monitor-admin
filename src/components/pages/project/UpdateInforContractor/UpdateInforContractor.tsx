@@ -266,7 +266,7 @@ function ItemContractorProject({
 				<Select isSearch={true} name='uuidGroupContractor' value={data?.uuidGroupContractor} placeholder='Chọn'>
 					{dropdownGroupContractor?.map((v: any) => (
 						<Option
-							key={v.uuid}
+							key={v?.uuid}
 							value={v.uuid}
 							title={v?.name}
 							onClick={() => handleChangeValue(index, 'uuidGroupContractor', v?.uuid)}
@@ -277,7 +277,7 @@ function ItemContractorProject({
 					<Select isSearch={true} name='contractorLinkUuid' value={data?.contractorLinkUuid} placeholder='Chọn'>
 						{dropdownContractor?.map((v: any) => (
 							<Option
-								key={v.contractorLinkUuid}
+								key={v?.uuid}
 								value={v.contractorLinkUuid}
 								title={v?.name}
 								onClick={() => handleChangeValue(index, 'contractorLinkUuid', v?.contractorLinkUuid)}

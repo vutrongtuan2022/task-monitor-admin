@@ -83,6 +83,8 @@ export interface IDetailContract {
 	uuid: string;
 	accumAmountThisYear: number;
 	state: number;
+	totalContractor: number;
+	totalContractorCat: number;
 }
 
 export interface IContractDetailFund {
