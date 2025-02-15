@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {IDetailPlanNextMonth, PropsDetailPlanNextMonth} from './interfaces';
-import styles from './detailPlanNextMonth.module.scss';
+import styles from './DetailPlanNextMonth.module.scss';
 import {PATH} from '~/constants/config';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import StateActive from '~/components/common/StateActive';
