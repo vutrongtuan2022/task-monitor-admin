@@ -82,9 +82,9 @@ export interface IDetailContract {
 		contractorCatName: string;
 		createDate: string;
 	}[];
-	totalDayAdvantage: number;
 	totalContractor: number;
 	totalContractorCat: number;
+	totalDayAdvantage: number;
 	amount: number;
 	accumAmount: number;
 	progress: number;
