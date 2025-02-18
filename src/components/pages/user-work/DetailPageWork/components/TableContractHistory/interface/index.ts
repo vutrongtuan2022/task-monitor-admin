@@ -18,6 +18,11 @@ export interface IContractByActivity {
 		}[];
 		uuid: string;
 	};
+	contractorInfos: {
+		contractorName: string;
+		contractorCatName: string;
+		createDate: string;
+	}[];
 	advanceGuarantee: {
 		amount: number;
 		endDate: string;

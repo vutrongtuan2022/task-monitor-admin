@@ -34,6 +34,11 @@ export interface IContractByAppendices {
 		state: number;
 		status: number;
 	};
+	contractorInfos: {
+		contractorName: string;
+		contractorCatName: string;
+		createDate: string;
+	}[];
 	user: {
 		fullname: string;
 		code: string;
