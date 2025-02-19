@@ -8,12 +8,8 @@ import DataWrapper from '~/components/common/DataWrapper';
 import Table from '~/components/common/Table';
 
 import icons from '~/constants/images/icons';
-import Image from 'next/image';
-import Noti from '~/components/common/DataWrapper/components/Noti';
 import {useRouter} from 'next/router';
 
-import CreateContractor from '../../contractor/CreateContractor';
-import PositionContainer from '~/components/common/PositionContainer';
 import IconCustom from '~/components/common/IconCustom';
 import {CloseCircle, TickCircle} from 'iconsax-react';
 import Dialog from '~/components/common/Dialog';
@@ -26,16 +22,37 @@ import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import FilterCustom from '~/components/common/FilterCustom';
 import contractorcatServices from '~/services/contractorcatServices';
 import Pagination from '~/components/common/Pagination';
+import contractorServices from '~/services/contractorServices';
+import Loading from '~/components/common/Loading';
+import Moment from 'react-moment';
 function MainPageApprove({}: PropsMainPageApprove) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _type, action, _uuidContractor} = router.query;
+	const {_page, _pageSize, _keyword, _contractorCat} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
 	const [form, setForm] = useState<{feedback: string}>({
 		feedback: '',
 	});
+	const {data: ListUpdateContractorCat, isLoading} = useQuery(
+		[QUERY_KEY.table_update_contractor_cat, _page, _pageSize, _keyword, _contractorCat],
+		{
+			queryFn: () =>
+				httpRequest({
+					http: contractorServices.getListUpdateContractorCat({
+						page: Number(_page) || 1,
+						pageSize: Number(_pageSize) || 10,
+						status: STATUS_CONFIG.ACTIVE,
+						keyword: _keyword as string,
+						contractorCat: (_contractorCat as string) || '',
+					}),
+				}),
+			select(data) {
+				return data;
+			},
+		}
+	);
 
 	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor], {
 		queryFn: () =>
@@ -50,140 +67,133 @@ function MainPageApprove({}: PropsMainPageApprove) {
 		},
 	});
 
-	// const funcConfirm = useMutation({
-	// 	mutationFn: () => {
-	// 		return httpRequest({
-	// 			showMessageFailed: true,
-	// 			showMessageSuccess: true,
-	// 			msgSuccess: 'Duyệt nhóm nhà thầu thành công!',
-	// 			http: contractsFundServices.approveContractFund({
-	// 				uuid: uuidConfirm,
-	// 				isApproved: 1,
-	// 				reason: '',
-	// 			}),
-	// 		});
-	// 	},
-	// 	onSuccess(data) {
-	// 		if (data) {
-	// 			setUuidConfirm('');
-	// 			queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
-	// 		}
-	// 	},
-	// });
+	const funcConfirm = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Duyệt nhóm nhà thầu thành công!',
+				http: contractorServices.changeUpdateContractorCat({
+					uuid: uuidConfirm,
+					state: 1,
+					rejected: '',
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setUuidConfirm('');
+				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat]);
+			}
+		},
+	});
 
-	// const funcCancel = useMutation({
-	// 	mutationFn: () => {
-	// 		return httpRequest({
-	// 			showMessageFailed: true,
-	// 			showMessageSuccess: true,
-	// 			msgSuccess: 'Từ chối nhóm nhà thầu thành công!',
-	// 			http: contractsFundServices.approveContractFund({
-	// 				uuid: uuidCancel,
-	// 				isApproved: 0,
-	// 				reason: form.feedback,
-	// 			}),
-	// 		});
-	// 	},
-	// 	onSuccess(data) {
-	// 		if (data) {
-	// 			setUuidCancel('');
-	// 			queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
-	// 		}
-	// 	},
-	// });
+	const funcCancel = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Từ chối nhóm nhà thầu thành công!',
+				http: contractorServices.changeUpdateContractorCat({
+					uuid: uuidCancel,
+					state: 2,
+					rejected: '',
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setUuidCancel('');
+				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat]);
+			}
+		},
+	});
 
 	return (
 		<div className={styles.container}>
-			{/* <Loading loading={funcDeleteBranches.isLoading} /> */}
-
-			<div className={styles.main_table}>
-				<div className={styles.head_filt}>
-					<div className={styles.main_search}>
-						<div className={styles.search}>
-							<Search keyName='_keyword' placeholder='Tìm kiếm theo tên nhà thầu' />
-						</div>
-						<div className={styles.filter}>
-							<FilterCustom
-								isSearch
-								name='Nhóm nhà thầu'
-								query='_contractorCat'
-								listFilter={listGroupContractor?.map((v: any) => ({
-									id: v?.uuid,
-									name: v?.name,
-								}))}
-							/>
-						</div>
+			<Loading loading={funcConfirm.isLoading || funcCancel.isLoading} />
+			<div className={styles.head}>
+				<div className={styles.search_fillter}>
+					<div className={styles.search}>
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên nhà thầu' />
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Nhóm nhà thầu'
+							query='_contractorCat'
+							listFilter={listGroupContractor?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.name,
+							}))}
+						/>
 					</div>
 				</div>
-				<WrapperScrollbar>
-					<DataWrapper
-						data={
-							// listBranches?.data?.items ||
-							[1, 2, 3, 4]
-						}
-						// loading={listBranches.isLoading}
-					>
-						<Table
-							fixedHeader={true}
-							data={
-								// listBranches?.data?.items ||
-								[1, 2, 3, 4, 5, 6, 7, 8, 9]
-							}
-							column={[
-								{
-									title: 'STT',
-									fixedLeft: true,
-									render: (data: PropsMainPageApprove, index: number) => <>{index + 1}</>,
-								},
-
-								{
-									title: 'Nhóm nhà thầu cần thêm',
-									render: (data: PropsMainPageApprove) => <>{'---'}</>,
-								},
-								{
-									title: 'Người gửi yêu cầu',
-									render: (data: PropsMainPageApprove) => <>{'---'}</>,
-								},
-								{
-									title: 'Thời gian yêu cầu',
-									render: (data: PropsMainPageApprove) => <>{'---'}</>,
-								},
-
-								// {
-								// 	title: 'Hành động',
-								// 	fixedRight: true,
-								// 	render: (data: PropsMainPageApprove) => (
-								// 		<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-								// 			<>
-								// 				<IconCustom
-								// 					color='#06D7A0'
-								// 					icon={<TickCircle fontSize={20} fontWeight={600} />}
-								// 					tooltip='Duyệt nhóm nhà thầu'
-								// 					onClick={() => setUuidConfirm(1)}
-								// 				/>
-								// 				<IconCustom
-								// 					color='#EE464C'
-								// 					icon={<CloseCircle fontSize={20} fontWeight={600} />}
-								// 					tooltip='Từ chối nhóm nhà thầu'
-								// 					onClick={() => setUuidCancel(1)}
-								// 				/>
-								// 			</>
-								// 		</div>
-								// 	),
-								// },
-							]}
-						/>
-					</DataWrapper>
-					{/* <Pagination
-					currentPage={1}
-					pageSize={10}
-					total={listBranches?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword]}
-				/> */}
-				</WrapperScrollbar>
 			</div>
+			<WrapperScrollbar>
+				<DataWrapper data={ListUpdateContractorCat?.items || []} loading={isLoading}>
+					<Table
+						fixedHeader={true}
+						data={ListUpdateContractorCat?.items || []}
+						column={[
+							{
+								title: 'STT',
+								fixedLeft: true,
+								render: (data: PropsMainPageApprove, index: number) => <>{index + 1}</>,
+							},
+							{
+								title: 'Tên nhà thầu',
+								render: (data: PropsMainPageApprove) => <>{data?.contractor?.name || '---'}</>,
+							},
+							{
+								title: 'Nhóm nhà thầu cần thêm',
+								render: (data: PropsMainPageApprove) => <>{data?.contractorCat?.name || '---'}</>,
+							},
+							{
+								title: 'Người gửi yêu cầu',
+								render: (data: PropsMainPageApprove) => <>{data?.user?.fullname || '---'}</>,
+							},
+							{
+								title: 'Thời gian yêu cầu',
+								render: (data: PropsMainPageApprove) => (
+									<>{data?.timeCreated ? <Moment date={data?.timeCreated} format='DD/MM/YYYY' /> : '---'}</>
+								),
+							},
 
-			{/* <Dialog
+							{
+								title: 'Hành động',
+								fixedRight: true,
+								render: (data: PropsMainPageApprove) => (
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										<>
+											<IconCustom
+												color='#06D7A0'
+												icon={<TickCircle fontSize={20} fontWeight={600} />}
+												tooltip='Duyệt nhóm nhà thầu'
+												onClick={() => setUuidConfirm(data?.uuid)}
+											/>
+											<IconCustom
+												color='#EE464C'
+												icon={<CloseCircle fontSize={20} fontWeight={600} />}
+												tooltip='Từ chối nhóm nhà thầu'
+												onClick={() => setUuidCancel(data?.uuid)}
+											/>
+										</>
+									</div>
+								),
+							},
+						]}
+					/>
+				</DataWrapper>
+				<Pagination
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 10}
+					total={ListUpdateContractorCat?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword, _keyword, _contractorCat]}
+				/>
+			</WrapperScrollbar>
+
+			<Dialog
 				type='primary'
 				open={!!uuidConfirm}
 				icon={icons.success}
@@ -191,9 +201,9 @@ function MainPageApprove({}: PropsMainPageApprove) {
 				title={'Duyệt báo cáo nhóm'}
 				note={'Bạn có chắc chắn muốn duyệt nhóm này không?'}
 				onSubmit={funcConfirm.mutate}
-			/> */}
+			/>
 
-			{/* <Form form={form} setForm={setForm}>
+			<Form form={form} setForm={setForm}>
 				<Popup open={!!uuidCancel} onClose={() => setUuidCancel('')}>
 					<div className={styles.main_popup}>
 						<div className={styles.head_popup}>
@@ -216,7 +226,7 @@ function MainPageApprove({}: PropsMainPageApprove) {
 						</div>
 					</div>
 				</Popup>
-			</Form> */}
+			</Form>
 		</div>
 	);
 }

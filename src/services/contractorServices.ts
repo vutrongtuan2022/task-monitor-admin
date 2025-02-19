@@ -82,5 +82,31 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	getListUpdateContractorCat: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			contractorCat: string;
+			status: number;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/get-page-list-update-contractor-cat`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	changeUpdateContractorCat: (
+		data: {
+			uuid: string;
+			state: number;
+			rejected?: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/change-state-update-contractor-cat`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractorServices;
