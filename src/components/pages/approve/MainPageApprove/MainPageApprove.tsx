@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styles from './MainPageApprove.module.scss';
-import {PropsMainPageApprove} from './interface';
+import {ITablePageApprove, PropsMainPageApprove} from './interface';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
@@ -25,6 +25,7 @@ import Pagination from '~/components/common/Pagination';
 import contractorServices from '~/services/contractorServices';
 import Loading from '~/components/common/Loading';
 import Moment from 'react-moment';
+
 function MainPageApprove({}: PropsMainPageApprove) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
@@ -35,7 +36,8 @@ function MainPageApprove({}: PropsMainPageApprove) {
 	const [form, setForm] = useState<{feedback: string}>({
 		feedback: '',
 	});
-	const {data: ListUpdateContractorCat, isLoading} = useQuery(
+
+	const {data: listUpdateContractorCat, isLoading} = useQuery(
 		[QUERY_KEY.table_update_contractor_cat, _page, _pageSize, _keyword, _contractorCat],
 		{
 			queryFn: () =>
@@ -131,31 +133,31 @@ function MainPageApprove({}: PropsMainPageApprove) {
 				</div>
 			</div>
 			<WrapperScrollbar>
-				<DataWrapper data={ListUpdateContractorCat?.items || []} loading={isLoading}>
+				<DataWrapper data={listUpdateContractorCat?.items || []} loading={isLoading}>
 					<Table
 						fixedHeader={true}
-						data={ListUpdateContractorCat?.items || []}
+						data={listUpdateContractorCat?.items || []}
 						column={[
 							{
 								title: 'STT',
 								fixedLeft: true,
-								render: (data: PropsMainPageApprove, index: number) => <>{index + 1}</>,
+								render: (data: ITablePageApprove, index: number) => <>{index + 1}</>,
 							},
 							{
 								title: 'Tên nhà thầu',
-								render: (data: PropsMainPageApprove) => <>{data?.contractor?.name || '---'}</>,
+								render: (data: ITablePageApprove) => <>{data?.contractor?.name || '---'}</>,
 							},
 							{
 								title: 'Nhóm nhà thầu cần thêm',
-								render: (data: PropsMainPageApprove) => <>{data?.contractorCat?.name || '---'}</>,
+								render: (data: ITablePageApprove) => <>{data?.contractorCat?.name || '---'}</>,
 							},
 							{
 								title: 'Người gửi yêu cầu',
-								render: (data: PropsMainPageApprove) => <>{data?.user?.fullname || '---'}</>,
+								render: (data: ITablePageApprove) => <>{data?.user?.fullname || '---'}</>,
 							},
 							{
 								title: 'Thời gian yêu cầu',
-								render: (data: PropsMainPageApprove) => (
+								render: (data: ITablePageApprove) => (
 									<>{data?.timeCreated ? <Moment date={data?.timeCreated} format='DD/MM/YYYY' /> : '---'}</>
 								),
 							},
@@ -163,7 +165,7 @@ function MainPageApprove({}: PropsMainPageApprove) {
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: PropsMainPageApprove) => (
+								render: (data: ITablePageApprove) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<>
 											<IconCustom
@@ -188,8 +190,8 @@ function MainPageApprove({}: PropsMainPageApprove) {
 				<Pagination
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
-					total={ListUpdateContractorCat?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _keyword, _contractorCat]}
+					total={listUpdateContractorCat?.pagination?.totalCount}
+					dependencies={[_pageSize, _keyword, _contractorCat]}
 				/>
 			</WrapperScrollbar>
 

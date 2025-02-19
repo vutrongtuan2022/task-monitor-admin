@@ -1,4 +1,6 @@
-export interface PropsMainPageApprove {
+export interface PropsMainPageApprove {}
+
+export interface ITablePageApprove {
 	uuid: string;
 	contractor: {
 		uuid: string;
@@ -17,6 +19,6 @@ export interface PropsMainPageApprove {
 		fullname: string;
 		code: string;
 	};
-	timeCreated: '2025-02-19';
+	timeCreated: string;
 	status: number;
 }
