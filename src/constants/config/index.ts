@@ -10,6 +10,7 @@ import {
 	Note,
 	Receipt21,
 	ReceiptItem,
+	TickCircle,
 	TagUser,
 	UserOctagon,
 } from 'iconsax-react';
@@ -66,6 +67,7 @@ export enum PATH {
 	ReportDisbursement = '/report-disbursement',
 	ContractReportDisbursement = '/report-disbursement/contract',
 	PlanNextMonth = '/plan-next-month',
+	Approve = '/approve',
 
 	ReportOverview = '/report-overview',
 }
@@ -141,6 +143,12 @@ export const Menu: {
 		path: PATH.Contractor,
 		pathActive: PATH.Contractor,
 		icon: Receipt21,
+	},
+	{
+		title: 'Duyệt yêu cầu',
+		path: PATH.Approve,
+		pathActive: PATH.Approve,
+		icon: TickCircle,
 	},
 	{
 		title: 'Quản lý nhân viên',
