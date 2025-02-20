@@ -350,6 +350,10 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										),
 									},
 									{
+										title: 'Thuộc hợp đồng',
+										render: (data: IContractsForProject) => <b>{data?.parent?.code || '---'}</b>,
+									},
+									{
 										title: 'Giá trị hợp đồng (VND)',
 										render: (data: IContractsForProject) => <>{convertCoin(data?.amount)}</>,
 									},
@@ -448,7 +452,6 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 									},
 									{
 										title: 'Trạng thái',
-										fixedRight: true,
 										render: (data: IContractsForProject) => (
 											<StateActive
 												stateActive={data?.state}

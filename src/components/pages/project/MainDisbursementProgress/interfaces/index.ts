@@ -52,4 +52,10 @@ export interface IContractsForProject {
 	status: number;
 	uuid: string;
 	state: number;
+	parent: {
+		code: string;
+		state: number;
+		status: number;
+		uuid: string;
+	};
 }
