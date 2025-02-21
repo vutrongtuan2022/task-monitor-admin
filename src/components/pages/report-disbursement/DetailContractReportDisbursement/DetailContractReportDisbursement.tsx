@@ -190,7 +190,7 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 								<p>{convertCoin(detailContract?.amount!) || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Thời gian THHĐ</p>
+								<p>Thời gian THHĐ (ngày)</p>
 								<p>{detailContract?.totalDayAdvantage}</p>
 							</div>
 							<div className={styles.item}>
@@ -254,15 +254,21 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 									{
 										title: 'Báo cáo tháng',
 										render: (data: IContractDetailFund) => (
-											<>{`Tháng ${data?.releasedMonth} - ${data?.releasedYear}`}</>
+											<>
+												{data?.releasedMonth && data?.releasedYear
+													? `Tháng ${data?.releasedMonth} - ${data?.releasedYear}`
+													: !data?.releasedMonth && data?.releasedYear
+													? `Năm ${data?.releasedYear}`
+													: '---'}
+											</>
 										),
 									},
 									{
-										title: 'Vốn dự phòng (VND)',
+										title: 'Sử dụng vốn dự phòng (VND)',
 										render: (data: IContractDetailFund) => <>{convertCoin(data?.reverseAmount) || '---'}</>,
 									},
 									{
-										title: 'Vốn dự án (VND)',
+										title: 'Sử dụng vốn dự án (VND)',
 										render: (data: IContractDetailFund) => <>{convertCoin(data?.projectAmount) || '---'}</>,
 									},
 									{
