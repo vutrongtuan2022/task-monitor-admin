@@ -217,57 +217,57 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 								code: v?.code,
 							}))}
 						/>
+						<div className={styles.mt}>
+							<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
+								{listProvince?.data?.map((v: any) => (
+									<Option
+										key={v?.matp}
+										value={v?.matp}
+										title={v?.name}
+										onClick={() =>
+											setForm((prev: any) => ({
+												...prev,
+												matp: v?.matp,
+												maqh: '',
+												xaid: '',
+											}))
+										}
+									/>
+								))}
+							</Select>
+							<Select isSearch name='maqh' value={form.maqh} placeholder='Lựa chọn' label={<span>Quận/ Huyện</span>}>
+								{listDistrict?.data?.map((v: any) => (
+									<Option
+										key={v?.maqh}
+										value={v?.maqh}
+										title={v?.name}
+										onClick={() =>
+											setForm((prev: any) => ({
+												...prev,
+												maqh: v?.maqh,
+												xaid: '',
+											}))
+										}
+									/>
+								))}
+							</Select>
 
-						<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
-							{listProvince?.data?.map((v: any) => (
-								<Option
-									key={v?.matp}
-									value={v?.matp}
-									title={v?.name}
-									onClick={() =>
-										setForm((prev: any) => ({
-											...prev,
-											matp: v?.matp,
-											maqh: '',
-											xaid: '',
-										}))
-									}
-								/>
-							))}
-						</Select>
-
-						<Select isSearch name='maqh' value={form.maqh} placeholder='Lựa chọn' label={<span>Quận/ Huyện</span>}>
-							{listDistrict?.data?.map((v: any) => (
-								<Option
-									key={v?.maqh}
-									value={v?.maqh}
-									title={v?.name}
-									onClick={() =>
-										setForm((prev: any) => ({
-											...prev,
-											maqh: v?.maqh,
-											xaid: '',
-										}))
-									}
-								/>
-							))}
-						</Select>
-
-						<Select isSearch name='xaid' value={form.xaid} placeholder='Lựa chọn' label={<span>Thị trấn/ Xã </span>}>
-							{listTown?.data?.map((v: any) => (
-								<Option
-									key={v?.xaid}
-									value={v?.xaid}
-									title={v?.name}
-									onClick={() =>
-										setForm((prev: any) => ({
-											...prev,
-											xaid: v?.xaid,
-										}))
-									}
-								/>
-							))}
-						</Select>
+							<Select isSearch name='xaid' value={form.xaid} placeholder='Lựa chọn' label={<span>Thị trấn/ Xã </span>}>
+								{listTown?.data?.map((v: any) => (
+									<Option
+										key={v?.xaid}
+										value={v?.xaid}
+										title={v?.name}
+										onClick={() =>
+											setForm((prev: any) => ({
+												...prev,
+												xaid: v?.xaid,
+											}))
+										}
+									/>
+								))}
+							</Select>
+						</div>
 					</div>
 
 					<div className={styles.mt}>
