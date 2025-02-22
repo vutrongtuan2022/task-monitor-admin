@@ -99,7 +99,7 @@ function MainPageApprove({}: PropsMainPageApprove) {
 				http: contractorServices.changeUpdateContractorCat({
 					uuid: uuidCancel,
 					state: 2,
-					rejected: '',
+					rejected: form?.feedback,
 				}),
 			});
 		},
