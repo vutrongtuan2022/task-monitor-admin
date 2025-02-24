@@ -75,7 +75,7 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 				http: contractorServices.changeUpdateContractorCat({
 					uuid: uuidCancel,
 					state: 2,
-					rejected: form?.feedback,
+					// rejected: form?.feedback,
 				}),
 			});
 		},
@@ -134,7 +134,7 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 							},
 
 							{
-								title: 'hành động',
+								title: 'Hành động',
 								render: (data: ITableContractorCatPending) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<>
@@ -168,7 +168,17 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 				onSubmit={funcConfirm.mutate}
 			/>
 
-			<Form form={form} setForm={setForm}>
+			<Dialog
+				type='error'
+				open={!!uuidCancel}
+				icon={icons.question}
+				onClose={() => setUuidCancel('')}
+				title={'Từ chối báo cáo nhóm'}
+				note={'Bạn có chắc chắn muốn từ chối nhóm này không?'}
+				onSubmit={funcCancel.mutate}
+			/>
+
+			{/* <Form form={form} setForm={setForm}>
 				<Popup open={!!uuidCancel} onClose={() => setUuidCancel('')}>
 					<div className={styles.main_popup}>
 						<div className={styles.head_popup}>
@@ -191,7 +201,7 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 						</div>
 					</div>
 				</Popup>
-			</Form>
+			</Form> */}
 		</div>
 	);
 }
