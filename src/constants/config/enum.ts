@@ -120,12 +120,6 @@ export enum STATE_PROJECT {
 	FINISH,
 }
 
-export enum STATE_WORK_PROJECT {
-	NOT_PROCESSED,
-	PROCESSING,
-	COMPLETED,
-}
-
 export enum STATUS_WORK_PROJECT {
 	NOT_DONE,
 	ON_SCHEDULE,
@@ -137,10 +131,12 @@ export enum TYPE_OF_WORK {
 	HAVE_PLAN,
 }
 
-export enum STATE_REPORT_WORK {
+export enum STATE_WORK {
 	NOT_PROCESSED,
 	PROCESSING,
 	COMPLETED,
+	REJECTED,
+	APPROVED,
 }
 
 export enum STATE_REPORT {

@@ -4,7 +4,7 @@ import {PropsTableReportWorkCurrent} from './interfaces';
 import styles from './TableReportWorkCurrent.module.scss';
 import Search from '~/components/common/Search';
 import FilterCustom from '~/components/common/FilterCustom';
-import {QUERY_KEY, STATE_WORK_PROJECT, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_WORK, STATUS_CONFIG} from '~/constants/config/enum';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
@@ -52,16 +52,24 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 						query='_state'
 						listFilter={[
 							{
-								id: STATE_WORK_PROJECT.NOT_PROCESSED,
+								id: STATE_WORK.NOT_PROCESSED,
 								name: 'Chưa xử lý',
 							},
 							{
-								id: STATE_WORK_PROJECT.PROCESSING,
+								id: STATE_WORK.PROCESSING,
 								name: 'Đang xử lý',
 							},
 							{
-								id: STATE_WORK_PROJECT.COMPLETED,
+								id: STATE_WORK.COMPLETED,
 								name: 'Đã hoàn thành',
+							},
+							{
+								id: STATE_WORK.REJECTED,
+								name: 'Bị từ chối',
+							},
+							{
+								id: STATE_WORK.APPROVED,
+								name: 'Đã được duyệt',
 							},
 						]}
 					/>
@@ -118,20 +126,32 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 									stateActive={data?.activity?.state}
 									listState={[
 										{
-											state: STATE_WORK_PROJECT.NOT_PROCESSED,
+											state: STATE_WORK.NOT_PROCESSED,
 											text: 'Chưa xử lý',
 											textColor: '#FFFFFF',
 											backgroundColor: '#FDAD73',
 										},
 										{
-											state: STATE_WORK_PROJECT.PROCESSING,
+											state: STATE_WORK.PROCESSING,
 											text: 'Đang xử lý',
+											textColor: '#FFFFFF',
+											backgroundColor: '#5B70B3',
+										},
+										{
+											state: STATE_WORK.COMPLETED,
+											text: 'Đã hoàn thành',
 											textColor: '#FFFFFF',
 											backgroundColor: '#16C1F3',
 										},
 										{
-											state: STATE_WORK_PROJECT.COMPLETED,
-											text: 'Đã hoàn thành',
+											state: STATE_WORK.REJECTED,
+											text: 'Bị từ chối',
+											textColor: '#FFFFFF',
+											backgroundColor: '#EE464C',
+										},
+										{
+											state: STATE_WORK.APPROVED,
+											text: 'Đã được duyệt',
 											textColor: '#FFFFFF',
 											backgroundColor: '#06D7A0',
 										},

@@ -11,15 +11,7 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {
-	QUERY_KEY,
-	STATE_REPORT_WORK,
-	STATUS_CONFIG,
-	STATE_COMPLETE_REPORT,
-	TYPE_OF_WORK,
-	TYPE_ACCOUNT,
-	TYPE_WORK,
-} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG, STATE_COMPLETE_REPORT, TYPE_OF_WORK, TYPE_ACCOUNT, TYPE_WORK, STATE_WORK} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
@@ -29,8 +21,8 @@ import {generateYearsArray} from '~/common/funcs/selectDate';
 import userServices from '~/services/userServices';
 import projectServices from '~/services/projectServices';
 import IconCustom from '~/components/common/IconCustom';
-import { Eye } from 'iconsax-react';
-import { PATH } from '~/constants/config';
+import {Eye} from 'iconsax-react';
+import {PATH} from '~/constants/config';
 
 function MainPageUserWork({}: PropsMainPageUserWork) {
 	const router = useRouter();
@@ -167,16 +159,24 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 							query='_state'
 							listFilter={[
 								{
-									id: STATE_REPORT_WORK.NOT_PROCESSED,
+									id: STATE_WORK.NOT_PROCESSED,
 									name: 'Chưa xử lý',
 								},
 								{
-									id: STATE_REPORT_WORK.PROCESSING,
+									id: STATE_WORK.PROCESSING,
 									name: 'Đang xử lý',
 								},
 								{
-									id: STATE_REPORT_WORK.COMPLETED,
+									id: STATE_WORK.COMPLETED,
 									name: 'Đã hoàn thành',
+								},
+								{
+									id: STATE_WORK.REJECTED,
+									name: 'Bị từ chối',
+								},
+								{
+									id: STATE_WORK.APPROVED,
+									name: 'Đã được duyệt',
 								},
 							]}
 						/>
@@ -354,20 +354,32 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 											stateActive={data?.activityState}
 											listState={[
 												{
-													state: STATE_REPORT_WORK.NOT_PROCESSED,
+													state: STATE_WORK.NOT_PROCESSED,
 													text: 'Chưa xử lý',
 													textColor: '#FFFFFF',
-													backgroundColor: '#F37277',
+													backgroundColor: '#FDAD73',
 												},
 												{
-													state: STATE_REPORT_WORK.PROCESSING,
+													state: STATE_WORK.PROCESSING,
 													text: 'Đang xử lý',
 													textColor: '#FFFFFF',
-													backgroundColor: '#4BC9F0',
+													backgroundColor: '#5B70B3',
 												},
 												{
-													state: STATE_REPORT_WORK.COMPLETED,
+													state: STATE_WORK.COMPLETED,
 													text: 'Đã hoàn thành',
+													textColor: '#FFFFFF',
+													backgroundColor: '#16C1F3',
+												},
+												{
+													state: STATE_WORK.REJECTED,
+													text: 'Bị từ chối',
+													textColor: '#FFFFFF',
+													backgroundColor: '#EE464C',
+												},
+												{
+													state: STATE_WORK.APPROVED,
+													text: 'Đã được duyệt',
 													textColor: '#FFFFFF',
 													backgroundColor: '#06D7A0',
 												},
@@ -431,13 +443,12 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										{data?.type == TYPE_WORK.TASK && (
 											<IconCustom
-											color='#005994'
-											icon={<Eye fontSize={20} fontWeight={600} />}
-											tooltip='Xem chi tiết'
-											href={`${PATH.UserWork}/${data?.activity?.uuid}`}
-										/>
+												color='#005994'
+												icon={<Eye fontSize={20} fontWeight={600} />}
+												tooltip='Xem chi tiết'
+												href={`${PATH.UserWork}/${data?.activity?.uuid}`}
+											/>
 										)}
-										
 									</div>
 								),
 							},
