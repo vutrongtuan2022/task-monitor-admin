@@ -136,7 +136,6 @@ export enum STATE_WORK {
 	PROCESSING,
 	COMPLETED,
 	REJECTED,
-	APPROVED,
 }
 
 export enum STATE_REPORT {
