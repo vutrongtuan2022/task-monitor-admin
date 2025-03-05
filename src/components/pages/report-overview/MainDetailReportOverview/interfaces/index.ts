@@ -9,6 +9,11 @@ export interface IDetailReportOverview {
 		code: string;
 		name: string;
 		state: number;
+		leader: {
+			fullname: string;
+			code: string;
+			uuid: string;
+		};
 	};
 	report: {
 		uuid: string;
@@ -22,6 +27,11 @@ export interface IDetailReportOverview {
 			code: string;
 			name: string;
 			state: number;
+			leader: {
+				fullname: string;
+				code: string;
+				uuid: string;
+			};
 		};
 		reporter: {
 			uuid: string;
@@ -58,6 +68,11 @@ export interface IDetailReportOverview {
 			code: string;
 			name: string;
 			state: number;
+			leader: {
+				fullname: string;
+				code: string;
+				uuid: string;
+			};
 		};
 	};
 	reporter: {
