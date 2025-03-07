@@ -27,6 +27,34 @@ export interface IDetailInfoProject {
 		code: string;
 		uuid: string;
 	}[];
+	activity: {
+		uuid: string;
+		name: string;
+		state: number;
+		project: {
+			uuid: string;
+			code: string;
+			name: string;
+			state: number;
+			leader: {
+				uuid: string;
+				fullname: string;
+				code: string;
+			};
+			branch: {
+				uuid: string;
+				code: string;
+				name: string;
+			};
+		};
+		contracts: {
+			uuid: string;
+			code: string;
+			state: number;
+			status: number;
+			parent: string;
+		};
+	};
 	digitalFile: string;
 	expectBudget: number;
 	totalInvest: number;
