@@ -68,7 +68,8 @@
 	white-space: wrap;
 }
 
-.name {
+.name,
+.issue {
 	width: fit-content;
 	max-width: 240px;
 	-webkit-line-clamp: 1;

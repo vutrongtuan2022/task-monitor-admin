@@ -310,27 +310,31 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 							},
 							{
 								title: 'Khó khăn vướng mắc',
-								render: (data: IUserWork, index: number) => (
-									<>
-										{(data?.issue && (
-											<Tippy content={data?.issue}>
-												<p
-													className={styles.name}
-													style={{
-														color:
-															data?.type == TYPE_WORK.TASK
-																? '#2970FF'
-																: data?.type == TYPE_WORK.SUB_TASK
-																? ''
-																: '',
-													}}
-												>
-													{data?.issue || '---'}
-												</p>
-											</Tippy>
-										)) ||
-											'---'}
-									</>
+								render: (data: IUserWork) => (
+									<Tippy content={data?.issue || '---'}>
+										<p
+											className={styles.issue}
+											style={{
+												color:
+													data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+											}}
+										>
+											{data?.issue || '---'}
+										</p>
+									</Tippy>
+								),
+							},
+							{
+								title: 'Hợp đồng',
+								render: (data: IUserWork) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{' '}
+										{data?.activity?.contracts?.code || '---'}
+									</p>
 								),
 							},
 							{
