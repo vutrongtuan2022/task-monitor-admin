@@ -51,7 +51,13 @@
 		color: #2d74ff;
 	}
 }
-
+.group_button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 24px;
+}
 .main_description {
 	min-width: 320px;
 	border-radius: 4px;
