@@ -101,12 +101,12 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 					</div>
 				</div>
 				<div className={styles.group_button}>
-					<div className={styles.btn}>
+					{/* <div className={styles.btn}>
 						<Button rounded_8 w_fit p_8_16 blue bold onClick={handleOpenExportUser}>
 							<Image src={icons.exportExcel} alt='icon down' width={20} height={20} />
 							Xuất excel
 						</Button>
-					</div>
+					</div> */}
 					<div className={styles.btn}>
 						<Button rounded_8 w_fit p_8_16 green bold onClick={handleOpenExport}>
 							<Image src={icons.exportExcel} alt='icon down' width={20} height={20} />
@@ -204,9 +204,9 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 			<Popup open={isExportPopupOpen} onClose={handleCloseExport}>
 				<FormExportExcel onClose={handleCloseExport} />
 			</Popup>
-			<Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>
+			{/* <Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>
 				<FormExportExcelUser onClose={handleCloseExportUser} />
-			</Popup>
+			</Popup> */}
 		</div>
 	);
 }
