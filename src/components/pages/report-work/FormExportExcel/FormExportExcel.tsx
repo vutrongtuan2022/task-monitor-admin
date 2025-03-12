@@ -19,7 +19,7 @@ function FormExportExcel({onClose}: PropsFormExportExcel) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const [projects, setProjects] = useState<any[]>([]);
+	// const [projects, setProjects] = useState<any[]>([]);
 	const [form, setForm] = useState<{
 		year: number;
 		month: number;
@@ -44,8 +44,8 @@ function FormExportExcel({onClose}: PropsFormExportExcel) {
 	const exportExcel = useMutation({
 		mutationFn: () => {
 			return httpRequest({
-				http: overviewServices.exportOverviewReport({
-					projectUuid: projects?.map((v: any) => v?.uuid),
+				http: overviewServices.exportUpNoReport({
+					projectUuid: [],
 					year: form.year,
 					month: form.month,
 				}),
