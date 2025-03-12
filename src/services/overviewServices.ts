@@ -101,5 +101,29 @@ const overviewServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	exportUpNoReport: (
+		data: {
+			projectUuid: string[];
+			year: number;
+			month: number;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/OverviewReport/export-up-no-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	exportUpNoOverviewReport: (
+		data: {
+			projectUuid: string[];
+			year: number;
+			month: number;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/OverviewReport/export-up-no-overview-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default overviewServices;
