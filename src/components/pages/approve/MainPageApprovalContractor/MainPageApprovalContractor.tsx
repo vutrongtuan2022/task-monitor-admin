@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import styles from './MainPageApprove.module.scss';
-import {ITablePageApprove, PropsMainPageApprove} from './interface';
+import styles from './MainPageApprovalContractor.module.scss';
+import {ITablePageApprove, PropsMainPageApprovalContractor} from './interface';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
@@ -22,8 +22,7 @@ import {CloseCircle, TickCircle} from 'iconsax-react';
 import Pagination from '~/components/common/Pagination';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
-
-function MainPageApprove({}: PropsMainPageApprove) {
+function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
@@ -228,4 +227,4 @@ function MainPageApprove({}: PropsMainPageApprove) {
 	);
 }
 
-export default MainPageApprove;
+export default MainPageApprovalContractor;
