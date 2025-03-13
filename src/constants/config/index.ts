@@ -150,7 +150,8 @@ export const Menu: {
 	},
 	{
 		title: 'Duyệt yêu cầu',
-		path: PATH.ContractorApproval,
+		// path: PATH.ContractorApproval,
+		path: PATH.Approve,
 		pathActive: PATH.Approve,
 		icon: TickCircle,
 	},
