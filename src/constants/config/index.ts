@@ -68,7 +68,10 @@ export enum PATH {
 	ReportDisbursement = '/report-disbursement',
 	ContractReportDisbursement = '/report-disbursement/contract',
 	PlanNextMonth = '/plan-next-month',
+
 	Approve = '/approve',
+	ContractorApproval = '/approve/contractor-approval',
+	ApprovalContractor = '/approve/approval-contractor',
 
 	ReportOverview = '/report-overview',
 }
@@ -147,7 +150,7 @@ export const Menu: {
 	},
 	{
 		title: 'Duyệt yêu cầu',
-		path: PATH.Approve,
+		path: PATH.ContractorApproval,
 		pathActive: PATH.Approve,
 		icon: TickCircle,
 	},
