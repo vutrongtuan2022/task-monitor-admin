@@ -1,6 +1,6 @@
 export interface PropsDialog {
 	open: boolean;
-	title: string;
+	title: string | React.ReactNode;
 	note?: string | React.ReactNode;
 	icon?: any;
 	onClose: () => any;
