@@ -66,6 +66,18 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	categoryContractorInProject: (
+		data: {
+			keyword: string;
+			status: number;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/category-contractor-in-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	getContractorForProject: (
 		data: {
 			pageSize: number;
@@ -147,6 +159,42 @@ const contractorServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`Contractor/get-list-update-contractor-cat-by-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getListRequesterContractor: (
+		data: {
+			type: string;
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			state: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/get-page-list-requester-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	approveRequesterAddContractor: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/approve-request-add-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	rejectRequesterAddContractor: (
+		data: {
+			reason: string;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/reject-request-add-contractor`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

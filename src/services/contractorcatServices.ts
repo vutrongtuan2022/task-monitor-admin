@@ -51,6 +51,8 @@ const contractorcatServices = {
 			keyword: string;
 			status: number;
 			isDefault?: number;
+			contractorUuid?: string;
+			activityUuid?: string;
 			uuid?: string;
 		},
 		tokenAxios?: any
