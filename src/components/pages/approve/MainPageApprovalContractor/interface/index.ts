@@ -1,24 +1,20 @@
 export interface PropsMainPageApprovalContractor {}
 
-export interface ITablePageApprove {
+export interface ITablePageApproveRequester {
 	uuid: string;
-	contractor: {
-		uuid: string;
+	requester: {
+		fullname: string;
 		code: string;
-		name: string;
-	};
-	contractorCat: {
 		uuid: string;
+	};
+	contractorCatPending: {
 		id: number;
 		code: string;
 		name: string;
 		isDefault: number;
-	};
-	user: {
 		uuid: string;
-		fullname: string;
-		code: string;
-	};
-	timeCreated: string;
+	}[];
+	code: string;
+	name: string;
 	status: number;
 }

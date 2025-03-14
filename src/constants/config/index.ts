@@ -48,6 +48,7 @@ export enum PATH {
 
 	UpdateInfoProject = '/project/update/infor-project',
 	UpdateInfoCapital = '/project/update/info-capital',
+	UpdateDisbursementProgress = '/project/update/update-disbursement-progress',
 	UpdateInfoContractor = '/project/update/infor-contractor',
 
 	Task = '/task',
@@ -150,8 +151,8 @@ export const Menu: {
 	},
 	{
 		title: 'Duyệt yêu cầu',
-		// path: PATH.ContractorApproval,
-		path: PATH.Approve,
+		path: PATH.ContractorApproval,
+		// path: PATH.Approve,
 		pathActive: PATH.Approve,
 		icon: TickCircle,
 	},

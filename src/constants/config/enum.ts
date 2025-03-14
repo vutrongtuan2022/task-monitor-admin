@@ -31,6 +31,7 @@ export enum QUERY_KEY {
 	table_project_for_contractor,
 	table_contractor_cat_by_contractor,
 	table_update_contractor_cat_by_contractor,
+	table_requester_contractor,
 
 	dropdown_role,
 	dropdown_group_contractor,
@@ -45,6 +46,8 @@ export enum QUERY_KEY {
 	dropdown_can_bo_chuyen_quan,
 	table_overview_report,
 	dropdown_project,
+	dropdown_contractor_in_project,
+	dropdown_activity_in_project,
 
 	detail_contractor,
 	detail_user,
@@ -72,6 +75,8 @@ export enum QUERY_KEY {
 	detail_progress_contract_fund_project,
 	detail_activity_contract,
 	detail_contractor_for_admin,
+	detail_contract_addium,
+	detail_contract_addendum,
 
 	tree_task,
 	count_unseen_noti,
