@@ -211,3 +211,9 @@ export enum TYPE_SPECIAL {
 	NORMAL,
 	SENIOR,
 }
+
+export enum STATE_APPROVED {
+	NOT_REPORTED, // 0: chưa duyệt
+	APPROVED, //1: đã duyệt
+	REJECTED, //2: đã từ chối
+}

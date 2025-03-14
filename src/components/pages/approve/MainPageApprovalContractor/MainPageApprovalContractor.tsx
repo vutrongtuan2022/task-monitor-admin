@@ -6,7 +6,7 @@ import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_APPROVED, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
@@ -45,7 +45,7 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 						status: STATUS_CONFIG.ACTIVE,
 						keyword: _keyword as string,
 						type: (_type as string) || '',
-						state: !!_state ? Number(_state) : null,
+						state: STATE_APPROVED.NOT_REPORTED,
 					}),
 				}),
 			select(data) {
