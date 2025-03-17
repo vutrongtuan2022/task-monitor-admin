@@ -163,8 +163,8 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 				open={!!uuidConfirm}
 				icon={icons.success}
 				onClose={() => setUuidConfirm('')}
-				title={'Duyệt báo cáo nhóm'}
-				note={'Bạn có chắc chắn muốn duyệt nhóm này không?'}
+				title={'Duyệt nhóm nhà thầu'}
+				note={'Bạn có chắc chắn muốn duyệt nhóm nhà thầu này không?'}
 				onSubmit={funcConfirm.mutate}
 			/>
 
@@ -173,8 +173,8 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 				open={!!uuidCancel}
 				icon={icons.question}
 				onClose={() => setUuidCancel('')}
-				title={'Từ chối báo cáo nhóm'}
-				note={'Bạn có chắc chắn muốn từ chối nhóm này không?'}
+				title={'Từ chối nhóm nhà thầu'}
+				note={'Bạn có chắc chắn muốn từ chối nhóm nhà thầu này không?'}
 				onSubmit={funcCancel.mutate}
 			/>
 
