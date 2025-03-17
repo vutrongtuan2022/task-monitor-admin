@@ -16,7 +16,6 @@ import FilterCustom from '~/components/common/FilterCustom';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Table from '~/components/common/Table';
-import Moment from 'react-moment';
 import IconCustom from '~/components/common/IconCustom';
 import {CloseCircle, TickCircle} from 'iconsax-react';
 import Pagination from '~/components/common/Pagination';
@@ -27,7 +26,7 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _contractorCat, _type, _state} = router.query;
+	const {_page, _pageSize, _keyword, _contractorCat} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
 	const [form, setForm] = useState<{feedback: string}>({
@@ -44,7 +43,7 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 						pageSize: Number(_pageSize) || 10,
 						status: STATUS_CONFIG.ACTIVE,
 						keyword: _keyword as string,
-						type: (_type as string) || '',
+						type: (_contractorCat as string) || '',
 						state: [STATE_APPROVED.NOT_REPORTED],
 					}),
 				}),
