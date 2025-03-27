@@ -24,6 +24,11 @@ import userServices from '~/services/userServices';
 import projectServices from '~/services/projectServices';
 import contractsFundServices from '~/services/contractsFundServices';
 import Tippy from '@tippyjs/react';
+import Button from '~/components/common/Button';
+import Image from 'next/image';
+import icons from '~/constants/images/icons';
+import Popup from '~/components/common/Popup';
+import FormExportExcelUser from '../FormExportExcelUser';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
@@ -32,6 +37,8 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const {_page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _project} = router.query;
+
+	const [isExportUserPopupOpen, setExportUserPopupOpen] = useState(false);
 
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
@@ -83,6 +90,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			},
 		}
 	);
+
+	const handleCloseExportUser = () => {
+		setExportUserPopupOpen(false);
+	};
+
+	const handleOpenExportUser = () => {
+		setExportUserPopupOpen(true);
+	};
 
 	return (
 		<div className={styles.container}>
@@ -159,6 +174,12 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 								},
 							]}
 						/>
+					</div>
+					<div className={styles.btn}>
+						<Button rounded_8 w_fit p_8_16 green bold onClick={handleOpenExportUser}>
+							<Image src={icons.exportExcel} alt='icon down' width={20} height={20} />
+							Xuất DSNV chưa báo cáo
+						</Button>
 					</div>
 				</div>
 			</div>
@@ -285,6 +306,10 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 					dependencies={[_pageSize, _keyword, _year, _month, _state, _reporterUuid, _project]}
 				/>
 			</WrapperScrollbar>
+
+			<Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>
+				<FormExportExcelUser onClose={handleCloseExportUser} />
+			</Popup>
 		</div>
 	);
 }
