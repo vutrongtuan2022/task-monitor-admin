@@ -33,6 +33,7 @@ export enum QUERY_KEY {
 	table_update_contractor_cat_by_contractor,
 	table_requester_contractor,
 	table_csct,
+	table_pn_contract,
 
 	dropdown_role,
 	dropdown_group_contractor,

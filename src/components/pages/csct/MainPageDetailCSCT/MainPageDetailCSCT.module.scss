@@ -81,7 +81,7 @@
 .basic_info {
     background-color: #fff;
     border-radius: 12px;
-    padding: 12px 0;
+    padding: 16px 0;
 }
 
 .mt {
@@ -106,5 +106,16 @@
 
     &:hover {
         opacity: 0.8;
+    }
+}
+
+.link {
+    font-weight: 600;
+    color: var(--primary-btn);
+    transition: 0.3s;
+
+    &:hover {
+        opacity: 0.8;
+        text-decoration: underline;
     }
 }

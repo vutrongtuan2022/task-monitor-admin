@@ -36,7 +36,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword} = router.query;
+	const {_page, _pageSize, _keyword, _state} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
 
@@ -53,7 +53,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 		},
 	});
 
-	const listPN = useQuery([QUERY_KEY.table_csct, _page, _pageSize, _keyword], {
+	const listPN = useQuery([QUERY_KEY.table_csct, _page, _pageSize, _keyword, _state], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.listPN({
@@ -61,6 +61,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					page: Number(_page) || 1,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
+					state: _state ? Number(_state) : null,
 				}),
 			}),
 		select(data) {
@@ -74,10 +75,10 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Duyệt thanh toán thành công!',
-				http: contractorServices.changeUpdateContractorCat({
+				http: pnServices.approvePN({
 					uuid: uuidConfirm,
-					state: 1,
-					rejected: '',
+					action: 0,
+					reason: '',
 				}),
 			});
 		},
@@ -95,11 +96,10 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Từ chối thanh toán thành công!',
-				http: contractorServices.changeUpdateContractorCat({
+				http: pnServices.approvePN({
 					uuid: uuidCancel,
-					state: 2,
-					// rejected: form?.feedback,
-					rejected: '',
+					action: 1,
+					reason: '',
 				}),
 			});
 		},
@@ -159,20 +159,10 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 				<div className={styles.btn}></div>
 			</div>
 			<WrapperScrollbar>
-				<DataWrapper
-					data={
-						// listPN?.data?.items ||
-						[1, 2, 3, 4, 5, 6]
-					}
-					loading={listPN.isLoading}
-					noti={<Noti />}
-				>
+				<DataWrapper data={listPN?.data?.items || []} loading={listPN.isLoading} noti={<Noti />}>
 					<Table
 						fixedHeader={true}
-						data={
-							// listPN?.data?.items ||
-							[1, 2, 3, 4, 5, 6]
-						}
+						data={listPN?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
@@ -184,7 +174,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								render: (data: ICSCT, index: number) => (
 									<Tippy content='Xem chi tiết'>
 										<Link href={`${PATH.CSCT}/${data?.uuid}`} className={styles.link}>
-											{index + 1}
+											{data?.code || '---'}
 										</Link>
 									</Tippy>
 								),
@@ -192,29 +182,28 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 							{
 								title: 'Ngày lấy số',
 								render: (data: ICSCT) => (
-									<>{'2025-03-13T11:26:17'}</>
-									// <p>{data?.releasedDate ? <Moment date={'2025-03-13T11:26:17'} format='DD/MM/YYYY' /> : '---'}</p>
+									<p>{data?.numberingDate ? <Moment date={data?.numberingDate} format='DD/MM/YYYY' /> : '---'}</p>
 								),
 							},
 							{
 								title: 'Tên dự án',
-								render: (data: ICSCT) => <>{'Dự án cấp thành phố'}</>,
+								render: (data: ICSCT) => <>{data?.project?.name || '---'}</>,
 							},
 							{
 								title: 'SL hợp đồng',
-								render: (data: ICSCT) => <p>{'24'}</p>,
+								render: (data: ICSCT) => <p>{data?.totalContracts}</p>,
 							},
 							{
 								title: 'Lãnh đạo phụ trách',
-								render: (data: ICSCT) => <>{'---'}</>,
+								render: (data: ICSCT) => <>{data?.project?.leader?.fullname || '---'}</>,
 							},
 							{
 								title: 'Cán bộ chuyên quản',
-								render: (data: ICSCT) => <>{'---'}</>,
+								render: (data: ICSCT) => <>{data?.user?.fullname || '---'}</>,
 							},
 							{
 								title: 'Tiến độ giải ngân',
-								render: (data: ICSCT) => <Progress percent={50} width={80} />,
+								render: (data: ICSCT) => <Progress percent={data?.percent} width={80} />,
 							},
 							{
 								title: 'Trạng thái',
@@ -256,7 +245,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								render: (data: ICSCT) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
-											href={`${PATH.CSCT}/${1}`}
+											href={`${PATH.CSCT}/${data?.uuid}`}
 											type='edit'
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
@@ -265,13 +254,16 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 											color='#06D7A0'
 											icon={<TickCircle fontSize={20} fontWeight={600} />}
 											tooltip='Duyệt thanh toán'
-											onClick={() => setUuidConfirm(1)}
+											disnable={data?.state === STATUS_CSCT.REJECTED || data?.state === STATUS_CSCT.APPROVED}
+											onClick={() => setUuidConfirm(data?.uuid)}
 										/>
+
 										<IconCustom
 											color='#EE464C'
 											icon={<CloseCircle fontSize={20} fontWeight={600} />}
 											tooltip='Từ chối thanh toán'
-											onClick={() => setUuidCancel(1)}
+											disnable={data?.state === STATUS_CSCT.REJECTED || data?.state === STATUS_CSCT.APPROVED}
+											onClick={() => setUuidCancel(data?.uuid)}
 										/>
 									</div>
 								),
@@ -280,19 +272,10 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					/>
 				</DataWrapper>
 				<Pagination
-					currentPage={
-						// Number(_page) ||
-						1
-					}
-					pageSize={
-						// Number(_pageSize) ||
-						10
-					}
-					total={
-						// listPN?.data?.pagination?.totalCount ||
-						10
-					}
-					dependencies={[_pageSize, _keyword]}
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 10}
+					total={listPN?.data?.pagination?.totalCount || 0}
+					dependencies={[_pageSize, _keyword, _state]}
 				/>
 				<Dialog
 					type='primary'
