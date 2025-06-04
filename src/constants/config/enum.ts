@@ -32,6 +32,8 @@ export enum QUERY_KEY {
 	table_contractor_cat_by_contractor,
 	table_update_contractor_cat_by_contractor,
 	table_requester_contractor,
+	table_csct,
+	table_pn_contract,
 
 	dropdown_role,
 	dropdown_group_contractor,
@@ -77,6 +79,7 @@ export enum QUERY_KEY {
 	detail_contractor_for_admin,
 	detail_contract_addium,
 	detail_contract_addendum,
+	detail_csct,
 
 	tree_task,
 	count_unseen_noti,
@@ -216,4 +219,11 @@ export enum STATE_APPROVED {
 	NOT_REPORTED, // 0: chưa duyệt
 	APPROVED, //1: đã duyệt
 	REJECTED, //2: đã từ chối
+}
+
+export enum STATUS_CSCT {
+	NUMBER_ISSUED = 1, // Đã cấp số
+	PENDING_APPROVAL, // Chờ phê duyệt
+	APPROVED, // Đã phê duyệt
+	REJECTED, // Bị từ chối
 }

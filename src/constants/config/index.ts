@@ -13,6 +13,7 @@ import {
 	TickCircle,
 	TagUser,
 	UserOctagon,
+	EmptyWalletTick,
 } from 'iconsax-react';
 import {TYPE_DATE} from './enum';
 
@@ -75,6 +76,7 @@ export enum PATH {
 	ApprovalContractor = '/approve/approval-contractor',
 
 	ReportOverview = '/report-overview',
+	CSCT = '/csct',
 }
 
 export const Menu: {
@@ -130,6 +132,12 @@ export const Menu: {
 		path: PATH.Task,
 		pathActive: PATH.Task,
 		icon: ReceiptItem,
+	},
+	{
+		title: 'CSCT thanh toán',
+		path: PATH.CSCT,
+		pathActive: PATH.CSCT,
+		icon: EmptyWalletTick,
 	},
 	{
 		title: 'Quản lý chi nhánh',
