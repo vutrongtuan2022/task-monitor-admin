@@ -14,13 +14,8 @@ import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG, STATUS_CSCT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
-import contractorServices from '~/services/contractorServices';
-import contractorcatServices from '~/services/contractorcatServices';
-import PositionContainer from '~/components/common/PositionContainer';
 import Tippy from '@tippyjs/react';
 import Search from '~/components/common/Search';
-import Button from '~/components/common/Button';
-import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import projectServices from '~/services/projectServices';
 import pnServices from '~/services/pnServices';
@@ -36,7 +31,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _state} = router.query;
+	const {_page, _pageSize, _keyword, _state, _project} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
 
@@ -53,7 +48,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 		},
 	});
 
-	const listPN = useQuery([QUERY_KEY.table_csct, _page, _pageSize, _keyword, _state], {
+	const listPN = useQuery([QUERY_KEY.table_csct, _page, _pageSize, _keyword, _state, _project], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.listPN({
@@ -62,6 +57,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					state: _state ? Number(_state) : null,
+					projectUuid: (_project as string) || '',
 				}),
 			}),
 		select(data) {
@@ -275,7 +271,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
 					total={listPN?.data?.pagination?.totalCount || 0}
-					dependencies={[_pageSize, _keyword, _state]}
+					dependencies={[_pageSize, _keyword, _state, _project]}
 				/>
 				<Dialog
 					type='primary'
