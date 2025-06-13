@@ -76,7 +76,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		onSuccess(data) {
 			if (data) {
 				setUuidConfirm('');
-				queryClient.invalidateQueries([QUERY_KEY.table_csct]);
+				queryClient.invalidateQueries([QUERY_KEY.table_csct, QUERY_KEY.detail_csct]);
 			}
 		},
 	});
@@ -97,7 +97,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		onSuccess(data) {
 			if (data) {
 				setUuidCancel('');
-				queryClient.invalidateQueries([QUERY_KEY.table_csct]);
+				queryClient.invalidateQueries([QUERY_KEY.table_csct, QUERY_KEY.detail_csct]);
 			}
 		},
 	});
