@@ -38,23 +38,6 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 		enabled: !!_uuid,
 	});
 
-	const {data: listContractFund} = useQuery([QUERY_KEY.table_contract_fund_detail, _page, _pageSize, _uuid], {
-		queryFn: () =>
-			httpRequest({
-				http: contractsServices.contractsReportFundpaged({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 10,
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					uuid: _uuid as string,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!_uuid,
-	});
-
 	return (
 		<div className={styles.container}>
 			<Breadcrumb

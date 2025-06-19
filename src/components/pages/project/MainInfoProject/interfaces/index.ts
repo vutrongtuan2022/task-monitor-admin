@@ -62,6 +62,7 @@ export interface IDetailInfoProject {
 	reserveBudget: number;
 	remainReserveBudget: number;
 	accumAmount: number;
+	accumReserve: number;
 	annualAccumAmount: number;
 	annualBudget: number;
 	address: string;
@@ -86,4 +87,5 @@ export interface IDetailInfoProject {
 	realEnd: string;
 	created: string;
 	uuid: string;
+	totalAmountPN: number;
 }

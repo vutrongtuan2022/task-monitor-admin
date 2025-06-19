@@ -26,6 +26,7 @@ import {PATH} from '~/constants/config';
 import Link from 'next/link';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
+import {convertCoin} from '~/common/funcs/convertCoin';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
@@ -70,7 +71,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Duyệt thanh toán thành công!',
+				msgSuccess: 'Duyệt CSCT thanh toán thành công!',
 				http: pnServices.approvePN({
 					uuid: uuidConfirm,
 					action: 0,
@@ -91,7 +92,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Từ chối thanh toán thành công!',
+				msgSuccess: 'Từ chối CSCT thanh toán thành công!',
 				http: pnServices.approvePN({
 					uuid: uuidCancel,
 					action: 1,
@@ -113,7 +114,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo nhà thầu' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo mã cấp số' />
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -188,6 +189,15 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 							{
 								title: 'SL hợp đồng',
 								render: (data: ICSCT) => <p>{data?.totalContracts}</p>,
+							},
+							{
+								title: 'Tổng giá trị thanh toán(VND)',
+								render: (data: ICSCT) => (
+									<p>
+										<span>{convertCoin(data?.accumAmount)}</span>/
+										<span style={{color: '#005994'}}>{convertCoin(data?.totalAmount)}</span>
+									</p>
+								),
 							},
 							{
 								title: 'Lãnh đạo phụ trách',
@@ -278,8 +288,8 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					open={!!uuidConfirm}
 					icon={icons.success}
 					onClose={() => setUuidConfirm('')}
-					title={'Duyệt thanh toán'}
-					note={'Bạn có chắc chắn muốn duyệt thanh toán này không?'}
+					title={'Duyệt CSCT thanh toán'}
+					note={'Bạn có chắc chắn muốn duyệt CSCT thanh toán này không?'}
 					onSubmit={funcConfirm.mutate}
 				/>
 
@@ -288,8 +298,8 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					open={!!uuidCancel}
 					icon={icons.question}
 					onClose={() => setUuidCancel('')}
-					title={'Từ chối thanh toán '}
-					note={'Bạn có chắc chắn muốn từ chối thanh toán này không?'}
+					title={'Từ chối CSCT thanh toán '}
+					note={'Bạn có chắc chắn muốn từ chối CSCT thanh toán này không?'}
 					onSubmit={funcCancel.mutate}
 				/>
 			</WrapperScrollbar>
