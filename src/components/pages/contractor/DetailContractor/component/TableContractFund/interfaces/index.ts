@@ -1,38 +1,23 @@
-export interface PropsDetailReportDisbursement {}
+export interface PropsTableContractFund {}
 
-export interface IDetailContractFund {
-	project: {
-		code: string;
-		name: string;
-		state: number;
-		uuid: string;
-		branch: {
-			code: string;
-			name: string;
-			uuid: string;
-		};
-	};
-	creator: {
-		fullname: string;
-		code: string;
-		uuid: string;
-	};
-	releasedMonth: number;
-	releasedYear: number;
-	contractCount: number;
-	totalAmount: number;
-	sendDate: string | null;
-	state: number;
-	note: string;
-	rejectedReason: string | null;
-	uuid: string;
-}
 export interface IContractFund {
 	activity: {
 		name: string;
 		state: number;
+		project: {
+			code: string;
+			name: string;
+			state: number;
+			leader: {
+				fullname: string;
+				code: string;
+				uuid: string;
+			};
+			uuid: string;
+		};
 		contracts: {
 			code: string;
+			state: number;
 			status: number;
 			uuid: string;
 		};
@@ -67,6 +52,7 @@ export interface IContractFund {
 	};
 	note: string;
 	code: string;
+	state: number;
 	status: number;
 	uuid: string;
 	totalContractor: number;
@@ -74,6 +60,24 @@ export interface IContractFund {
 	pnContract: {
 		pn: {
 			code: string;
+			project: {
+				code: string;
+				name: string;
+				created: string;
+				state: 2;
+				leader: {
+					fullname: string;
+					code: string;
+					uuid: string;
+				};
+				member: [];
+				branch: {
+					uuid: string;
+					code: string;
+					name: string;
+				};
+				uuid: string;
+			};
 			state: number;
 			uuid: string;
 			numberingDate: string;
@@ -104,4 +108,32 @@ export interface IContractFund {
 		uuid: string;
 		status: number;
 	};
+	parent: null;
+	contractorLinks: {
+		contractor: {
+			code: string;
+			name: string;
+			state: number;
+			contractorLinkUuid: string;
+			contractorCat: {
+				id: number;
+				code: string;
+				name: string;
+				isDefault: number | null;
+				uuid: string;
+			}[];
+			amount: number;
+			uuid: string;
+		};
+		contractorCat: {
+			id: number;
+			code: string;
+			name: string;
+			isDefault: number | null;
+			uuid: string;
+		};
+		status: number;
+		uuid: string;
+	}[];
+	startDate: string;
 }

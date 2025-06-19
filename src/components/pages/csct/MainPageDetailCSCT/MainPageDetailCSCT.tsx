@@ -12,15 +12,12 @@ import {httpRequest} from '~/services';
 import pnServices from '~/services/pnServices';
 import clsx from 'clsx';
 import DataWrapper from '~/components/common/DataWrapper';
-import contractsServices from '~/services/contractsServices';
 import Table from '~/components/common/Table';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import Moment from 'react-moment';
-import Pagination from '~/components/common/Pagination';
 import Button from '~/components/common/Button';
 import {useState} from 'react';
-import contractorServices from '~/services/contractorServices';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
 import Loading from '~/components/common/Loading';
@@ -29,7 +26,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_uuid, _page, _pageSize, _keyword, _contractorUuid, _contractorCat} = router.query;
+	const {_uuid} = router.query;
 
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
@@ -76,7 +73,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		onSuccess(data) {
 			if (data) {
 				setUuidConfirm('');
-				queryClient.invalidateQueries([QUERY_KEY.table_csct, QUERY_KEY.detail_csct]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_csct]);
 			}
 		},
 	});
@@ -88,7 +85,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 				showMessageSuccess: true,
 				msgSuccess: 'Từ chối thanh toán thành công!',
 				http: pnServices.approvePN({
-					uuid: uuidCancel,
+					uuid: _uuid as string,
 					action: 1,
 					reason: '',
 				}),
@@ -97,7 +94,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		onSuccess(data) {
 			if (data) {
 				setUuidCancel('');
-				queryClient.invalidateQueries([QUERY_KEY.table_csct, QUERY_KEY.detail_csct]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_csct]);
 			}
 		},
 	});
@@ -134,7 +131,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 					<div className={styles.head}>
 						<h4>Thông tin cơ bản</h4>
 						<div className={styles.state}>
-							<p>Trạng thái giải ngân:</p>
+							<p>Trạng thái:</p>
 							<StateActive
 								stateActive={detailCSCT?.state!}
 								listState={[
@@ -211,7 +208,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Tống giá trị thanh toán (VND)</p>
+								<p>Tổng giá trị thanh toán (VND)</p>
 								<p>{convertCoin(detailCSCT?.totalAmount!)}</p>
 							</div>
 							<div className={styles.item}>
@@ -292,8 +289,8 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							open={!!uuidConfirm}
 							icon={icons.success}
 							onClose={() => setUuidConfirm('')}
-							title={'Duyệt thanh toán'}
-							note={'Bạn có chắc chắn muốn duyệt thanh toán này không?'}
+							title={'Duyệt CSCT thanh toán'}
+							note={'Bạn có chắc chắn muốn duyệt CSCT thanh toán này không?'}
 							onSubmit={funcConfirm.mutate}
 						/>
 
@@ -302,8 +299,8 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							open={!!uuidCancel}
 							icon={icons.question}
 							onClose={() => setUuidCancel('')}
-							title={'Từ chối thanh toán '}
-							note={'Bạn có chắc chắn muốn từ chối thanh toán này không?'}
+							title={'Từ chối CSCT thanh toán '}
+							note={'Bạn có chắc chắn muốn từ chối CSCT thanh toán này không?'}
 							onSubmit={funcCancel.mutate}
 						/>
 					</div>
