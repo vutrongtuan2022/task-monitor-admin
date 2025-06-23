@@ -29,6 +29,8 @@ import Tippy from '@tippyjs/react';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import userServices from '~/services/userServices';
 import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from 'react-icons/ti';
+import Popup from '~/components/common/Popup';
+import FormExportExcel from '../FormExportExcel';
 
 enum COLUMN_SORT_PROJECT {
 	PROGRESS = 1,
@@ -41,6 +43,7 @@ function MainPageProject({}: PropsMainPageProject) {
 	const queryClient = useQueryClient();
 
 	const [deleteProject, setDeleteProject] = useState<IProject | null>(null);
+	const [exportPopupOpen, setExportPopupOpen] = useState(false);
 	const [sort, setSort] = useState<{
 		column: COLUMN_SORT_PROJECT | null;
 		type: SORT_TYPE | null;
@@ -139,6 +142,14 @@ function MainPageProject({}: PropsMainPageProject) {
 		});
 	};
 
+	const handleCloseExport = () => {
+		setExportPopupOpen(false);
+	};
+
+	const handleOpenExport = () => {
+		setExportPopupOpen(true);
+	};
+
 	return (
 		<div className={styles.container}>
 			<Loading loading={funcDeleteProject.isLoading} />
@@ -195,6 +206,10 @@ function MainPageProject({}: PropsMainPageProject) {
 					</div>
 				</div>
 				<div className={styles.btn}>
+					<Button rounded_8 w_fit p_8_16 green bold onClick={handleOpenExport}>
+						<Image src={icons.exportExcel} alt='icon down' width={20} height={20} />
+						Xuất file Excel
+					</Button>
 					<Button
 						p_10_24
 						rounded_8
@@ -369,6 +384,9 @@ function MainPageProject({}: PropsMainPageProject) {
 				note={'Bạn có chắc chắn muốn xóa dự án này?'}
 				onSubmit={funcDeleteProject.mutate}
 			/>
+			<Popup open={exportPopupOpen} onClose={handleCloseExport}>
+				<FormExportExcel onClose={handleCloseExport} />
+			</Popup>
 		</div>
 	);
 }

@@ -154,6 +154,7 @@ const projectServices = {
 		data: {
 			keyword: string;
 			status: number;
+			excludeState?: number | null;
 		},
 		tokenAxios?: any
 	) => {
@@ -168,6 +169,18 @@ const projectServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Project/progress-contract-fund-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	exportProject: (
+		data: {
+			projectUuid: string[];
+			from: string | null;
+			to: string | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Project/export-project`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
