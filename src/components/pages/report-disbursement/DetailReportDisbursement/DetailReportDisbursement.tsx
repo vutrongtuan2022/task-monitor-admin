@@ -23,6 +23,7 @@ import Link from 'next/link';
 import contractsFundServices from '~/services/contractsFundServices';
 import Button from '~/components/common/Button';
 import Dialog from '~/components/common/Dialog';
+import Loading from '~/components/common/Loading';
 
 function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 	const router = useRouter();
@@ -81,6 +82,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 
 	return (
 		<div className={styles.container}>
+			<Loading loading={backStateFundReport.isLoading} />
 			<Breadcrumb
 				listUrls={[
 					{

@@ -30,6 +30,7 @@ import icons from '~/constants/images/icons';
 import Popup from '~/components/common/Popup';
 import FormExportExcelUser from '../FormExportExcelUser';
 import Dialog from '~/components/common/Dialog';
+import Loading from '~/components/common/Loading';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
@@ -121,6 +122,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 
 	return (
 		<div className={styles.container}>
+			<Loading loading={backStateFundReport.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -313,13 +315,13 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 											tooltip='Xem chi tiết'
 											href={`${PATH.ReportDisbursement}/${data?.uuid}`}
 										/>
-										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED  && (
-										<IconCustom
-											onClick={() => setRefeshUuid(data?.uuid)}
-											type='edit'
-											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refesh trạng thái'
-										/>
+										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED && (
+											<IconCustom
+												onClick={() => setRefeshUuid(data?.uuid)}
+												type='edit'
+												icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+												tooltip='Refesh trạng thái'
+											/>
 										)}
 									</div>
 								),
