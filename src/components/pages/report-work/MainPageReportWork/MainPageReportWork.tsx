@@ -15,7 +15,7 @@ import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
-import {Eye} from 'iconsax-react';
+import {DriverRefresh, Eye} from 'iconsax-react';
 import reportServices from '~/services/reportServices';
 import Moment from 'react-moment';
 import {generateYearsArray} from '~/common/funcs/selectDate';
@@ -26,6 +26,7 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Popup from '~/components/common/Popup';
 import FormExportExcel from '../FormExportExcel';
+import Dialog from '~/components/common/Dialog';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
@@ -33,6 +34,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const [isExportPopupOpen, setExportPopupOpen] = useState(false);
+	const [refeshUuid, setRefeshUuid] = useState(false);
 
 	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState, _reporterUuid} = router.query;
 
@@ -307,6 +309,12 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
+										<IconCustom
+											onClick={() => setRefeshUuid(true)}
+											type='edit'
+											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+										/>
 									</div>
 								),
 							},
@@ -323,6 +331,14 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			<Popup open={isExportPopupOpen} onClose={handleCloseExport}>
 				<FormExportExcel onClose={handleCloseExport} />
 			</Popup>
+			<Dialog
+				type='error'
+				open={!!refeshUuid}
+				onClose={() => setRefeshUuid(false)}
+				title={'Refesh dữ liệu'}
+				note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
+				onSubmit={() => {}}
+			/>
 		</div>
 	);
 }
