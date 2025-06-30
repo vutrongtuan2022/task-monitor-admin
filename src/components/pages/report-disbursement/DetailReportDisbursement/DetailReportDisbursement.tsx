@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {IDetailContractFund, IContractFund, PropsDetailReportDisbursement} from './interfaces';
 import styles from './DetailReportDisbursement.module.scss';
@@ -8,7 +8,7 @@ import StateActive from '~/components/common/StateActive';
 import {QUERY_KEY, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useRouter} from 'next/router';
 import {httpRequest} from '~/services';
 import {convertCoin} from '~/common/funcs/convertCoin';
@@ -21,11 +21,16 @@ import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import Link from 'next/link';
 import contractsFundServices from '~/services/contractsFundServices';
+import Button from '~/components/common/Button';
+import Dialog from '~/components/common/Dialog';
+import Loading from '~/components/common/Loading';
 
 function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
 	const {_uuid, _page, _pageSize} = router.query;
+	const [openRefesh, setOpenRefesh] = useState<boolean>(false);
 
 	const {data: detailContractFund} = useQuery<IDetailContractFund>([QUERY_KEY.detail_report_disbursement, _uuid], {
 		queryFn: () =>
@@ -57,8 +62,27 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 		enabled: !!_uuid,
 	});
 
+	const backStateFundReport = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Refesh lại báo cáo thành công!',
+				http: contractsFundServices.backStateContractFund({
+					uuid: _uuid as string,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setOpenRefesh(false);
+				queryClient.invalidateQueries([QUERY_KEY.detail_report_disbursement]);
+			}
+		},
+	});
+
 	return (
 		<div className={styles.container}>
+			<Loading loading={backStateFundReport.isLoading} />
 			<Breadcrumb
 				listUrls={[
 					{
@@ -70,6 +94,15 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 						title: 'Chi tiết báo cáo',
 					},
 				]}
+				action={
+					<div className={styles.group_btn}>
+						{detailContractFund?.state == STATE_REPORT_DISBURSEMENT.APPROVED && (
+							<Button p_14_24 rounded_8 error onClick={() => setOpenRefesh(true)}>
+								Refresh báo cáo
+							</Button>
+						)}
+					</div>
+				}
 			/>
 
 			<div className={styles.main}>
@@ -305,6 +338,14 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 							dependencies={[_pageSize, _uuid]}
 						/>
 					</WrapperScrollbar>
+					<Dialog
+						type='error'
+						open={!!openRefesh}
+						onClose={() => setOpenRefesh(false)}
+						title={'Refesh dữ liệu'}
+						note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
+						onSubmit={backStateFundReport.mutate}
+					/>
 				</div>
 			</div>
 		</div>
