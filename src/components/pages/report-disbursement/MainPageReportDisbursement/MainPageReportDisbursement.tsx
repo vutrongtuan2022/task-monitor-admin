@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {IReportDisbursement, PropsMainPageReportDisbursement} from './interfaces';
 import styles from './MainPageReportDisbursement.module.scss';
 import {useRouter} from 'next/router';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import Search from '~/components/common/Search';
@@ -33,14 +33,14 @@ import Dialog from '~/components/common/Dialog';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
-
+	const queryClient = useQueryClient();
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const {_page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _project} = router.query;
 
 	const [isExportUserPopupOpen, setExportUserPopupOpen] = useState(false);
-	const [refeshUuid, setRefeshUuid] = useState(false);
+	const [refeshUuid, setRefeshUuid] = useState<string>('');
 
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
@@ -67,6 +67,24 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			}),
 		select(data) {
 			return data;
+		},
+	});
+
+	const backStateFundReport = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Refesh lại báo cáo thành công!',
+				http: contractsFundServices.backStateContractFund({
+					uuid: refeshUuid,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setRefeshUuid('');
+				queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
+			}
 		},
 	});
 
@@ -295,12 +313,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 											tooltip='Xem chi tiết'
 											href={`${PATH.ReportDisbursement}/${data?.uuid}`}
 										/>
+										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED  && (
 										<IconCustom
-											onClick={() => setRefeshUuid(true)}
+											onClick={() => setRefeshUuid(data?.uuid)}
 											type='edit'
 											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Xem chi tiết'
+											tooltip='Refesh trạng thái'
 										/>
+										)}
 									</div>
 								),
 							},
@@ -318,10 +338,10 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			<Dialog
 				type='error'
 				open={!!refeshUuid}
-				onClose={() => setRefeshUuid(false)}
+				onClose={() => setRefeshUuid('')}
 				title={'Refesh dữ liệu'}
 				note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
-				onSubmit={() => {}}
+				onSubmit={backStateFundReport.mutate}
 			/>
 			<Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>
 				<FormExportExcelUser onClose={handleCloseExportUser} />
