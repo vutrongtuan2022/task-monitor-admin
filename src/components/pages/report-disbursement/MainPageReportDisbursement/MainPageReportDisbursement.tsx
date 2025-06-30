@@ -18,7 +18,7 @@ import StateActive from '~/components/common/StateActive';
 import Moment from 'react-moment';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import IconCustom from '~/components/common/IconCustom';
-import {Eye} from 'iconsax-react';
+import {DriverRefresh, Eye} from 'iconsax-react';
 import {PATH} from '~/constants/config';
 import userServices from '~/services/userServices';
 import projectServices from '~/services/projectServices';
@@ -29,6 +29,7 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Popup from '~/components/common/Popup';
 import FormExportExcelUser from '../FormExportExcelUser';
+import Dialog from '~/components/common/Dialog';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
@@ -39,6 +40,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const {_page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _project} = router.query;
 
 	const [isExportUserPopupOpen, setExportUserPopupOpen] = useState(false);
+	const [refeshUuid, setRefeshUuid] = useState(false);
 
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
@@ -293,6 +295,12 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 											tooltip='Xem chi tiết'
 											href={`${PATH.ReportDisbursement}/${data?.uuid}`}
 										/>
+										<IconCustom
+											onClick={() => setRefeshUuid(true)}
+											type='edit'
+											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+										/>
 									</div>
 								),
 							},
@@ -307,6 +315,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				/>
 			</WrapperScrollbar>
 
+			<Dialog
+				type='error'
+				open={!!refeshUuid}
+				onClose={() => setRefeshUuid(false)}
+				title={'Refesh dữ liệu'}
+				note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
+				onSubmit={() => {}}
+			/>
 			<Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>
 				<FormExportExcelUser onClose={handleCloseExportUser} />
 			</Popup>
