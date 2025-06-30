@@ -57,6 +57,17 @@ const contractsFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+
+	backStateContractFund: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/admin-back-state-contract-fund`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default contractsFundServices;
