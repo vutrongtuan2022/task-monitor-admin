@@ -9,7 +9,7 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATE_REPORT, STATUS_CONFIG, STATE_COMPLETE_REPORT, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
@@ -30,11 +30,12 @@ import Dialog from '~/components/common/Dialog';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const [isExportPopupOpen, setExportPopupOpen] = useState(false);
-	const [refeshUuid, setRefeshUuid] = useState(false);
+	const [refeshUuid, setRefeshUuid] = useState<string>('');
 
 	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState, _reporterUuid} = router.query;
 
@@ -50,6 +51,24 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			}),
 		select(data) {
 			return data;
+		},
+	});
+
+	const backStateReport = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Refesh lại báo cáo thành công!',
+				http: reportServices.backStateReport({
+					uuid: refeshUuid,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setRefeshUuid('');
+				queryClient.invalidateQueries([QUERY_KEY.table_list_report]);
+			}
 		},
 	});
 
@@ -309,12 +328,14 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
+										{data?.state == STATE_REPORT.REPORTED  && (
 										<IconCustom
-											onClick={() => setRefeshUuid(true)}
+											color='#EE464C'
+											onClick={() => setRefeshUuid(data?.uuid)}
 											type='edit'
 											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Xem chi tiết'
-										/>
+											tooltip='Refesh trạng thái'
+										/>)}
 									</div>
 								),
 							},
@@ -334,10 +355,10 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			<Dialog
 				type='error'
 				open={!!refeshUuid}
-				onClose={() => setRefeshUuid(false)}
+				onClose={() => setRefeshUuid('')}
 				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
-				onSubmit={() => {}}
+				note={'Bạn có chắc chắn muốn refesh dữ liệu của báo cáo công việc này?'}
+				onSubmit={backStateReport.mutate}
 			/>
 		</div>
 	);

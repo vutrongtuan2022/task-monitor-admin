@@ -315,6 +315,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 										/>
 										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED  && (
 										<IconCustom
+											color='#EE464C'
 											onClick={() => setRefeshUuid(data?.uuid)}
 											type='edit'
 											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
@@ -340,7 +341,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				open={!!refeshUuid}
 				onClose={() => setRefeshUuid('')}
 				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
+				note={'Bạn có chắc chắn muốn refesh dữ liệu của báo cáo giải ngân này?'}
 				onSubmit={backStateFundReport.mutate}
 			/>
 			<Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>

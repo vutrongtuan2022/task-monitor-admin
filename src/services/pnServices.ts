@@ -112,6 +112,18 @@ const pnServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+
+	backStatePN: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Report/back-state-pn-admin`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+
 };
 
 export default pnServices;
