@@ -46,6 +46,17 @@ const reportServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+
+	backStateReport: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Report/back-state-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default reportServices;

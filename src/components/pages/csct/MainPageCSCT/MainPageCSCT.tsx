@@ -8,7 +8,7 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
-import {CloseCircle, Eye, TickCircle} from 'iconsax-react';
+import {CloseCircle, DriverRefresh, Eye, TickCircle} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -35,7 +35,8 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 	const {_page, _pageSize, _keyword, _state, _project} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
-
+	const [refeshUuid, setRefeshUuid] = useState<string>('');
+	const [refeshCode, setRefeshCode] = useState<string>('');
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
 			httpRequest({
@@ -107,7 +108,23 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			}
 		},
 	});
-
+	const backStatePN = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Refesh lại báo cáo thành công!',
+				http: pnServices.backStatePN({
+					uuid: refeshUuid,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setRefeshUuid('');
+				queryClient.invalidateQueries([QUERY_KEY.table_csct]);
+			}
+		},
+	});
 	return (
 		<div className={styles.container}>
 			<Loading loading={funcConfirm.isLoading || funcCancel.isLoading} />
@@ -256,21 +273,32 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
+										{data?.state == STATUS_CSCT.APPROVED  && (
+										<IconCustom
+											color='#EE464C'
+											onClick={() => {setRefeshUuid(data?.uuid) , setRefeshCode(data?.code) }}
+											type='edit'
+											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+											tooltip='Refesh trạng thái'
+										/>)}
+
+										{(data?.state !== STATUS_CSCT.REJECTED && data?.state !== STATUS_CSCT.APPROVED)  && (
+										<>
 										<IconCustom
 											color='#06D7A0'
 											icon={<TickCircle fontSize={20} fontWeight={600} />}
 											tooltip='Duyệt thanh toán'
-											disnable={data?.state === STATUS_CSCT.REJECTED || data?.state === STATUS_CSCT.APPROVED}
+											
 											onClick={() => setUuidConfirm(data?.uuid)}
 										/>
-
+										
 										<IconCustom
 											color='#EE464C'
 											icon={<CloseCircle fontSize={20} fontWeight={600} />}
 											tooltip='Từ chối thanh toán'
-											disnable={data?.state === STATUS_CSCT.REJECTED || data?.state === STATUS_CSCT.APPROVED}
 											onClick={() => setUuidCancel(data?.uuid)}
 										/>
+										</>)}
 									</div>
 								),
 							},
@@ -302,6 +330,15 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					note={'Bạn có chắc chắn muốn từ chối CSCT thanh toán này không?'}
 					onSubmit={funcCancel.mutate}
 				/>
+
+				<Dialog
+				type='error'
+				open={!!refeshUuid}
+				onClose={() => setRefeshUuid('')}
+				title={'Refesh dữ liệu'}
+				note={`Bạn có chắc chắn muốn refesh dữ liệu của CSCT ${refeshCode}?`}
+				onSubmit={backStatePN.mutate}
+			/>
 			</WrapperScrollbar>
 		</div>
 	);

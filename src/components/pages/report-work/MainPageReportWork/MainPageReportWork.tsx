@@ -27,8 +27,6 @@ import icons from '~/constants/images/icons';
 import Popup from '~/components/common/Popup';
 import FormExportExcel from '../FormExportExcel';
 import Dialog from '~/components/common/Dialog';
-import contractsFundServices from '~/services/contractsFundServices';
-import Loading from '~/components/common/Loading';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
@@ -53,6 +51,24 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			}),
 		select(data) {
 			return data;
+		},
+	});
+
+	const backStateReport = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Refesh lại báo cáo thành công!',
+				http: reportServices.backStateReport({
+					uuid: refeshUuid,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setRefeshUuid('');
+				queryClient.invalidateQueries([QUERY_KEY.table_list_report]);
+			}
 		},
 	});
 
@@ -87,27 +103,8 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 		setExportPopupOpen(true);
 	};
 
-	const backStateFundReport = useMutation({
-		mutationFn: () =>
-			httpRequest({
-				showMessageFailed: true,
-				showMessageSuccess: true,
-				msgSuccess: 'Refesh lại báo cáo thành công!',
-				http: contractsFundServices.backStateContractFund({
-					uuid: refeshUuid,
-				}),
-			}),
-		onSuccess(data) {
-			if (data) {
-				setRefeshUuid('');
-				queryClient.invalidateQueries([QUERY_KEY.table_list_report]);
-			}
-		},
-	});
-
 	return (
 		<div className={styles.container}>
-			<Loading loading={backStateFundReport.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -331,14 +328,14 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
-										{data?.state == STATE_REPORT.REPORTED && (
-											<IconCustom
-												onClick={() => setRefeshUuid(data?.uuid)}
-												type='edit'
-												icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-												tooltip='Refesh trạng thái'
-											/>
-										)}
+										{data?.state == STATE_REPORT.REPORTED  && (
+										<IconCustom
+											color='#EE464C'
+											onClick={() => setRefeshUuid(data?.uuid)}
+											type='edit'
+											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+											tooltip='Refesh trạng thái'
+										/>)}
 									</div>
 								),
 							},
@@ -360,8 +357,8 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 				open={!!refeshUuid}
 				onClose={() => setRefeshUuid('')}
 				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
-				onSubmit={backStateFundReport.mutate}
+				note={'Bạn có chắc chắn muốn refesh báo cáo công việc này?'}
+				onSubmit={backStateReport.mutate}
 			/>
 		</div>
 	);
