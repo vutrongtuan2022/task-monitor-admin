@@ -294,10 +294,10 @@ function FormCreateContractProject({onClose, uuidProject, queryKeys}: PropsFormC
 					<div className={styles.main_form}>
 						<GridColumn col_3>
 							<p className={styles.label}>
-								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
 							</p>
 							<p className={styles.label}>
-								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
+								Tên nhà thầu <span style={{color: 'red'}}>*</span>
 							</p>
 							<p className={styles.label}>
 								Tiền hợp đồng <span style={{color: 'red'}}>*</span>
