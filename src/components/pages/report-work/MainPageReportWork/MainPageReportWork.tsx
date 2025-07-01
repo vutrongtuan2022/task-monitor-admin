@@ -357,7 +357,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 				open={!!refeshUuid}
 				onClose={() => setRefeshUuid('')}
 				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh dữ liệu của báo cáo công việc này?'}
+				note={'Bạn có chắc chắn muốn refesh báo cáo công việc này?'}
 				onSubmit={backStateReport.mutate}
 			/>
 		</div>

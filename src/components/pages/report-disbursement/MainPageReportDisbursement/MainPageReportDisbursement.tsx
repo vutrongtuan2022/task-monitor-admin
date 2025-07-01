@@ -341,7 +341,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				open={!!refeshUuid}
 				onClose={() => setRefeshUuid('')}
 				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh dữ liệu của báo cáo giải ngân này?'}
+				note={'Bạn có chắc chắn muốn refesh báo cáo giải ngân này?'}
 				onSubmit={backStateFundReport.mutate}
 			/>
 			<Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>
