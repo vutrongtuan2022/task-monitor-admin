@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {IDetailReportWork, PropsDetailReportWork} from './interfaces';
 import styles from './DetailReportWork.module.scss';
@@ -10,16 +10,22 @@ import GridColumn from '~/components/layouts/GridColumn';
 import clsx from 'clsx';
 import TabNavLink from '~/components/common/TabNavLink';
 import {useRouter} from 'next/router';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import reportServices from '~/services/reportServices';
 import Moment from 'react-moment';
 import TableReportWorkLastMonth from '../TableReportWorkLastMonth';
 import TableReportWorkCurrent from '../TableReportWorkCurrent';
+import contractsFundServices from '~/services/contractsFundServices';
+import Loading from '~/components/common/Loading';
+import Button from '~/components/common/Button';
+import Dialog from '~/components/common/Dialog';
 
 function DetailReportWork({}: PropsDetailReportWork) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const {_uuid, _type} = router.query;
+	const [openRefesh, setOpenRefesh] = useState<boolean>(false);
 
 	const {data: detailReportWork} = useQuery<IDetailReportWork>([QUERY_KEY.detail_report_work, _uuid], {
 		queryFn: () =>
@@ -34,8 +40,27 @@ function DetailReportWork({}: PropsDetailReportWork) {
 		enabled: !!_uuid,
 	});
 
+	const backStateFundReport = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Refesh lại báo cáo thành công!',
+				http: contractsFundServices.backStateContractFund({
+					uuid: _uuid as string,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setOpenRefesh(false);
+				queryClient.invalidateQueries([QUERY_KEY.detail_report_disbursement]);
+			}
+		},
+	});
+
 	return (
 		<div className={styles.container}>
+			<Loading loading={backStateFundReport.isLoading} />
 			<Breadcrumb
 				listUrls={[
 					{
@@ -47,6 +72,15 @@ function DetailReportWork({}: PropsDetailReportWork) {
 						title: 'Chi tiết báo cáo',
 					},
 				]}
+				action={
+					<div className={styles.group_btn}>
+						{detailReportWork?.state == STATE_REPORT.REPORTED && (
+							<Button p_14_24 rounded_8 error onClick={() => setOpenRefesh(true)}>
+								Refresh báo cáo
+							</Button>
+						)}
+					</div>
+				}
 			/>
 			<div className={styles.main}>
 				<div className={styles.basic_info}>
@@ -195,6 +229,14 @@ function DetailReportWork({}: PropsDetailReportWork) {
 						{_type == 'report' && <TableReportWorkCurrent />}
 					</div>
 				</div>
+				<Dialog
+					type='error'
+					open={!!openRefesh}
+					onClose={() => setOpenRefesh(false)}
+					title={'Refesh dữ liệu'}
+					note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
+					onSubmit={backStateFundReport.mutate}
+				/>
 			</div>
 		</div>
 	);
