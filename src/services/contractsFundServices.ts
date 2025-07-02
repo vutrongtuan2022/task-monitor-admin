@@ -61,6 +61,7 @@ const contractsFundServices = {
 	backStateContractFund: (
 		data: {
 			uuid: string;
+			reason: string;
 		},
 		tokenAxios?: any
 	) => {

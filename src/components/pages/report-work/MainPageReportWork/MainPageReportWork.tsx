@@ -26,7 +26,8 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Popup from '~/components/common/Popup';
 import FormExportExcel from '../FormExportExcel';
-import Dialog from '~/components/common/Dialog';
+import Form from '~/components/common/Form';
+import TextArea from '~/components/common/Form/components/TextArea';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
@@ -36,7 +37,9 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 
 	const [isExportPopupOpen, setExportPopupOpen] = useState(false);
 	const [refreshUuid, setRefreshUuid] = useState<string>('');
-
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState, _reporterUuid} = router.query;
 
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
@@ -62,6 +65,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 				msgSuccess: 'Refresh lại báo cáo thành công!',
 				http: reportServices.backStateReport({
 					uuid: refreshUuid,
+					reason: formRefresh.reason,
 				}),
 			}),
 		onSuccess(data) {
@@ -352,14 +356,39 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			<Popup open={isExportPopupOpen} onClose={handleCloseExport}>
 				<FormExportExcel onClose={handleCloseExport} />
 			</Popup>
-			<Dialog
-				type='error'
-				open={!!refreshUuid}
-				onClose={() => setRefreshUuid('')}
-				title={'Refresh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refresh báo cáo công việc này?'}
-				onSubmit={backStateReport.mutate}
-			/>
+			
+			<Form form={formRefresh} setForm={setFormRefresh}>
+				<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
+					<div className={styles.main_popup}>
+						<div className={styles.head_popup}>
+							<h4>Xác nhận refresh báo cáo công việc</h4>
+						</div>
+						<div className={styles.form_poup}>
+							<TextArea
+								name='reason'
+								placeholder='Nhập lý do refresh'
+								label={
+									<span>
+										Lý do refresh<span style={{color: 'red'}}>*</span>
+									</span>
+								}
+							/>
+							<div className={styles.group_button}>
+								<div>
+									<Button p_12_20 grey rounded_6 onClick={() => setRefreshUuid('')}>
+										Hủy bỏ
+									</Button>
+								</div>
+								<div className={styles.btn}>
+									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={backStateReport.mutate}>
+										Xác nhận
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Popup>
+			</Form>
 		</div>
 	);
 }

@@ -50,6 +50,7 @@ const reportServices = {
 	backStateReport: (
 		data: {
 			uuid: string;
+			reason: string;
 		},
 		tokenAxios?: any
 	) => {
