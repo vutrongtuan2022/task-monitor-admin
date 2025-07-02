@@ -342,6 +342,22 @@ function MainPageUserWork({}: PropsMainPageUserWork) {
 								render: (data: IUserWork) => <Progress percent={data?.progress} width={80} />,
 							},
 							{
+								title: 'Tình trạng xử lý',
+								render: (data: IUserWork) => (
+									<Tippy content={data?.unfinishReason || '---'}>
+										<p
+											className={styles.unfinishReason}
+											style={{
+												color:
+													data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+											}}
+										>
+											{data?.unfinishReason || '---'}
+										</p>
+									</Tippy>
+								),
+							},
+							{
 								title: 'Trạng thái',
 								fixedRight: true,
 								render: (data: IUserWork) => (
