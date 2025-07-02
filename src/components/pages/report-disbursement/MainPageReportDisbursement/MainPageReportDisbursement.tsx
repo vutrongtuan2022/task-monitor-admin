@@ -40,7 +40,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const {_page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _project} = router.query;
 
 	const [isExportUserPopupOpen, setExportUserPopupOpen] = useState(false);
-	const [refeshUuid, setRefeshUuid] = useState<string>('');
+	const [refreshUuid, setRefreshUuid] = useState<string>('');
 
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
@@ -75,14 +75,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Refesh lại báo cáo thành công!',
+				msgSuccess: 'Refresh lại báo cáo thành công!',
 				http: contractsFundServices.backStateContractFund({
-					uuid: refeshUuid,
+					uuid: refreshUuid,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
-				setRefeshUuid('');
+				setRefreshUuid('');
 				queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
 			}
 		},
@@ -316,10 +316,10 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED  && (
 										<IconCustom
 											color='#EE464C'
-											onClick={() => setRefeshUuid(data?.uuid)}
+											onClick={() => setRefreshUuid(data?.uuid)}
 											type='edit'
 											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refesh trạng thái'
+											tooltip='Refresh trạng thái'
 										/>
 										)}
 									</div>
@@ -338,8 +338,8 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 
 			<Dialog
 				type='error'
-				open={!!refeshUuid}
-				onClose={() => setRefeshUuid('')}
+				open={!!refreshUuid}
+				onClose={() => setRefreshUuid('')}
 				title={'Refesh dữ liệu'}
 				note={'Bạn có chắc chắn muốn refesh báo cáo giải ngân này?'}
 				onSubmit={backStateFundReport.mutate}

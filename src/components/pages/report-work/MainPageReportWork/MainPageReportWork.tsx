@@ -35,7 +35,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const [isExportPopupOpen, setExportPopupOpen] = useState(false);
-	const [refeshUuid, setRefeshUuid] = useState<string>('');
+	const [refreshUuid, setRefreshUuid] = useState<string>('');
 
 	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState, _reporterUuid} = router.query;
 
@@ -59,14 +59,14 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Refesh lại báo cáo thành công!',
+				msgSuccess: 'Refresh lại báo cáo thành công!',
 				http: reportServices.backStateReport({
-					uuid: refeshUuid,
+					uuid: refreshUuid,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
-				setRefeshUuid('');
+				setRefreshUuid('');
 				queryClient.invalidateQueries([QUERY_KEY.table_list_report]);
 			}
 		},
@@ -331,10 +331,10 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 										{data?.state == STATE_REPORT.REPORTED  && (
 										<IconCustom
 											color='#EE464C'
-											onClick={() => setRefeshUuid(data?.uuid)}
+											onClick={() => setRefreshUuid(data?.uuid)}
 											type='edit'
 											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refesh trạng thái'
+											tooltip='Refresh trạng thái'
 										/>)}
 									</div>
 								),
@@ -354,10 +354,10 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			</Popup>
 			<Dialog
 				type='error'
-				open={!!refeshUuid}
-				onClose={() => setRefeshUuid('')}
-				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh báo cáo công việc này?'}
+				open={!!refreshUuid}
+				onClose={() => setRefreshUuid('')}
+				title={'Refresh dữ liệu'}
+				note={'Bạn có chắc chắn muốn refresh báo cáo công việc này?'}
 				onSubmit={backStateReport.mutate}
 			/>
 		</div>

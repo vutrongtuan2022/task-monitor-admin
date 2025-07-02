@@ -35,8 +35,8 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 	const {_page, _pageSize, _keyword, _state, _project} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
-	const [refeshUuid, setRefeshUuid] = useState<string>('');
-	const [refeshCode, setRefeshCode] = useState<string>('');
+	const [refreshUuid, setRefreshUuid] = useState<string>('');
+	const [refreshCode, setRefreshCode] = useState<string>('');
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
 			httpRequest({
@@ -113,14 +113,14 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Refesh lại báo cáo thành công!',
+				msgSuccess: 'Refresh lại báo cáo thành công!',
 				http: pnServices.backStatePN({
-					uuid: refeshUuid,
+					uuid: refreshUuid,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
-				setRefeshUuid('');
+				setRefreshUuid('');
 				queryClient.invalidateQueries([QUERY_KEY.table_csct]);
 			}
 		},
@@ -276,10 +276,10 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 										{data?.state == STATUS_CSCT.APPROVED  && (
 										<IconCustom
 											color='#EE464C'
-											onClick={() => {setRefeshUuid(data?.uuid) , setRefeshCode(data?.code) }}
+											onClick={() => {setRefreshUuid(data?.uuid) , setRefreshCode(data?.code) }}
 											type='edit'
 											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refesh trạng thái'
+											tooltip='Refresh trạng thái'
 										/>)}
 
 										{(data?.state !== STATUS_CSCT.REJECTED && data?.state !== STATUS_CSCT.APPROVED)  && (
@@ -333,10 +333,10 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 
 				<Dialog
 				type='error'
-				open={!!refeshUuid}
-				onClose={() => setRefeshUuid('')}
-				title={'Refesh dữ liệu'}
-				note={`Bạn có chắc chắn muốn refesh dữ liệu của CSCT ${refeshCode}?`}
+				open={!!refreshUuid}
+				onClose={() => setRefreshUuid('')}
+				title={'Refresh dữ liệu'}
+				note={`Bạn có chắc chắn muốn refesh dữ liệu của CSCT ${refreshCode}?`}
 				onSubmit={backStatePN.mutate}
 			/>
 			</WrapperScrollbar>
