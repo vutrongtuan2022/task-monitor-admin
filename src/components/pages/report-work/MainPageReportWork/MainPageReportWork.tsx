@@ -77,6 +77,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 		onSuccess(data) {
 			if (data) {
 				setRefreshUuid('');
+				setFormRefresh({reason: ''});
 				queryClient.invalidateQueries([QUERY_KEY.table_list_report]);
 			}
 		},
@@ -365,7 +366,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			</Popup>
 
 			<Form form={formRefresh} setForm={setFormRefresh}>
-				<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
+				<Popup open={!!refreshUuid} onClose={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
 					<div className={styles.main_popup}>
 						<div className={styles.head_popup}>
 							<h4>Xác nhận refresh báo cáo công việc</h4>
@@ -382,7 +383,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							/>
 							<div className={styles.group_button}>
 								<div>
-									<Button p_12_20 grey rounded_6 onClick={() => setRefreshUuid('')}>
+									<Button p_12_20 grey rounded_6 onClick={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
 										Hủy bỏ
 									</Button>
 								</div>

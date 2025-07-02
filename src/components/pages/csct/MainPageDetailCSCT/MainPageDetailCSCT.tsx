@@ -72,7 +72,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Refresh lại CSCT thành công!',
+				msgSuccess: 'Refresh lại trạng thái thành công!',
 				http: pnServices.backStatePN({
 					uuid: _uuid as string,
 					reason: formRefresh.reason,
@@ -81,7 +81,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		onSuccess(data) {
 			if (data) {
 				setOpenRefesh(false);
-				queryClient.invalidateQueries([QUERY_KEY.table_csct]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_csct, _uuid]);
 			}
 		},
 	});
@@ -164,7 +164,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 										setOpenRefesh(true), setRefreshCode(detailCSCT?.code);
 									}}
 								>
-									Refresh báo cáo
+									Refresh trạng thái
 								</Button>
 							</div>
 						)}
@@ -350,7 +350,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							onSubmit={funcCancel.mutate}
 						/>
 						<Form form={formRefresh} setForm={setFormRefresh}>
-							<Popup open={!!openRefesh} onClose={() => setOpenRefesh(false)}>
+							<Popup open={!!openRefesh} onClose={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
 								<div className={styles.main_popup}>
 									<div className={styles.head_popup}>
 										<h4>Xác nhận refresh CSCT {refreshCode}</h4>
@@ -367,7 +367,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 										/>
 										<div className={styles.group_button}>
 											<div>
-												<Button p_12_20 grey rounded_6 onClick={() => setOpenRefesh(false)}>
+												<Button p_12_20 grey rounded_6 onClick={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
 													Hủy bỏ
 												</Button>
 											</div>

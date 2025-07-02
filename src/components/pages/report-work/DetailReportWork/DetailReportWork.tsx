@@ -63,7 +63,8 @@ function DetailReportWork({}: PropsDetailReportWork) {
 		onSuccess(data) {
 			if (data) {
 				setOpenRefesh(false);
-				queryClient.invalidateQueries([QUERY_KEY.detail_report_disbursement]);
+				setFormRefresh({reason: ''});
+				queryClient.invalidateQueries([QUERY_KEY.detail_report_work, _uuid]);
 			}
 		},
 	});
@@ -240,7 +241,7 @@ function DetailReportWork({}: PropsDetailReportWork) {
 					</div>
 				</div>
 				<Form form={formRefresh} setForm={setFormRefresh}>
-					<Popup open={!!openRefesh} onClose={() => setOpenRefesh(false)}>
+					<Popup open={!!openRefesh} onClose={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
 						<div className={styles.main_popup}>
 							<div className={styles.head_popup}>
 								<h4>Xác nhận refresh báo cáo công việc</h4>
@@ -257,7 +258,7 @@ function DetailReportWork({}: PropsDetailReportWork) {
 								/>
 								<div className={styles.group_button}>
 									<div>
-										<Button p_12_20 grey rounded_6 onClick={() => setOpenRefesh(false)}>
+										<Button p_12_20 grey rounded_6 onClick={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
 											Hủy bỏ
 										</Button>
 									</div>
