@@ -8,6 +8,10 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
+import Form from '~/components/common/Form';
+import Popup from '~/components/common/Popup';
+import TextArea from '~/components/common/Form/components/TextArea';
+import Button from '~/components/common/Button';
 import {CloseCircle, DriverRefresh, Eye, TickCircle} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
 import {useRouter} from 'next/router';
@@ -31,7 +35,9 @@ import {convertCoin} from '~/common/funcs/convertCoin';
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {_page, _pageSize, _keyword, _state, _project} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
@@ -116,6 +122,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 				msgSuccess: 'Refresh lại báo cáo thành công!',
 				http: pnServices.backStatePN({
 					uuid: refreshUuid,
+					reason: formRefresh.reason,
 				}),
 			}),
 		onSuccess(data) {
@@ -331,14 +338,39 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					onSubmit={funcCancel.mutate}
 				/>
 
-				<Dialog
-				type='error'
-				open={!!refreshUuid}
-				onClose={() => setRefreshUuid('')}
-				title={'Refresh dữ liệu'}
-				note={`Bạn có chắc chắn muốn refesh dữ liệu của CSCT ${refreshCode}?`}
-				onSubmit={backStatePN.mutate}
-			/>
+				
+			<Form form={formRefresh} setForm={setFormRefresh}>
+				<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
+					<div className={styles.main_popup}>
+						<div className={styles.head_popup}>
+							<h4>Xác nhận refresh CSCT {refreshCode}</h4>
+						</div>
+						<div className={styles.form_poup}>
+							<TextArea
+								name='reason'
+								placeholder='Nhập lý do refresh'
+								label={
+									<span>
+										Lý do refresh <span style={{color: 'red'}}>*</span>
+									</span>
+								}
+							/>
+							<div className={styles.group_button}>
+								<div>
+									<Button p_12_20 grey rounded_6 onClick={() => setRefreshUuid('')}>
+										Hủy bỏ
+									</Button>
+								</div>
+								<div className={styles.btn}>
+									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={backStatePN.mutate}>
+										Xác nhận
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Popup>
+			</Form>
 			</WrapperScrollbar>
 		</div>
 	);

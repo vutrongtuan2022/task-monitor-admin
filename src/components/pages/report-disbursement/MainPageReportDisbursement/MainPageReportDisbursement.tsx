@@ -13,6 +13,8 @@ import Pagination from '~/components/common/Pagination';
 import DataWrapper from '~/components/common/DataWrapper';
 import Table from '~/components/common/Table';
 import Noti from '~/components/common/DataWrapper/components/Noti';
+import Form from '~/components/common/Form';
+import TextArea from '~/components/common/Form/components/TextArea';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import StateActive from '~/components/common/StateActive';
 import Moment from 'react-moment';
@@ -41,7 +43,9 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 
 	const [isExportUserPopupOpen, setExportUserPopupOpen] = useState(false);
 	const [refreshUuid, setRefreshUuid] = useState<string>('');
-
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
 			httpRequest({
@@ -78,6 +82,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				msgSuccess: 'Refresh lại báo cáo thành công!',
 				http: contractsFundServices.backStateContractFund({
 					uuid: refreshUuid,
+					reason: formRefresh.reason,
 				}),
 			}),
 		onSuccess(data) {
@@ -336,14 +341,39 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				/>
 			</WrapperScrollbar>
 
-			<Dialog
-				type='error'
-				open={!!refreshUuid}
-				onClose={() => setRefreshUuid('')}
-				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh báo cáo giải ngân này?'}
-				onSubmit={backStateFundReport.mutate}
-			/>
+			
+			<Form form={formRefresh} setForm={setFormRefresh}>
+				<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
+					<div className={styles.main_popup}>
+						<div className={styles.head_popup}>
+							<h4>Xác nhận refresh báo cáo giải ngân</h4>
+						</div>
+						<div className={styles.form_poup}>
+							<TextArea
+								name='reason'
+								placeholder='Nhập lý do refresh'
+								label={
+									<span>
+										Lý do refresh<span style={{color: 'red'}}>*</span>
+									</span>
+								}
+							/>
+							<div className={styles.group_button}>
+								<div>
+									<Button p_12_20 grey rounded_6 onClick={() => setRefreshUuid('')}>
+										Hủy bỏ
+									</Button>
+								</div>
+								<div className={styles.btn}>
+									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={backStateFundReport.mutate}>
+										Xác nhận
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Popup>
+			</Form>
 			<Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>
 				<FormExportExcelUser onClose={handleCloseExportUser} />
 			</Popup>

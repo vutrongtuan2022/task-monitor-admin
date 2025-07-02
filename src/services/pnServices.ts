@@ -116,6 +116,7 @@ const pnServices = {
 	backStatePN: (
 		data: {
 			uuid: string;
+			reason: string;
 		},
 		tokenAxios?: any
 	) => {
