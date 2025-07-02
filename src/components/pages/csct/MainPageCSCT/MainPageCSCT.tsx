@@ -31,6 +31,7 @@ import Link from 'next/link';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
 import {convertCoin} from '~/common/funcs/convertCoin';
+import {toastWarn} from '~/common/funcs/toast';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
@@ -72,7 +73,12 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			return data;
 		},
 	});
-
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStatePN.mutate();
+	};
 	const funcConfirm = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -280,32 +286,35 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
-										{data?.state == STATUS_CSCT.APPROVED  && (
-										<IconCustom
-											color='#EE464C'
-											onClick={() => {setRefreshUuid(data?.uuid) , setRefreshCode(data?.code) }}
-											type='edit'
-											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refresh trạng thái'
-										/>)}
+										{data?.state == STATUS_CSCT.APPROVED && (
+											<IconCustom
+												color='#EE464C'
+												onClick={() => {
+													setRefreshUuid(data?.uuid), setRefreshCode(data?.code);
+												}}
+												type='edit'
+												icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+												tooltip='Refresh trạng thái'
+											/>
+										)}
 
-										{(data?.state !== STATUS_CSCT.REJECTED && data?.state !== STATUS_CSCT.APPROVED)  && (
-										<>
-										<IconCustom
-											color='#06D7A0'
-											icon={<TickCircle fontSize={20} fontWeight={600} />}
-											tooltip='Duyệt thanh toán'
-											
-											onClick={() => setUuidConfirm(data?.uuid)}
-										/>
-										
-										<IconCustom
-											color='#EE464C'
-											icon={<CloseCircle fontSize={20} fontWeight={600} />}
-											tooltip='Từ chối thanh toán'
-											onClick={() => setUuidCancel(data?.uuid)}
-										/>
-										</>)}
+										{data?.state !== STATUS_CSCT.REJECTED && data?.state !== STATUS_CSCT.APPROVED && (
+											<>
+												<IconCustom
+													color='#06D7A0'
+													icon={<TickCircle fontSize={20} fontWeight={600} />}
+													tooltip='Duyệt thanh toán'
+													onClick={() => setUuidConfirm(data?.uuid)}
+												/>
+
+												<IconCustom
+													color='#EE464C'
+													icon={<CloseCircle fontSize={20} fontWeight={600} />}
+													tooltip='Từ chối thanh toán'
+													onClick={() => setUuidCancel(data?.uuid)}
+												/>
+											</>
+										)}
 									</div>
 								),
 							},
@@ -338,39 +347,38 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					onSubmit={funcCancel.mutate}
 				/>
 
-				
-			<Form form={formRefresh} setForm={setFormRefresh}>
-				<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
-					<div className={styles.main_popup}>
-						<div className={styles.head_popup}>
-							<h4>Xác nhận refresh CSCT {refreshCode}</h4>
-						</div>
-						<div className={styles.form_poup}>
-							<TextArea
-								name='reason'
-								placeholder='Nhập lý do refresh'
-								label={
-									<span>
-										Lý do refresh <span style={{color: 'red'}}>*</span>
-									</span>
-								}
-							/>
-							<div className={styles.group_button}>
-								<div>
-									<Button p_12_20 grey rounded_6 onClick={() => setRefreshUuid('')}>
-										Hủy bỏ
-									</Button>
-								</div>
-								<div className={styles.btn}>
-									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={backStatePN.mutate}>
-										Xác nhận
-									</Button>
+				<Form form={formRefresh} setForm={setFormRefresh}>
+					<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
+						<div className={styles.main_popup}>
+							<div className={styles.head_popup}>
+								<h4>Xác nhận refresh CSCT {refreshCode}</h4>
+							</div>
+							<div className={styles.form_poup}>
+								<TextArea
+									name='reason'
+									placeholder='Nhập lý do refresh'
+									label={
+										<span>
+											Lý do refresh <span style={{color: 'red'}}>*</span>
+										</span>
+									}
+								/>
+								<div className={styles.group_button}>
+									<div>
+										<Button p_12_20 grey rounded_6 onClick={() => setRefreshUuid('')}>
+											Hủy bỏ
+										</Button>
+									</div>
+									<div className={styles.btn}>
+										<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
+											Xác nhận
+										</Button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</Popup>
-			</Form>
+					</Popup>
+				</Form>
 			</WrapperScrollbar>
 		</div>
 	);

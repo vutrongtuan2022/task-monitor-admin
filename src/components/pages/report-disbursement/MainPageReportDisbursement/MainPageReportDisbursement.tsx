@@ -31,7 +31,7 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Popup from '~/components/common/Popup';
 import FormExportExcelUser from '../FormExportExcelUser';
-import Dialog from '~/components/common/Dialog';
+import {toastWarn} from '~/common/funcs/toast';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
@@ -92,7 +92,12 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			}
 		},
 	});
-
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStateFundReport.mutate();
+	};
 	const listReportDisbursement = useQuery(
 		[QUERY_KEY.table_list_report_disbursement, _page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _project],
 		{
@@ -318,14 +323,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 											tooltip='Xem chi tiết'
 											href={`${PATH.ReportDisbursement}/${data?.uuid}`}
 										/>
-										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED  && (
-										<IconCustom
-											color='#EE464C'
-											onClick={() => setRefreshUuid(data?.uuid)}
-											type='edit'
-											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refresh trạng thái'
-										/>
+										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED && (
+											<IconCustom
+												color='#EE464C'
+												onClick={() => setRefreshUuid(data?.uuid)}
+												type='edit'
+												icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+												tooltip='Refresh trạng thái'
+											/>
 										)}
 									</div>
 								),
@@ -341,7 +346,6 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				/>
 			</WrapperScrollbar>
 
-			
 			<Form form={formRefresh} setForm={setFormRefresh}>
 				<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
 					<div className={styles.main_popup}>
@@ -365,7 +369,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 									</Button>
 								</div>
 								<div className={styles.btn}>
-									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={backStateFundReport.mutate}>
+									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
 										Xác nhận
 									</Button>
 								</div>
