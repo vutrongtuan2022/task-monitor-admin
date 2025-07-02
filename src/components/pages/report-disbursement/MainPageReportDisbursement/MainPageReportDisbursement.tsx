@@ -88,6 +88,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 		onSuccess(data) {
 			if (data) {
 				setRefreshUuid('');
+				setFormRefresh({reason: ''})
 				queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
 			}
 		},
@@ -347,7 +348,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			</WrapperScrollbar>
 
 			<Form form={formRefresh} setForm={setFormRefresh}>
-				<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
+				<Popup open={!!refreshUuid} onClose={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
 					<div className={styles.main_popup}>
 						<div className={styles.head_popup}>
 							<h4>Xác nhận refresh báo cáo giải ngân</h4>
@@ -364,7 +365,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							/>
 							<div className={styles.group_button}>
 								<div>
-									<Button p_12_20 grey rounded_6 onClick={() => setRefreshUuid('')}>
+									<Button p_12_20 grey rounded_6 onClick={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
 										Hủy bỏ
 									</Button>
 								</div>

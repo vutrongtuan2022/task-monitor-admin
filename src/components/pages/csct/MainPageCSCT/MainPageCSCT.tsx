@@ -125,7 +125,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Refresh lại báo cáo thành công!',
+				msgSuccess: 'Refresh lại trạng thái thành công!',
 				http: pnServices.backStatePN({
 					uuid: refreshUuid,
 					reason: formRefresh.reason,
@@ -134,6 +134,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 		onSuccess(data) {
 			if (data) {
 				setRefreshUuid('');
+				setFormRefresh({reason: ''});
 				queryClient.invalidateQueries([QUERY_KEY.table_csct]);
 			}
 		},
@@ -348,7 +349,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 				/>
 
 				<Form form={formRefresh} setForm={setFormRefresh}>
-					<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
+					<Popup open={!!refreshUuid} onClose={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
 						<div className={styles.main_popup}>
 							<div className={styles.head_popup}>
 								<h4>Xác nhận refresh CSCT {refreshCode}</h4>
@@ -365,7 +366,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								/>
 								<div className={styles.group_button}>
 									<div>
-										<Button p_12_20 grey rounded_6 onClick={() => setRefreshUuid('')}>
+										<Button p_12_20 grey rounded_6 onClick={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
 											Hủy bỏ
 										</Button>
 									</div>
