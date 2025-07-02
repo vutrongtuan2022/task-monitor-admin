@@ -22,13 +22,18 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Link from 'next/link';
 import contractsFundServices from '~/services/contractsFundServices';
 import Button from '~/components/common/Button';
-import Dialog from '~/components/common/Dialog';
+import Form from '~/components/common/Form';
+import Popup from '~/components/common/Popup';
+import TextArea from '~/components/common/Form/components/TextArea';
 import Loading from '~/components/common/Loading';
+import {toastWarn} from '~/common/funcs/toast';
 
 function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {_uuid, _page, _pageSize} = router.query;
 	const [openRefesh, setOpenRefesh] = useState<boolean>(false);
 
@@ -61,7 +66,12 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 		},
 		enabled: !!_uuid,
 	});
-
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStateFundReport.mutate();
+	};
 	const backStateFundReport = useMutation({
 		mutationFn: () =>
 			httpRequest({
@@ -70,6 +80,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 				msgSuccess: 'Refesh lại báo cáo thành công!',
 				http: contractsFundServices.backStateContractFund({
 					uuid: _uuid as string,
+					reason: formRefresh.reason,
 				}),
 			}),
 		onSuccess(data) {
@@ -338,14 +349,38 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 							dependencies={[_pageSize, _uuid]}
 						/>
 					</WrapperScrollbar>
-					<Dialog
-						type='error'
-						open={!!openRefesh}
-						onClose={() => setOpenRefesh(false)}
-						title={'Refesh dữ liệu'}
-						note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
-						onSubmit={backStateFundReport.mutate}
-					/>
+					<Form form={formRefresh} setForm={setFormRefresh}>
+						<Popup open={!!openRefesh} onClose={() => setOpenRefesh(false)}>
+							<div className={styles.main_popup}>
+								<div className={styles.head_popup}>
+									<h4>Xác nhận refresh báo cáo giải ngân</h4>
+								</div>
+								<div className={styles.form_poup}>
+									<TextArea
+										name='reason'
+										placeholder='Nhập lý do refresh'
+										label={
+											<span>
+												Lý do refresh<span style={{color: 'red'}}>*</span>
+											</span>
+										}
+									/>
+									<div className={styles.group_button}>
+										<div>
+											<Button p_12_20 grey rounded_6 onClick={() => setOpenRefesh(false)}>
+												Hủy bỏ
+											</Button>
+										</div>
+										<div className={styles.btn}>
+											<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
+												Xác nhận
+											</Button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</Popup>
+					</Form>
 				</div>
 			</div>
 		</div>

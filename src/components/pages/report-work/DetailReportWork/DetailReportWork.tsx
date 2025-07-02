@@ -16,17 +16,21 @@ import reportServices from '~/services/reportServices';
 import Moment from 'react-moment';
 import TableReportWorkLastMonth from '../TableReportWorkLastMonth';
 import TableReportWorkCurrent from '../TableReportWorkCurrent';
-import contractsFundServices from '~/services/contractsFundServices';
 import Loading from '~/components/common/Loading';
 import Button from '~/components/common/Button';
-import Dialog from '~/components/common/Dialog';
+import Form from '~/components/common/Form';
+import Popup from '~/components/common/Popup';
+import TextArea from '~/components/common/Form/components/TextArea';
+import {toastWarn} from '~/common/funcs/toast';
 
 function DetailReportWork({}: PropsDetailReportWork) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const {_uuid, _type} = router.query;
 	const [openRefesh, setOpenRefesh] = useState<boolean>(false);
-
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {data: detailReportWork} = useQuery<IDetailReportWork>([QUERY_KEY.detail_report_work, _uuid], {
 		queryFn: () =>
 			httpRequest({
@@ -39,15 +43,21 @@ function DetailReportWork({}: PropsDetailReportWork) {
 		},
 		enabled: !!_uuid,
 	});
-
-	const backStateFundReport = useMutation({
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStateReport.mutate();
+	};
+	const backStateReport = useMutation({
 		mutationFn: () =>
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Refesh lại báo cáo thành công!',
-				http: contractsFundServices.backStateContractFund({
+				http: reportServices.backStateReport({
 					uuid: _uuid as string,
+					reason: formRefresh.reason,
 				}),
 			}),
 		onSuccess(data) {
@@ -60,7 +70,7 @@ function DetailReportWork({}: PropsDetailReportWork) {
 
 	return (
 		<div className={styles.container}>
-			<Loading loading={backStateFundReport.isLoading} />
+			<Loading loading={backStateReport.isLoading} />
 			<Breadcrumb
 				listUrls={[
 					{
@@ -229,14 +239,38 @@ function DetailReportWork({}: PropsDetailReportWork) {
 						{_type == 'report' && <TableReportWorkCurrent />}
 					</div>
 				</div>
-				<Dialog
-					type='error'
-					open={!!openRefesh}
-					onClose={() => setOpenRefesh(false)}
-					title={'Refesh dữ liệu'}
-					note={'Bạn có chắc chắn muốn refesh dữ liệu này?'}
-					onSubmit={backStateFundReport.mutate}
-				/>
+				<Form form={formRefresh} setForm={setFormRefresh}>
+					<Popup open={!!openRefesh} onClose={() => setOpenRefesh(false)}>
+						<div className={styles.main_popup}>
+							<div className={styles.head_popup}>
+								<h4>Xác nhận refresh báo cáo công việc</h4>
+							</div>
+							<div className={styles.form_poup}>
+								<TextArea
+									name='reason'
+									placeholder='Nhập lý do refresh'
+									label={
+										<span>
+											Lý do refresh<span style={{color: 'red'}}>*</span>
+										</span>
+									}
+								/>
+								<div className={styles.group_button}>
+									<div>
+										<Button p_12_20 grey rounded_6 onClick={() => setOpenRefesh(false)}>
+											Hủy bỏ
+										</Button>
+									</div>
+									<div className={styles.btn}>
+										<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
+											Xác nhận
+										</Button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</Popup>
+				</Form>
 			</div>
 		</div>
 	);

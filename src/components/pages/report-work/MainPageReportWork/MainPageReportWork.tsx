@@ -28,6 +28,7 @@ import Popup from '~/components/common/Popup';
 import FormExportExcel from '../FormExportExcel';
 import Form from '~/components/common/Form';
 import TextArea from '~/components/common/Form/components/TextArea';
+import {toastWarn} from '~/common/funcs/toast';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
@@ -56,7 +57,12 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			return data;
 		},
 	});
-
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStateReport.mutate();
+	};
 	const backStateReport = useMutation({
 		mutationFn: () =>
 			httpRequest({
@@ -332,14 +338,15 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
-										{data?.state == STATE_REPORT.REPORTED  && (
-										<IconCustom
-											color='#EE464C'
-											onClick={() => setRefreshUuid(data?.uuid)}
-											type='edit'
-											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refresh trạng thái'
-										/>)}
+										{data?.state == STATE_REPORT.REPORTED && (
+											<IconCustom
+												color='#EE464C'
+												onClick={() => setRefreshUuid(data?.uuid)}
+												type='edit'
+												icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+												tooltip='Refresh trạng thái'
+											/>
+										)}
 									</div>
 								),
 							},
@@ -356,7 +363,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			<Popup open={isExportPopupOpen} onClose={handleCloseExport}>
 				<FormExportExcel onClose={handleCloseExport} />
 			</Popup>
-			
+
 			<Form form={formRefresh} setForm={setFormRefresh}>
 				<Popup open={!!refreshUuid} onClose={() => setRefreshUuid('')}>
 					<div className={styles.main_popup}>
@@ -380,7 +387,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 									</Button>
 								</div>
 								<div className={styles.btn}>
-									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={backStateReport.mutate}>
+									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
 										Xác nhận
 									</Button>
 								</div>
