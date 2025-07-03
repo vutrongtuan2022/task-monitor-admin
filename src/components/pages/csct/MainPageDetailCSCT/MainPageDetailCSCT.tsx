@@ -21,16 +21,22 @@ import {useState} from 'react';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
 import Loading from '~/components/common/Loading';
-
+import Form from '~/components/common/Form';
+import Popup from '~/components/common/Popup';
+import TextArea from '~/components/common/Form/components/TextArea';
+import {toastWarn} from '~/common/funcs/toast';
 function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const {_uuid} = router.query;
-
+	const [refreshCode, setRefreshCode] = useState<string>('');
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
-
+	const [openRefesh, setOpenRefesh] = useState<boolean>(false);
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {data: detailCSCT} = useQuery<IDetailCSCT>([QUERY_KEY.detail_csct, _uuid], {
 		queryFn: () =>
 			httpRequest({
@@ -43,7 +49,12 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		},
 		enabled: !!_uuid,
 	});
-
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStatePN.mutate();
+	};
 	const {data: ListPNContract, isLoading} = useQuery([QUERY_KEY.table_pn_contract, _uuid], {
 		queryFn: () =>
 			httpRequest({
@@ -56,7 +67,24 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		},
 		enabled: !!_uuid,
 	});
-
+	const backStatePN = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Refresh lại trạng thái thành công!',
+				http: pnServices.backStatePN({
+					uuid: _uuid as string,
+					reason: formRefresh.reason,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setOpenRefesh(false);
+				queryClient.invalidateQueries([QUERY_KEY.detail_csct, _uuid]);
+			}
+		},
+	});
 	const funcConfirm = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -114,16 +142,33 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 					},
 				]}
 				action={
-					detailCSCT?.state === STATUS_CSCT.NUMBER_ISSUED || detailCSCT?.state === STATUS_CSCT.PENDING_APPROVAL ? (
-						<div className={styles.group_btn}>
-							<Button p_14_24 rounded_8 light-red onClick={() => setUuidCancel(detailCSCT?.uuid!)}>
-								Từ chối
-							</Button>
-							<Button p_14_24 rounded_8 green onClick={() => setUuidConfirm(detailCSCT?.uuid!)}>
-								Duyệt cấp số
-							</Button>
-						</div>
-					) : null
+					<>
+						{(detailCSCT?.state === STATUS_CSCT.NUMBER_ISSUED || detailCSCT?.state === STATUS_CSCT.PENDING_APPROVAL) && (
+							<div className={styles.group_btn}>
+								<Button p_14_24 rounded_8 light-red onClick={() => setUuidCancel(detailCSCT?.uuid!)}>
+									Từ chối
+								</Button>
+								<Button p_14_24 rounded_8 green onClick={() => setUuidConfirm(detailCSCT?.uuid!)}>
+									Duyệt cấp số
+								</Button>
+							</div>
+						)}
+
+						{detailCSCT?.state == STATUS_CSCT.APPROVED && (
+							<div className={styles.group_btn}>
+								<Button
+									p_14_24
+									rounded_8
+									error
+									onClick={() => {
+										setOpenRefesh(true), setRefreshCode(detailCSCT?.code);
+									}}
+								>
+									Refresh trạng thái
+								</Button>
+							</div>
+						)}
+					</>
 				}
 			/>
 			<div className={styles.main}>
@@ -214,6 +259,12 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 								<p>LKSCT đến hiện tại (VND)</p>
 								<p>{convertCoin(detailCSCT?.accumAmount!)}</p>
 							</div>
+							{detailCSCT?.rejectReason !== null && (
+								<div className={styles.item}>
+									<p>Lý do từ chối</p>
+									<p>{detailCSCT?.rejectReason || '---'}</p>
+								</div>
+							)}
 						</GridColumn>
 					</div>
 				</div>
@@ -298,6 +349,38 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							note={'Bạn có chắc chắn muốn từ chối CSCT thanh toán này không?'}
 							onSubmit={funcCancel.mutate}
 						/>
+						<Form form={formRefresh} setForm={setFormRefresh}>
+							<Popup open={!!openRefesh} onClose={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
+								<div className={styles.main_popup}>
+									<div className={styles.head_popup}>
+										<h4>Xác nhận refresh CSCT {refreshCode}</h4>
+									</div>
+									<div className={styles.form_poup}>
+										<TextArea
+											name='reason'
+											placeholder='Nhập lý do refresh'
+											label={
+												<span>
+													Lý do refresh <span style={{color: 'red'}}>*</span>
+												</span>
+											}
+										/>
+										<div className={styles.group_button}>
+											<div>
+												<Button p_12_20 grey rounded_6 onClick={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
+													Hủy bỏ
+												</Button>
+											</div>
+											<div className={styles.btn}>
+												<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
+													Xác nhận
+												</Button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</Popup>
+						</Form>
 					</div>
 				</div>
 			</div>

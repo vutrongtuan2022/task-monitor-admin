@@ -116,10 +116,11 @@ const pnServices = {
 	backStatePN: (
 		data: {
 			uuid: string;
+			reason: string;
 		},
 		tokenAxios?: any
 	) => {
-		return axiosClient.post(`/Report/back-state-pn-admin`, data, {
+		return axiosClient.post(`/PN/back-state-pn-admin`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

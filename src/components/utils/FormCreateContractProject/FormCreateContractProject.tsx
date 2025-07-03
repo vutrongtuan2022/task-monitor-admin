@@ -24,8 +24,8 @@ import activityServices from '~/services/activityServices';
 
 function hasDuplicateContractor(
 	data: {
-		contractorUuid: string;
 		contractorCatUuid: string;
+		contractorUuid: string;
 		amountInContract: number | string;
 	}[]
 ) {
@@ -47,8 +47,8 @@ interface IFormCreateContractProject {
 	nameActivity: string;
 	code: string;
 	contractorAndCat: {
-		contractorUuid: string;
 		contractorCatUuid: string;
+		contractorUuid: string;
 		amountInContract: number | string;
 	}[];
 	startDate: string;
@@ -69,8 +69,8 @@ function FormCreateContractProject({onClose, uuidProject, queryKeys}: PropsFormC
 		code: '',
 		contractorAndCat: [
 			{
-				contractorUuid: '',
 				contractorCatUuid: '',
+				contractorUuid: '',
 				amountInContract: 0,
 			},
 		],
@@ -107,8 +107,8 @@ function FormCreateContractProject({onClose, uuidProject, queryKeys}: PropsFormC
 					activityUuid: form?.uuidActivity,
 					code: form?.code,
 					contractorAndCat: form?.contractorAndCat?.map((v) => ({
-						contractorUuid: v?.contractorUuid,
 						contractorCatUuid: v?.contractorCatUuid,
+						contractorUuid: v?.contractorUuid,
 						amountInContract: price(v?.amountInContract),
 					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
@@ -209,8 +209,8 @@ function FormCreateContractProject({onClose, uuidProject, queryKeys}: PropsFormC
 												uuidActivity: v?.uuid,
 												contractorAndCat: [
 													{
-														contractorUuid: '',
 														contractorCatUuid: '',
+														contractorUuid: '',
 														amountInContract: 0,
 													},
 												],
@@ -295,9 +295,12 @@ function FormCreateContractProject({onClose, uuidProject, queryKeys}: PropsFormC
 						<GridColumn col_3>
 							<p className={styles.label}>
 								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>{' '}
+							<p className={styles.label}>
+								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
 							</p>
 							<p className={styles.label}>
-								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
 							</p>
 							<p className={styles.label}>
 								Tiền hợp đồng <span style={{color: 'red'}}>*</span>
@@ -321,8 +324,8 @@ function FormCreateContractProject({onClose, uuidProject, queryKeys}: PropsFormC
 									contractorAndCat: [
 										...prev.contractorAndCat,
 										{
-											contractorUuid: '',
 											contractorCatUuid: '',
+											contractorUuid: '',
 											amountInContract: 0,
 										},
 									],

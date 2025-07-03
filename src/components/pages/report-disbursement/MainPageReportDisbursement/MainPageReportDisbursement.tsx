@@ -13,6 +13,8 @@ import Pagination from '~/components/common/Pagination';
 import DataWrapper from '~/components/common/DataWrapper';
 import Table from '~/components/common/Table';
 import Noti from '~/components/common/DataWrapper/components/Noti';
+import Form from '~/components/common/Form';
+import TextArea from '~/components/common/Form/components/TextArea';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import StateActive from '~/components/common/StateActive';
 import Moment from 'react-moment';
@@ -29,7 +31,7 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Popup from '~/components/common/Popup';
 import FormExportExcelUser from '../FormExportExcelUser';
-import Dialog from '~/components/common/Dialog';
+import {toastWarn} from '~/common/funcs/toast';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
@@ -40,8 +42,10 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const {_page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _project} = router.query;
 
 	const [isExportUserPopupOpen, setExportUserPopupOpen] = useState(false);
-	const [refeshUuid, setRefeshUuid] = useState<string>('');
-
+	const [refreshUuid, setRefreshUuid] = useState<string>('');
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
 			httpRequest({
@@ -75,19 +79,26 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Refesh lại báo cáo thành công!',
+				msgSuccess: 'Refresh lại báo cáo thành công!',
 				http: contractsFundServices.backStateContractFund({
-					uuid: refeshUuid,
+					uuid: refreshUuid,
+					reason: formRefresh.reason,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
-				setRefeshUuid('');
+				setRefreshUuid('');
+				setFormRefresh({reason: ''})
 				queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
 			}
 		},
 	});
-
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStateFundReport.mutate();
+	};
 	const listReportDisbursement = useQuery(
 		[QUERY_KEY.table_list_report_disbursement, _page, _pageSize, _keyword, _year, _month, _state, _reporterUuid, _project],
 		{
@@ -313,14 +324,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 											tooltip='Xem chi tiết'
 											href={`${PATH.ReportDisbursement}/${data?.uuid}`}
 										/>
-										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED  && (
-										<IconCustom
-											color='#EE464C'
-											onClick={() => setRefeshUuid(data?.uuid)}
-											type='edit'
-											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refesh trạng thái'
-										/>
+										{data?.state == STATE_REPORT_DISBURSEMENT.APPROVED && (
+											<IconCustom
+												color='#EE464C'
+												onClick={() => setRefreshUuid(data?.uuid)}
+												type='edit'
+												icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+												tooltip='Refresh trạng thái'
+											/>
 										)}
 									</div>
 								),
@@ -336,14 +347,38 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				/>
 			</WrapperScrollbar>
 
-			<Dialog
-				type='error'
-				open={!!refeshUuid}
-				onClose={() => setRefeshUuid('')}
-				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh báo cáo giải ngân này?'}
-				onSubmit={backStateFundReport.mutate}
-			/>
+			<Form form={formRefresh} setForm={setFormRefresh}>
+				<Popup open={!!refreshUuid} onClose={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
+					<div className={styles.main_popup}>
+						<div className={styles.head_popup}>
+							<h4>Xác nhận refresh báo cáo giải ngân</h4>
+						</div>
+						<div className={styles.form_poup}>
+							<TextArea
+								name='reason'
+								placeholder='Nhập lý do refresh'
+								label={
+									<span>
+										Lý do refresh<span style={{color: 'red'}}>*</span>
+									</span>
+								}
+							/>
+							<div className={styles.group_button}>
+								<div>
+									<Button p_12_20 grey rounded_6 onClick={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
+										Hủy bỏ
+									</Button>
+								</div>
+								<div className={styles.btn}>
+									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
+										Xác nhận
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Popup>
+			</Form>
 			<Popup open={isExportUserPopupOpen} onClose={handleCloseExportUser}>
 				<FormExportExcelUser onClose={handleCloseExportUser} />
 			</Popup>

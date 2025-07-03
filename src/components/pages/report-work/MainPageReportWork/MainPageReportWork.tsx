@@ -26,7 +26,9 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Popup from '~/components/common/Popup';
 import FormExportExcel from '../FormExportExcel';
-import Dialog from '~/components/common/Dialog';
+import Form from '~/components/common/Form';
+import TextArea from '~/components/common/Form/components/TextArea';
+import {toastWarn} from '~/common/funcs/toast';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
@@ -35,8 +37,10 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const [isExportPopupOpen, setExportPopupOpen] = useState(false);
-	const [refeshUuid, setRefeshUuid] = useState<string>('');
-
+	const [refreshUuid, setRefreshUuid] = useState<string>('');
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState, _reporterUuid} = router.query;
 
 	const {data: listUser} = useQuery([QUERY_KEY.dropdown_user], {
@@ -53,20 +57,27 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			return data;
 		},
 	});
-
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStateReport.mutate();
+	};
 	const backStateReport = useMutation({
 		mutationFn: () =>
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Refesh lại báo cáo thành công!',
+				msgSuccess: 'Refresh lại báo cáo thành công!',
 				http: reportServices.backStateReport({
-					uuid: refeshUuid,
+					uuid: refreshUuid,
+					reason: formRefresh.reason,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
-				setRefeshUuid('');
+				setRefreshUuid('');
+				setFormRefresh({reason: ''});
 				queryClient.invalidateQueries([QUERY_KEY.table_list_report]);
 			}
 		},
@@ -328,14 +339,15 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
-										{data?.state == STATE_REPORT.REPORTED  && (
-										<IconCustom
-											color='#EE464C'
-											onClick={() => setRefeshUuid(data?.uuid)}
-											type='edit'
-											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refesh trạng thái'
-										/>)}
+										{data?.state == STATE_REPORT.REPORTED && (
+											<IconCustom
+												color='#EE464C'
+												onClick={() => setRefreshUuid(data?.uuid)}
+												type='edit'
+												icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+												tooltip='Refresh trạng thái'
+											/>
+										)}
 									</div>
 								),
 							},
@@ -352,14 +364,39 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 			<Popup open={isExportPopupOpen} onClose={handleCloseExport}>
 				<FormExportExcel onClose={handleCloseExport} />
 			</Popup>
-			<Dialog
-				type='error'
-				open={!!refeshUuid}
-				onClose={() => setRefeshUuid('')}
-				title={'Refesh dữ liệu'}
-				note={'Bạn có chắc chắn muốn refesh báo cáo công việc này?'}
-				onSubmit={backStateReport.mutate}
-			/>
+
+			<Form form={formRefresh} setForm={setFormRefresh}>
+				<Popup open={!!refreshUuid} onClose={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
+					<div className={styles.main_popup}>
+						<div className={styles.head_popup}>
+							<h4>Xác nhận refresh báo cáo công việc</h4>
+						</div>
+						<div className={styles.form_poup}>
+							<TextArea
+								name='reason'
+								placeholder='Nhập lý do refresh'
+								label={
+									<span>
+										Lý do refresh<span style={{color: 'red'}}>*</span>
+									</span>
+								}
+							/>
+							<div className={styles.group_button}>
+								<div>
+									<Button p_12_20 grey rounded_6 onClick={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
+										Hủy bỏ
+									</Button>
+								</div>
+								<div className={styles.btn}>
+									<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
+										Xác nhận
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Popup>
+			</Form>
 		</div>
 	);
 }

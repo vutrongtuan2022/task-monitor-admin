@@ -8,6 +8,10 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
+import Form from '~/components/common/Form';
+import Popup from '~/components/common/Popup';
+import TextArea from '~/components/common/Form/components/TextArea';
+import Button from '~/components/common/Button';
 import {CloseCircle, DriverRefresh, Eye, TickCircle} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
 import {useRouter} from 'next/router';
@@ -27,16 +31,19 @@ import Link from 'next/link';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
 import {convertCoin} from '~/common/funcs/convertCoin';
+import {toastWarn} from '~/common/funcs/toast';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-
+	const [formRefresh, setFormRefresh] = useState<{reason: string}>({
+		reason: '',
+	});
 	const {_page, _pageSize, _keyword, _state, _project} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
-	const [refeshUuid, setRefeshUuid] = useState<string>('');
-	const [refeshCode, setRefeshCode] = useState<string>('');
+	const [refreshUuid, setRefreshUuid] = useState<string>('');
+	const [refreshCode, setRefreshCode] = useState<string>('');
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
 			httpRequest({
@@ -66,7 +73,12 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			return data;
 		},
 	});
-
+	const handleChangeCancel = () => {
+		if (!formRefresh.reason) {
+			return toastWarn({msg: 'Vui lòng nhập lý do refresh!'});
+		}
+		return backStatePN.mutate();
+	};
 	const funcConfirm = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -113,14 +125,16 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Refesh lại báo cáo thành công!',
+				msgSuccess: 'Refresh lại trạng thái thành công!',
 				http: pnServices.backStatePN({
-					uuid: refeshUuid,
+					uuid: refreshUuid,
+					reason: formRefresh.reason,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
-				setRefeshUuid('');
+				setRefreshUuid('');
+				setFormRefresh({reason: ''});
 				queryClient.invalidateQueries([QUERY_KEY.table_csct]);
 			}
 		},
@@ -273,32 +287,35 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
-										{data?.state == STATUS_CSCT.APPROVED  && (
-										<IconCustom
-											color='#EE464C'
-											onClick={() => {setRefeshUuid(data?.uuid) , setRefeshCode(data?.code) }}
-											type='edit'
-											icon={<DriverRefresh fontSize={20} fontWeight={600} />}
-											tooltip='Refesh trạng thái'
-										/>)}
+										{data?.state == STATUS_CSCT.APPROVED && (
+											<IconCustom
+												color='#EE464C'
+												onClick={() => {
+													setRefreshUuid(data?.uuid), setRefreshCode(data?.code);
+												}}
+												type='edit'
+												icon={<DriverRefresh fontSize={20} fontWeight={600} />}
+												tooltip='Refresh trạng thái'
+											/>
+										)}
 
-										{(data?.state !== STATUS_CSCT.REJECTED && data?.state !== STATUS_CSCT.APPROVED)  && (
-										<>
-										<IconCustom
-											color='#06D7A0'
-											icon={<TickCircle fontSize={20} fontWeight={600} />}
-											tooltip='Duyệt thanh toán'
-											
-											onClick={() => setUuidConfirm(data?.uuid)}
-										/>
-										
-										<IconCustom
-											color='#EE464C'
-											icon={<CloseCircle fontSize={20} fontWeight={600} />}
-											tooltip='Từ chối thanh toán'
-											onClick={() => setUuidCancel(data?.uuid)}
-										/>
-										</>)}
+										{data?.state !== STATUS_CSCT.REJECTED && data?.state !== STATUS_CSCT.APPROVED && (
+											<>
+												<IconCustom
+													color='#06D7A0'
+													icon={<TickCircle fontSize={20} fontWeight={600} />}
+													tooltip='Duyệt thanh toán'
+													onClick={() => setUuidConfirm(data?.uuid)}
+												/>
+
+												<IconCustom
+													color='#EE464C'
+													icon={<CloseCircle fontSize={20} fontWeight={600} />}
+													tooltip='Từ chối thanh toán'
+													onClick={() => setUuidCancel(data?.uuid)}
+												/>
+											</>
+										)}
 									</div>
 								),
 							},
@@ -331,14 +348,38 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					onSubmit={funcCancel.mutate}
 				/>
 
-				<Dialog
-				type='error'
-				open={!!refeshUuid}
-				onClose={() => setRefeshUuid('')}
-				title={'Refesh dữ liệu'}
-				note={`Bạn có chắc chắn muốn refesh dữ liệu của CSCT ${refeshCode}?`}
-				onSubmit={backStatePN.mutate}
-			/>
+				<Form form={formRefresh} setForm={setFormRefresh}>
+					<Popup open={!!refreshUuid} onClose={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
+						<div className={styles.main_popup}>
+							<div className={styles.head_popup}>
+								<h4>Xác nhận refresh CSCT {refreshCode}</h4>
+							</div>
+							<div className={styles.form_poup}>
+								<TextArea
+									name='reason'
+									placeholder='Nhập lý do refresh'
+									label={
+										<span>
+											Lý do refresh <span style={{color: 'red'}}>*</span>
+										</span>
+									}
+								/>
+								<div className={styles.group_button}>
+									<div>
+										<Button p_12_20 grey rounded_6 onClick={() => {setRefreshUuid('') ,setFormRefresh({reason: ''})}}>
+											Hủy bỏ
+										</Button>
+									</div>
+									<div className={styles.btn}>
+										<Button disable={!formRefresh.reason} p_12_20 error rounded_6 onClick={handleChangeCancel}>
+											Xác nhận
+										</Button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</Popup>
+				</Form>
 			</WrapperScrollbar>
 		</div>
 	);

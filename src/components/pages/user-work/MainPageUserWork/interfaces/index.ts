@@ -46,4 +46,5 @@ export interface IUserWork {
 	digitalizedState: number;
 	activityStatus: number;
 	stage: number;
+	unfinishReason: string;
 }
