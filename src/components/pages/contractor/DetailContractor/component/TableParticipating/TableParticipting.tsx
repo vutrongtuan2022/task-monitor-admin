@@ -20,7 +20,7 @@ import {PATH} from '~/constants/config';
 function TableParticipating({}: PropsTableParticipating) {
 	const router = useRouter();
 	const {_page, _pageSize, _uuid} = router.query;
-	const {data: listProjectForContractor} = useQuery([QUERY_KEY.table_project_for_contractor, _uuid], {
+	const {data: listProjectForContractor} = useQuery([QUERY_KEY.table_project_for_contractor, _uuid, _page, _pageSize], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorServices.listProjectForContractor({
@@ -106,7 +106,7 @@ function TableParticipating({}: PropsTableParticipating) {
 				<Pagination
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
-					total={listProjectForContractor?.pagination?.totalCount || 0}
+					total={listProjectForContractor?.pagination?.totalCount}
 					dependencies={[_pageSize, _uuid]}
 				/>
 			</WrapperScrollbar>

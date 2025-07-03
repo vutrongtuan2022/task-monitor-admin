@@ -62,6 +62,7 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 			if (data) {
 				setUuidConfirm('');
 				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat_by_contractor]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_contractor_for_admin]);
 			}
 		},
 	});
@@ -83,6 +84,7 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 			if (data) {
 				setUuidCancel('');
 				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat_by_contractor]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_contractor_for_admin]);
 			}
 		},
 	});
