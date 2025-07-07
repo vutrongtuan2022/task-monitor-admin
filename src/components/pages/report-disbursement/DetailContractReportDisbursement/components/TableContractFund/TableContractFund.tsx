@@ -13,9 +13,10 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
-import Tippy from '@tippyjs/react';
+import IconCustom from '~/components/common/IconCustom';
 import StateActive from '~/components/common/StateActive';
 import Pagination from '~/components/common/Pagination';
+import {Eye} from 'iconsax-react';
 function TableContractFund() {
 	const router = useRouter();
 
@@ -71,12 +72,8 @@ function TableContractFund() {
 								),
 							},
 							{
-								title: 'Tên nhóm nhà thầu',
-								render: (data: PropsTableContractFund) => <>{data?.pnContract?.contractor?.contractorCat?.name || '---'}</>,
-							},
-							{
-								title: 'Tên nhà thầu',
-								render: (data: PropsTableContractFund) => <>{data?.pnContract?.contractor?.contractor?.name || '---'}</>,
+								title: 'Tổng giá trị giải ngân (VND)',
+								render: (data: PropsTableContractFund) => <>{convertCoin(data?.totalAmount) || '---'}</>,
 							},
 							{
 								title: 'Sử dụng vốn dự phòng (VND)',
@@ -90,49 +87,13 @@ function TableContractFund() {
 							// 	title: 'Người tạo',
 							// 	render: (data: PropsTableContractFund) => <>{data?.creator?.fullname}</>,
 							// },
-							{
-								title: 'Ngày giải ngân',
-								render: (data: PropsTableContractFund) => (
-									<p>{data?.releasedDate ? <Moment date={data?.releasedDate} format='DD/MM/YYYY' /> : '---'}</p>
-								),
-							},
-							{
-								title: 'Số thông báo chấp thuận thanh toán',
-								render: (data: PropsTableContractFund) => <>{data?.pnContract?.pn?.code || '---'}</>,
-							},
-							{
-								title: 'Ngày chấp nhận thanh toán',
-								render: (data: PropsTableContractFund) => (
-									<>
-										{data?.pnContract ? (
-											<Moment date={data?.pnContract?.pn?.numberingDate} format='DD/MM/YYYY' />
-										) : (
-											'---'
-										)}
-									</>
-								),
-							},
-							{
-								title: 'Giá trị chấp nhận thanh toán (VND)',
-								render: (data: PropsTableContractFund) => <>{convertCoin(data?.pnContract?.amount) || '---'}</>,
-							},
+							
+							
+							
 							{
 								title: 'Thời gian tạo',
 								render: (data: PropsTableContractFund) => (
 									<p>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</p>
-								),
-							},
-							{
-								title: 'Mô tả',
-								render: (data: PropsTableContractFund) => (
-									<>
-										{(data?.note && (
-											<Tippy content={data?.note}>
-												<p className={styles.name}>{data?.note || '---'}</p>
-											</Tippy>
-										)) ||
-											'---'}
-									</>
 								),
 							},
 							{
@@ -167,6 +128,19 @@ function TableContractFund() {
 											},
 										]}
 									/>
+								),
+							},
+							{
+								title: 'Tác vụ',
+								fixedRight: true,
+								render: (data: PropsTableContractFund) => (
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										<IconCustom
+											type='edit'
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+										/>
+									</div>
 								),
 							},
 						]}
