@@ -69,6 +69,21 @@ const contractsFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+
+	// contractFundDetailContractor: (
+	// 	data: {
+	// 		pageSize: number;
+	// 		page: number;
+	// 		keyword: string | null;
+	// 		status: number;
+	// 		uuid: string;
+	// 	},
+	// 	tokenAxios?: any
+	// ) => {
+	// 	return axiosClient.post(`/ContractFund/contractfund-detail-contracts-paged`, data, {
+	// 		cancelToken: tokenAxios,
+	// 	});
+	// },
 };
 
 export default contractsFundServices;
