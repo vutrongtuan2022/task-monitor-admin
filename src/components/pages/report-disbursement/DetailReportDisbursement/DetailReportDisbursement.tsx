@@ -257,11 +257,11 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										render: (data: IContractFund) => <>{convertCoin(data?.projectAmount)}</>,
 									},
 									{
-										title: 'Số thông báo chấp thuận thanh toán',
+										title: 'Mã số chấp thuận thanh toán',
 										render: (data: IContractFund) => <>{data?.pnContract?.pn?.code || '---'}</>,
 									},
 									{
-										title: 'Ngày chấp nhận thanh toán',
+										title: 'Ngày chấp thuận thanh toán',
 										render: (data: IContractFund) => (
 											<>
 												{data?.pnContract ? (
@@ -273,7 +273,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										),
 									},
 									{
-										title: 'Giá trị chấp nhận thanh toán (VND)',
+										title: 'Giá trị chấp thuận thanh toán (VND)',
 										render: (data: IContractFund) => <>{convertCoin(data?.pnContract?.amount) || '---'}</>,
 									},
 									{
@@ -351,7 +351,12 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 						/>
 					</WrapperScrollbar>
 					<Form form={formRefresh} setForm={setFormRefresh}>
-						<Popup open={!!openRefesh} onClose={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
+						<Popup
+							open={!!openRefesh}
+							onClose={() => {
+								setOpenRefesh(false), setFormRefresh({reason: ''});
+							}}
+						>
 							<div className={styles.main_popup}>
 								<div className={styles.head_popup}>
 									<h4>Xác nhận refresh báo cáo giải ngân</h4>
@@ -368,7 +373,14 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 									/>
 									<div className={styles.group_button}>
 										<div>
-											<Button p_12_20 grey rounded_6 onClick={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
+											<Button
+												p_12_20
+												grey
+												rounded_6
+												onClick={() => {
+													setOpenRefesh(false), setFormRefresh({reason: ''});
+												}}
+											>
 												Hủy bỏ
 											</Button>
 										</div>

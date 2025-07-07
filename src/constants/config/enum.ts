@@ -21,6 +21,7 @@ export enum QUERY_KEY {
 	table_next_plan_report_overview,
 	table_list_report_disbursement,
 	table_contract_fund_detail,
+	table_contract_fund_detail_contractor,
 	table_contractors_detail,
 	table_contract_report_disbursement,
 	table_contract_for_project,
