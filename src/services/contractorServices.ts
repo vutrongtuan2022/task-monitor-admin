@@ -199,5 +199,19 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	getPagedContractFundByContractor: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number | null;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/get-paged-contract-fund-by-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractorServices;
