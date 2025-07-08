@@ -25,6 +25,20 @@ const contractsFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	ContractFundDetailPaged: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string | null;
+			status: number;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/contractfund-detai-paged`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	getAdminContractFundPaged: (
 		data: {
 			pageSize: number;
@@ -54,6 +68,19 @@ const contractsFundServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/ContractFund/get-contract-contract-fund-by-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	contractfundDetailPagedContractContractfund: (
+		data: {
+			pageSize: number;
+			page: number;
+			contractUuid: string;
+			contractFundUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/contractfund-detail-paged-contract-contractfund`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

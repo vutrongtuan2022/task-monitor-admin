@@ -36,6 +36,9 @@ export enum QUERY_KEY {
 	table_csct,
 	table_pn_contract,
 	table_contract_fund_by_contractor,
+	table_contract_fund_for_overview_contractor,
+	table_contract_fund_detail_paged,
+	table_contractfund_detail_paged_contract_contract_fund,
 
 	dropdown_role,
 	dropdown_group_contractor,
