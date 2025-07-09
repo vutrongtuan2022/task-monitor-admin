@@ -259,7 +259,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 								<p>LKSCT đến hiện tại (VND)</p>
 								<p>{convertCoin(detailCSCT?.accumAmount!)}</p>
 							</div>
-							{detailCSCT?.rejectReason !== null && (
+							{detailCSCT?.state === STATUS_CSCT.REJECTED && (
 								<div className={styles.item}>
 									<p>Lý do từ chối</p>
 									<p>{detailCSCT?.rejectReason || '---'}</p>
@@ -300,10 +300,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 										title: 'Tên nhà thầu',
 										render: (data: IContractsPN) => <>{data?.contractor?.contractor?.name || '---'}</>,
 									},
-									{
-										title: 'Giá trị đề nghị thanh toán (VND)',
-										render: (data: IContractsPN) => <>{convertCoin(data?.amount)}</>,
-									},
+
 									{
 										title: 'Loại thanh toán',
 										render: (data: IContractsPN) => (
@@ -311,6 +308,28 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 												{data?.type === 1 && 'Thanh toán'}
 												{data?.type === 2 && 'Tạm ứng'}
 											</>
+										),
+									},
+									{
+										title: 'Số tiền tạm ứng (VND)',
+										render: (data: IContractsPN) => (
+											<>{data?.advanceAmount ? convertCoin(data?.advanceAmount) : '---'}</>
+										),
+									},
+									{
+										title: 'Tổng số tiền TT (VND)',
+										render: (data: IContractsPN) => <>{data?.amount ? convertCoin(data?.amount) : '---'}</>,
+									},
+									{
+										title: 'Số tiền còn phải TT (VND)',
+										render: (data: IContractsPN) => (
+											<>{data?.remainingAmount ? convertCoin(data?.remainingAmount) : '---'}</>
+										),
+									},
+									{
+										title: 'Số tiền khấu trừ tạm ứng (VND)',
+										render: (data: IContractsPN) => (
+											<>{data?.totalReverseAmount ? convertCoin(data?.totalReverseAmount) : '--'}</>
 										),
 									},
 									{
@@ -350,7 +369,12 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							onSubmit={funcCancel.mutate}
 						/>
 						<Form form={formRefresh} setForm={setFormRefresh}>
-							<Popup open={!!openRefesh} onClose={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
+							<Popup
+								open={!!openRefesh}
+								onClose={() => {
+									setOpenRefesh(false), setFormRefresh({reason: ''});
+								}}
+							>
 								<div className={styles.main_popup}>
 									<div className={styles.head_popup}>
 										<h4>Xác nhận refresh CSCT {refreshCode}</h4>
@@ -367,7 +391,14 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 										/>
 										<div className={styles.group_button}>
 											<div>
-												<Button p_12_20 grey rounded_6 onClick={() => {setOpenRefesh(false) ,setFormRefresh({reason: ''})}}>
+												<Button
+													p_12_20
+													grey
+													rounded_6
+													onClick={() => {
+														setOpenRefesh(false), setFormRefresh({reason: ''});
+													}}
+												>
 													Hủy bỏ
 												</Button>
 											</div>
