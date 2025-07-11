@@ -75,6 +75,10 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 										render: (data: IDetailContractFund) => <>{data?.code || '---'}</>,
 									},
 									{
+										title: 'Tên công việc',
+										render: (data: IDetailContractFund) => <>{data?.activity.name || '---'}</>,
+									},
+									{
 										title: 'Tên nhóm nhà thầu',
 										render: (data: IDetailContractFund) => (
 											<>{data?.pnContract?.contractor?.contractorCat?.name || '---'}</>

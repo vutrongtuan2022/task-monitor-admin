@@ -78,6 +78,11 @@ function TableContractFund({}: PropsTableContractFund) {
 										),
 									},
 									{
+										title: 'Tên dự án',
+										render: (data: IContractFund) => <>{data?.project.name || '---'}</>,
+									},
+
+									{
 										title: 'Tổng giá trị giải ngân (VND)',
 										render: (data: IContractFund) => <>{convertCoin(data?.totalAmount) || '---'}</>,
 									},
