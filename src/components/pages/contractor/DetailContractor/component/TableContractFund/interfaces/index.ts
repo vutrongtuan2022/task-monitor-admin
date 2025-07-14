@@ -12,6 +12,30 @@ export interface IContractFund {
 		fullname: string;
 		code: string;
 	};
+	project: {
+		uuid: string;
+		code: string;
+		name: string;
+		created: string;
+		state: 0;
+		leader: {
+			uuid: string;
+			fullname: string;
+			code: string;
+		};
+		member: [
+			{
+				uuid: string;
+				fullname: string;
+				code: string;
+			}
+		];
+		branch: {
+			uuid: string;
+			code: string;
+			name: string;
+		};
+	};
 	created: string;
 	state: number;
 }

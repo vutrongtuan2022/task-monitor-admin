@@ -20,7 +20,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 
 	const {_page, _pageSize} = router.query;
 	const {data: listContractFundDetail} = useQuery(
-		[QUERY_KEY.table_contract_fund_detail_contractor, _page, _pageSize, userContractFund?.uuid],
+		[QUERY_KEY.table_contract_fund_detail_contractor, _page, _pageSize, userContractFund?.uuid, userContractFund?.contractUuid],
 		{
 			queryFn: () =>
 				httpRequest({
@@ -30,6 +30,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 						keyword: '',
 						status: STATUS_CONFIG.ACTIVE,
 						uuid: userContractFund?.uuid,
+						contractUuid: userContractFund?.contractUuid,
 					}),
 				}),
 			select(data) {
@@ -132,13 +133,13 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 									{
 										title: 'Giá trị CTTT',
 										render: (data: IDetailContractFund) => (
-											<p>
-												{data?.pnContract?.amount ? (
-													<Moment date={data?.pnContract?.amount} format='DD/MM/YYYY' />
-												) : (
-													'---'
-												)}
-											</p>
+											<>
+												{convertCoin(
+													data?.pnContract?.amount == null
+														? data?.pnContract?.advanceAmount
+														: data?.pnContract?.amount
+												) || '---'}
+											</>
 										),
 									},
 									{

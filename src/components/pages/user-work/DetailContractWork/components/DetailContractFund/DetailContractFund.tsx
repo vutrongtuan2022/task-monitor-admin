@@ -13,14 +13,14 @@ import {useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractsFundServices from '~/services/contractsFundServices';
-import Tippy from '@tippyjs/react';
+import {Data} from 'iconsax-react';
 
 function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund) {
 	const router = useRouter();
 
 	const {_page, _pageSize} = router.query;
 	const {data: listContractFundDetail} = useQuery(
-		[QUERY_KEY.table_contract_fund_detail_contractor, _page, _pageSize, userContractFund?.uuid],
+		[QUERY_KEY.table_contract_fund_detail_contractor, _page, _pageSize, userContractFund?.uuid, userContractFund?.contractUuid],
 		{
 			queryFn: () =>
 				httpRequest({
@@ -30,12 +30,13 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 						keyword: '',
 						status: STATUS_CONFIG.ACTIVE,
 						uuid: userContractFund?.uuid,
+						contractUuid: userContractFund?.contractUuid,
 					}),
 				}),
 			select(data) {
 				return data;
 			},
-			enabled: !!userContractFund?.uuid,
+			enabled: !!userContractFund?.uuid && !!userContractFund?.contractUuid,
 		}
 	);
 	console.log(listContractFundDetail);
@@ -71,30 +72,24 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 										title: 'STT',
 										render: (data: IDetailContractFund, index: number) => <>{index + 1}</>,
 									},
-									{
-										title: 'Mã hợp đồng',
-										render: (data: IDetailContractFund) => <>{data?.code || '---'}</>,
-									},
-									{
-										title: 'Tên công việc',
-										render: (data: IDetailContractFund) => (
-											<Tippy content={data?.activity?.name}>
-												<p className={styles.name}>{data?.activity?.name || '---'}</p>
-											</Tippy>
-										),
-									},
+
 									{
 										title: 'Tên nhóm nhà thầu',
 										render: (data: IDetailContractFund) => (
 											<>{data?.pnContract?.contractor?.contractorCat?.name || '---'}</>
+											// <>
+											// 	{data?.releasedMonth && data?.releasedYear
+											// 		? `Tháng ${data?.releasedMonth} - ${data?.releasedYear}`
+											// 		: !data?.releasedMonth && data?.releasedYear
+											// 		? `Năm ${data?.releasedYear}`
+											// 		: '---'}
+											// </>
 										),
 									},
 									{
 										title: 'Tên nhà thầu',
 										render: (data: IDetailContractFund) => (
-											<Tippy content={data?.activity?.name}>
-												<p className={styles.name}>{data?.pnContract.contractor?.contractor.name || '---'}</p>
-											</Tippy>
+											<>{data?.pnContract?.contractor?.contractor?.name || '---'}</>
 										),
 									},
 									{
@@ -112,10 +107,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 
 									{
 										title: 'CSCTTT',
-										render: (data: IDetailContractFund) => (
-											<>{data?.pnContract?.pn?.code || '---'}</>
-											// <p>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</p>
-										),
+										render: (data: IDetailContractFund) => <>{data?.pnContract?.pn?.code || '---'}</>,
 									},
 									{
 										title: 'Ngày giải ngân',
