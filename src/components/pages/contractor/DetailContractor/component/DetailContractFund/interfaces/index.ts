@@ -241,6 +241,9 @@ export interface IDetailContractFund {
 		type: number;
 		note: string;
 		status: number;
+		totalReverseAmount: number;
+		remainingAmount: number;
+		advanceAmount: number;
 	};
 	contractorInfos: {
 		contractorName: string;
