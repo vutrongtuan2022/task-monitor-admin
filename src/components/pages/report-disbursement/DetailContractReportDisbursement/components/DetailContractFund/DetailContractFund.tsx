@@ -13,7 +13,6 @@ import {useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractsFundServices from '~/services/contractsFundServices';
-import {Data} from 'iconsax-react';
 
 function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund) {
 	const router = useRouter();
@@ -36,7 +35,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 			select(data) {
 				return data;
 			},
-			enabled: !!userContractFund?.uuid,
+			enabled: !!userContractFund?.uuid && !!userContractFund?.contractUuid,
 		}
 	);
 	console.log(listContractFundDetail);
