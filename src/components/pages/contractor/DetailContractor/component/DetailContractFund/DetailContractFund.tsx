@@ -20,7 +20,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 
 	const {_page, _pageSize} = router.query;
 	const {data: listContractFundDetail} = useQuery(
-		[QUERY_KEY.table_contract_fund_detail_contractor, _page, _pageSize, userContractFund?.uuid],
+		[QUERY_KEY.table_contract_fund_detail_contractor, _page, _pageSize, userContractFund?.uuid, userContractFund?.contractorUuid],
 		{
 			queryFn: () =>
 				httpRequest({
@@ -30,6 +30,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 						keyword: '',
 						status: STATUS_CONFIG.ACTIVE,
 						uuid: userContractFund?.uuid,
+						contractorUuid: userContractFund?.contractorUuid,
 					}),
 				}),
 			select(data) {
@@ -92,7 +93,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 									{
 										title: 'Tên nhà thầu',
 										render: (data: IDetailContractFund) => (
-											<Tippy content={data?.activity?.name}>
+											<Tippy content={data?.pnContract.contractor?.contractor.name}>
 												<p className={styles.name}>{data?.pnContract.contractor?.contractor.name || '---'}</p>
 											</Tippy>
 										),
