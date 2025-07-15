@@ -298,7 +298,11 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 									},
 									{
 										title: 'Tên nhà thầu',
-										render: (data: IContractsPN) => <>{data?.contractor?.contractor?.name || '---'}</>,
+										render: (data: IContractsPN) => (
+											<Tippy content={data?.contractor?.contractor?.name}>
+												<p className={styles.note}>{data?.contractor?.contractor?.name || '---'}</p>
+											</Tippy>
+										),
 									},
 
 									{
