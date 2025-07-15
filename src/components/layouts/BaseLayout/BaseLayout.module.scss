@@ -10,6 +10,7 @@ $duration: 0.1s;
 	background-image: url('../../../../public/static/images/background.png');
 	background-repeat: no-repeat;
 	background-size: cover;
+	overflow: visible;
 }
 
 .tab {
@@ -19,8 +20,9 @@ $duration: 0.1s;
 	top: 0;
 	left: 0;
 	transition: width $duration ease-in-out;
-	z-index: 11;
 	background-color: var(--light);
+	overflow: visible;
+	z-index: 11;
 }
 
 .wrapper {
