@@ -79,7 +79,7 @@ function TableContracfund({}: PropsTableContracFund) {
 							},
 							{
 								title: 'Tên công việc',
-								render: (data: IContractFund) => <>{data?.activity?.name}</>,
+								render: (data: IContractFund) => <>{data?.activity?.name || '---'}</>,
 							},
 
 							{

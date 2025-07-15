@@ -16,6 +16,7 @@ import {
 	EmptyWalletTick,
 } from 'iconsax-react';
 import {TYPE_DATE} from './enum';
+import {IconType} from 'react-icons';
 
 export const MAXIMUM_FILE = 10; //MB
 
@@ -79,18 +80,22 @@ export enum PATH {
 	CSCT = '/csct',
 }
 
-export const Menu: {
+export interface IMenuItem {
 	title: string;
-	path: string;
+	path?: string;
 	pathActive?: string;
-	icon: any;
-}[] = [
+	icon: IconType | any;
+	children?: IMenuItem[];
+}
+
+export const Menu: IMenuItem[] = [
 	// {
 	// 	title: 'Tổng quan',
 	// 	path: PATH.Home,
 	// 	pathActive: PATH.Home,
 	// 	icon: ElementEqual,
 	// },
+
 	{
 		title: 'Quản lý dự án',
 		path: PATH.Project,
@@ -127,36 +132,14 @@ export const Menu: {
 		pathActive: PATH.ReportOverview,
 		icon: ArchiveBook,
 	},
-	{
-		title: 'Quản lý quy trình',
-		path: PATH.Task,
-		pathActive: PATH.Task,
-		icon: ReceiptItem,
-	},
+
 	{
 		title: 'CSCT thanh toán',
 		path: PATH.CSCT,
 		pathActive: PATH.CSCT,
 		icon: EmptyWalletTick,
 	},
-	{
-		title: 'Quản lý chi nhánh',
-		path: PATH.Branch,
-		pathActive: PATH.Branch,
-		icon: Data,
-	},
-	{
-		title: 'Quản lý nhóm nhà thầu',
-		path: PATH.GroupContractor,
-		pathActive: PATH.GroupContractor,
-		icon: Buildings2,
-	},
-	{
-		title: 'Quản lý nhà thầu',
-		path: PATH.Contractor,
-		pathActive: PATH.Contractor,
-		icon: Receipt21,
-	},
+
 	{
 		title: 'Duyệt yêu cầu',
 		path: PATH.ContractorApproval,
@@ -165,16 +148,46 @@ export const Menu: {
 		icon: TickCircle,
 	},
 	{
-		title: 'Quản lý nhân viên',
-		path: PATH.User,
-		pathActive: PATH.User,
-		icon: UserOctagon,
-	},
-	{
-		title: 'Quản lý tài khoản',
-		path: PATH.Account,
-		pathActive: PATH.Account,
-		icon: TagUser,
+		title: 'Danh mục quản lý',
+		icon: DocumentText1,
+		children: [
+			{
+				title: 'Quản lý quy trình',
+				path: PATH.Task,
+				pathActive: PATH.Task,
+				icon: ReceiptItem,
+			},
+			{
+				title: 'Quản lý chi nhánh',
+				path: PATH.Branch,
+				pathActive: PATH.Branch,
+				icon: Data,
+			},
+			{
+				title: 'Quản lý nhóm nhà thầu',
+				path: PATH.GroupContractor,
+				pathActive: PATH.GroupContractor,
+				icon: Buildings2,
+			},
+			{
+				title: 'Quản lý nhà thầu',
+				path: PATH.Contractor,
+				pathActive: PATH.Contractor,
+				icon: Receipt21,
+			},
+			{
+				title: 'Quản lý nhân viên',
+				path: PATH.User,
+				pathActive: PATH.User,
+				icon: UserOctagon,
+			},
+			{
+				title: 'Quản lý tài khoản',
+				path: PATH.Account,
+				pathActive: PATH.Account,
+				icon: TagUser,
+			},
+		],
 	},
 ];
 

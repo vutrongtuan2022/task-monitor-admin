@@ -1,40 +1,57 @@
-import {RootState} from '~/redux/store';
-import {useCallback, useContext} from 'react';
-
-import {ContextBaseLayout} from '../../BaseLayout';
-import {PropsMenuTab} from './interfaces';
-import {TContextBaseLayout} from '../../interfaces';
-import styles from './MenuTab.module.scss';
+import {useCallback, useContext, useRef, useState} from 'react';
 import {useRouter} from 'next/router';
 import {useSelector} from 'react-redux';
 import Link from 'next/link';
+import clsx from 'clsx';
+import TippyHeadless from '@tippyjs/react/headless';
+
+import {RootState} from '~/redux/store';
+import {ContextBaseLayout} from '../../BaseLayout';
+import {TContextBaseLayout} from '../../interfaces';
 import {Menu, PATH} from '~/constants/config';
 import ImageFill from '~/components/common/ImageFill';
 import icons from '~/constants/images/icons';
-import clsx from 'clsx';
 
-function MenuTab({}: PropsMenuTab) {
+import styles from './MenuTab.module.scss';
+import {ArrowRight2} from 'iconsax-react';
+import type {Instance} from 'tippy.js';
+
+function MenuTab() {
 	const router = useRouter();
-
 	const {isMobile} = useSelector((state: RootState) => state.site);
 	const context = useContext<TContextBaseLayout>(ContextBaseLayout);
+	const tippyRef = useRef<Instance | null>(null);
+
+	const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+
+	const toggleGroup = (title: string) => {
+		setOpenGroups((prev) => ({
+			...prev,
+			[title]: !prev[title],
+		}));
+	};
 
 	const checkActive = useCallback(
-		(pathname: string) => {
-			const currentRoute = router.pathname.split('/')[1];
-
-			return pathname == `/${currentRoute}`;
+		(path?: string) => {
+			if (!path) return false;
+			const currentFirstSegment = router.pathname.split('/')[1];
+			const pathFirstSegment = path.split('/')[1];
+			return currentFirstSegment === pathFirstSegment;
 		},
-		[router]
+		[router.pathname]
+	);
+
+	const checkGroupActive = useCallback(
+		(children: (typeof Menu)[number]['children']) => {
+			if (!children) return false;
+			return children.some((child) => checkActive(child.pathActive ?? child.path));
+		},
+		[checkActive]
 	);
 
 	return (
 		<div id='menuTab' className={styles.container}>
-			<div
-				className={clsx(styles.header, {
-					[styles.header_small]: !context.showFull,
-				})}
-			>
+			<div className={clsx(styles.header, {[styles.header_small]: !context.showFull})}>
 				<Link href={PATH.Home} className={styles.box_logo}>
 					{context?.showFull ? (
 						<ImageFill src={icons.logoFull} className={styles.logo_icon} alt='Logo full' />
@@ -42,30 +59,138 @@ function MenuTab({}: PropsMenuTab) {
 						<ImageFill src={icons.logoSmall} className={styles.logo_small} alt='Logo small' />
 					)}
 				</Link>
-
 				<Link href={PATH.Home} className={styles.box_logo_mobile}>
 					<ImageFill src={icons.logoSmall} className={styles.logo_small} alt='Logo small' />
 				</Link>
 			</div>
+
 			<div className={clsx(styles.menu)}>
-				{Menu.map((v, i) => (
-					<Link
-						href={v.path}
-						key={i}
-						className={clsx(styles.itemMenu, {
-							[styles.active]: checkActive(v.path) || checkActive(v?.pathActive!),
-							[styles.small]: !context?.showFull,
-						})}
-						onClick={() => {
-							isMobile && context?.setShowFull!(!context?.showFull);
-						}}
-					>
-						<div className={styles.iconMenu}>
-							<v.icon size={20} />
-						</div>
-						<p className={styles.textMenu}>{v.title}</p>
-					</Link>
-				))}
+				{Menu.map((item) => {
+					const isGroup = !!item.children;
+					const isGroupOpen = openGroups[item.title];
+					const isGroupActive = isGroup && checkGroupActive(item.children!);
+
+					if (isGroup) {
+						return (
+							<div className={styles.menuGroup} key={item.title}>
+								{context?.showFull ? (
+									<>
+										<div
+											className={clsx(styles.itemMenu, {
+												[styles.active]: isGroupActive,
+												[styles.small]: !context?.showFull,
+											})}
+											onClick={() => toggleGroup(item.title)}
+										>
+											<div className={styles.iconMenu}>
+												<item.icon size={20} />
+											</div>
+											<p className={styles.textMenu}>{item.title}</p>
+											{context?.showFull && (
+												<span
+													className={clsx(styles.arrow, {
+														[styles.open]: isGroupOpen,
+													})}
+												>
+													<ArrowRight2 size={16} />
+												</span>
+											)}
+										</div>
+
+										{isGroupOpen && (
+											<div className={styles.groupChildren}>
+												{item.children!.map((child) => (
+													<Link
+														href={child.path!}
+														key={child.title}
+														className={clsx(styles.itemMenuChild, {
+															[styles.active]: checkActive(child.pathActive ?? child.path),
+														})}
+														onClick={() => {
+															if (isMobile) context?.setShowFull?.(false);
+														}}
+													>
+														<div className={styles.iconMenu}>
+															<child.icon size={18} />
+														</div>
+														<p className={styles.textMenu}>{child.title}</p>
+													</Link>
+												))}
+											</div>
+										)}
+									</>
+								) : (
+									<TippyHeadless
+										trigger='click'
+										interactive
+										hideOnClick={true}
+										placement='bottom-start'
+										offset={[0, 2]}
+										appendTo={typeof window !== 'undefined' ? document.body : undefined}
+										onCreate={(instance) => {
+											tippyRef.current = instance;
+										}}
+										render={(attrs) => (
+											<div className={styles.groupChildrenTippy} tabIndex={-1} {...attrs}>
+												<div className={styles.tippyTitle}>{item.title}</div>
+												<div className={styles.tippyChildList}>
+													{item.children!.map((child) => (
+														<Link
+															href={child.path!}
+															key={child.title}
+															className={clsx(styles.itemMenuChild, {
+																[styles.active]: checkActive(child.pathActive ?? child.path),
+															})}
+															onClick={() => {
+																tippyRef.current?.hide();
+																if (isMobile) context?.setShowFull?.(false);
+															}}
+														>
+															<div className={styles.iconMenu}>
+																<child.icon size={18} />
+															</div>
+															<p className={styles.textMenu}>{child.title}</p>
+														</Link>
+													))}
+												</div>
+											</div>
+										)}
+									>
+										<div
+											className={clsx(styles.itemMenu, {
+												[styles.active]: isGroupActive,
+												[styles.small]: !context?.showFull,
+											})}
+										>
+											<div className={styles.iconMenu}>
+												<item.icon size={20} />
+											</div>
+										</div>
+									</TippyHeadless>
+								)}
+							</div>
+						);
+					}
+
+					return (
+						<Link
+							href={item.path!}
+							key={item.title}
+							className={clsx(styles.itemMenu, {
+								[styles.active]: checkActive(item.path) || checkActive(item.pathActive),
+								[styles.small]: !context?.showFull,
+							})}
+							onClick={() => {
+								if (isMobile) context?.setShowFull?.(false);
+							}}
+						>
+							<div className={styles.iconMenu}>
+								<item.icon size={20} />
+							</div>
+							<p className={styles.textMenu}>{item.title}</p>
+						</Link>
+					);
+				})}
 			</div>
 		</div>
 	);

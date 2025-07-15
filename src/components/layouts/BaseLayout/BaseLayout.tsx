@@ -2,10 +2,10 @@ import {PropsBaseLayout, TContextBaseLayout} from './interfaces';
 import {createContext, useState} from 'react';
 
 import Header from './components/Header';
-import MenuTab from './components/MenuTab';
 import clsx from 'clsx';
 import styles from './BaseLayout.module.scss';
 import RequireAuth from '~/components/protected/RequiredAuth';
+import MenuTab from './components/MenuTab';
 
 export const ContextBaseLayout = createContext<TContextBaseLayout>({});
 
