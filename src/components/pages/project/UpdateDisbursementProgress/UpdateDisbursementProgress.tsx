@@ -459,7 +459,7 @@ function UpdateDisbursementProgress({}: PropsUpdateDisbursementProgress) {
 										title: 'Tên công việc',
 										render: (data: IContractsForProject) => (
 											<Tippy content={data?.activityName || '---'}>
-												<p className={styles.name}>{data?.activityName || ''}</p>
+												<p className={styles.name}>{data?.activityName || '---'}</p>
 											</Tippy>
 										),
 									},

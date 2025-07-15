@@ -95,48 +95,6 @@ export const Menu: IMenuItem[] = [
 	// 	pathActive: PATH.Home,
 	// 	icon: ElementEqual,
 	// },
-	{
-		title: 'Quản lý',
-		icon: DocumentText1,
-		children: [
-			{
-				title: 'Quản lý quy trình',
-				path: PATH.Task,
-				pathActive: PATH.Task,
-				icon: ReceiptItem,
-			},
-			{
-				title: 'Quản lý chi nhánh',
-				path: PATH.Branch,
-				pathActive: PATH.Branch,
-				icon: Data,
-			},
-			{
-				title: 'Quản lý nhóm nhà thầu',
-				path: PATH.GroupContractor,
-				pathActive: PATH.GroupContractor,
-				icon: Buildings2,
-			},
-			{
-				title: 'Quản lý nhà thầu',
-				path: PATH.Contractor,
-				pathActive: PATH.Contractor,
-				icon: Receipt21,
-			},
-			{
-				title: 'Quản lý nhân viên',
-				path: PATH.User,
-				pathActive: PATH.User,
-				icon: UserOctagon,
-			},
-			{
-				title: 'Quản lý tài khoản',
-				path: PATH.Account,
-				pathActive: PATH.Account,
-				icon: TagUser,
-			},
-		],
-	},
 
 	{
 		title: 'Quản lý dự án',
@@ -188,6 +146,48 @@ export const Menu: IMenuItem[] = [
 		// path: PATH.Approve,
 		pathActive: PATH.Approve,
 		icon: TickCircle,
+	},
+	{
+		title: 'Danh mục quản lý',
+		icon: DocumentText1,
+		children: [
+			{
+				title: 'Quản lý quy trình',
+				path: PATH.Task,
+				pathActive: PATH.Task,
+				icon: ReceiptItem,
+			},
+			{
+				title: 'Quản lý chi nhánh',
+				path: PATH.Branch,
+				pathActive: PATH.Branch,
+				icon: Data,
+			},
+			{
+				title: 'Quản lý nhóm nhà thầu',
+				path: PATH.GroupContractor,
+				pathActive: PATH.GroupContractor,
+				icon: Buildings2,
+			},
+			{
+				title: 'Quản lý nhà thầu',
+				path: PATH.Contractor,
+				pathActive: PATH.Contractor,
+				icon: Receipt21,
+			},
+			{
+				title: 'Quản lý nhân viên',
+				path: PATH.User,
+				pathActive: PATH.User,
+				icon: UserOctagon,
+			},
+			{
+				title: 'Quản lý tài khoản',
+				path: PATH.Account,
+				pathActive: PATH.Account,
+				icon: TagUser,
+			},
+		],
 	},
 ];
 

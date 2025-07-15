@@ -17,7 +17,7 @@ import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
 import Progress from '~/components/common/Progress';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, STATE_PROJECT, TYPE_ACCOUNT, SORT_TYPE} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG, STATE_PROJECT, TYPE_ACCOUNT, SORT_TYPE, TYPE_DATE} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
 import FilterCustom from '~/components/common/FilterCustom';
@@ -31,6 +31,8 @@ import userServices from '~/services/userServices';
 import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from 'react-icons/ti';
 import Popup from '~/components/common/Popup';
 import FormExportExcel from '../FormExportExcel';
+import FilterDateRange from '~/components/common/FilterDateRange';
+import moment from 'moment';
 
 enum COLUMN_SORT_PROJECT {
 	PROGRESS = 1,
@@ -43,7 +45,8 @@ function MainPageProject({}: PropsMainPageProject) {
 	const queryClient = useQueryClient();
 
 	const [deleteProject, setDeleteProject] = useState<IProject | null>(null);
-	const [exportPopupOpen, setExportPopupOpen] = useState(false);
+	const [typeDate, setTypeDate] = useState<TYPE_DATE>(TYPE_DATE.TODAY);
+	const [date, setDate] = useState<{from: Date | null; to: Date | null} | null>(null);
 	const [sort, setSort] = useState<{
 		column: COLUMN_SORT_PROJECT | null;
 		type: SORT_TYPE | null;
@@ -52,7 +55,7 @@ function MainPageProject({}: PropsMainPageProject) {
 		type: null,
 	});
 
-	const {_page, _pageSize, _keyword, _status, _state, _userUuid, _managerUuid} = router.query;
+	const {_page, _pageSize, _keyword, _status, _state, _userUuid, _managerUuid, from, to} = router.query;
 
 	const listUser = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
@@ -84,27 +87,32 @@ function MainPageProject({}: PropsMainPageProject) {
 		},
 	});
 
-	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _userUuid, _managerUuid, sort], {
-		queryFn: () =>
-			httpRequest({
-				http: projectServices.listProject({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 10,
-					keyword: (_keyword as string) || '',
-					status: STATUS_CONFIG.ACTIVE,
-					state: !!_state ? Number(_state) : null,
-					userUuid: (_userUuid as string) || '',
-					managerUuid: (_managerUuid as string) || '',
-					sort: {
-						column: sort.column,
-						type: sort.type,
-					},
+	const listProject = useQuery(
+		[QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _userUuid, _managerUuid, sort, from, to],
+		{
+			queryFn: () =>
+				httpRequest({
+					http: projectServices.listProject({
+						page: Number(_page) || 1,
+						pageSize: Number(_pageSize) || 10,
+						keyword: (_keyword as string) || '',
+						status: STATUS_CONFIG.ACTIVE,
+						state: !!_state ? Number(_state) : null,
+						userUuid: (_userUuid as string) || '',
+						managerUuid: (_managerUuid as string) || '',
+						sort: {
+							column: sort.column,
+							type: sort.type,
+						},
+						timeStart: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+						timeEnd: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+					}),
 				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
+			select(data) {
+				return data;
+			},
+		}
+	);
 
 	const funcDeleteProject = useMutation({
 		mutationFn: () => {
@@ -142,17 +150,40 @@ function MainPageProject({}: PropsMainPageProject) {
 		});
 	};
 
-	const handleCloseExport = () => {
-		setExportPopupOpen(false);
-	};
+	const exportExcel = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				http: projectServices.exportProject({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 10,
+					keyword: (_keyword as string) || '',
+					status: STATUS_CONFIG.ACTIVE,
+					state: !!_state ? Number(_state) : null,
+					userUuid: (_userUuid as string) || '',
+					managerUuid: (_managerUuid as string) || '',
+					sort: {
+						column: sort.column,
+						type: sort.type,
+					},
+					timeStart: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+					timeEnd: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				window.open(`${process.env.NEXT_PUBLIC_PATH_EXPORT}/${data}`, '_blank');
+			}
+		},
+	});
 
-	const handleOpenExport = () => {
-		setExportPopupOpen(true);
+	const handleExportExcel = () => {
+		return exportExcel.mutate();
 	};
 
 	return (
 		<div className={styles.container}>
-			<Loading loading={funcDeleteProject.isLoading} />
+			<Loading loading={funcDeleteProject.isLoading || exportExcel.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -179,9 +210,6 @@ function MainPageProject({}: PropsMainPageProject) {
 								},
 							]}
 						/>
-					</div>
-
-					<div className={styles.filter}>
 						<FilterCustom
 							isSearch
 							name='	Lãnh đạo phụ trách'
@@ -191,9 +219,6 @@ function MainPageProject({}: PropsMainPageProject) {
 								name: v?.fullname,
 							}))}
 						/>
-					</div>
-
-					<div className={styles.filter}>
 						<FilterCustom
 							isSearch
 							name='Cán bộ chuyên quản'
@@ -203,10 +228,18 @@ function MainPageProject({}: PropsMainPageProject) {
 								name: v?.fullname,
 							}))}
 						/>
+						<FilterDateRange
+							title='Thời gian dự tính'
+							styleRounded={true}
+							date={date}
+							setDate={setDate}
+							typeDate={typeDate}
+							setTypeDate={setTypeDate}
+						/>
 					</div>
 				</div>
 				<div className={styles.btn}>
-					<Button rounded_8 w_fit p_8_16 green bold onClick={handleOpenExport}>
+					<Button rounded_8 w_fit p_8_16 green bold onClick={handleExportExcel}>
 						<Image src={icons.exportExcel} alt='icon down' width={20} height={20} />
 						Xuất file Excel
 					</Button>
@@ -373,7 +406,7 @@ function MainPageProject({}: PropsMainPageProject) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
 					total={listProject?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _status, _state, _userUuid, _managerUuid]}
+					dependencies={[_pageSize, _keyword, _status, _state, _userUuid, _managerUuid, from, to]}
 				/>
 			</WrapperScrollbar>
 			<Dialog
@@ -384,9 +417,6 @@ function MainPageProject({}: PropsMainPageProject) {
 				note={'Bạn có chắc chắn muốn xóa dự án này?'}
 				onSubmit={funcDeleteProject.mutate}
 			/>
-			<Popup open={exportPopupOpen} onClose={handleCloseExport}>
-				<FormExportExcel onClose={handleCloseExport} />
-			</Popup>
 		</div>
 	);
 }

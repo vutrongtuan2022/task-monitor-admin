@@ -67,7 +67,7 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 												className={styles.name}
 												style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}
 											>
-												{data?.name || '---'}
+												{data?.name}
 											</p>
 										</Tippy>
 									),
