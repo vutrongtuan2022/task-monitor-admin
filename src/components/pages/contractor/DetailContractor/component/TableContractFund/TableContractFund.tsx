@@ -26,6 +26,7 @@ function TableContractFund({}: PropsTableContractFund) {
 	const [uuidContractFund, setUuidContractFund] = useState<{
 		uuid: string;
 		releasedMonthYear: string;
+		contractorUuid?: string;
 	} | null>(null);
 	const {data: listContractFund} = useQuery([QUERY_KEY.table_contract_fund_by_contractor, _page, _pageSize, _uuid], {
 		queryFn: () =>
@@ -163,6 +164,7 @@ function TableContractFund({}: PropsTableContractFund) {
 																	: '',
 
 															uuid: data?.uuid || '',
+															contractorUuid: _uuid as string,
 														})
 													}
 												/>
