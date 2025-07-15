@@ -255,7 +255,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 									},
 									{
 										title: 'Tên công việc',
-										render: (data: IContractFund) => <>{data?.activity?.name}</>,
+										render: (data: IContractFund) => <>{data?.activity?.name || '---'}</>,
 									},
 									{
 										title: 'Tổng giá trị giải ngân (VND)',

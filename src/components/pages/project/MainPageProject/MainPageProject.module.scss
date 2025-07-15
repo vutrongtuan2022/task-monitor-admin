@@ -22,8 +22,10 @@
 	.search {
 		min-width: 400px;
 	}
-
 	.filter {
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
 		min-width: 220px;
 	}
 }
