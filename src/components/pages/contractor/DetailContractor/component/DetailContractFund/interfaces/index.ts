@@ -2,6 +2,7 @@ export interface PropsDetailContractFund {
 	userContractFund: {
 		uuid: string;
 		releasedMonthYear: string;
+		contractorUuid?: string;
 	};
 	onClose: () => void;
 }
