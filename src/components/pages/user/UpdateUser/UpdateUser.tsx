@@ -51,7 +51,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 				email: data?.email,
 				gender: data?.gender,
 				phone: data?.phone,
-				birthday: data?.birthday|| null,
+				birthday: data?.birthday || null,
 				address: data?.address || '',
 				matp: data?.tp?.uuid || '',
 				maqh: data?.qh?.uuid || '',
@@ -154,7 +154,7 @@ function UpdateUser({onClose}: PropsUpdateUser) {
 		if (!!birthday && today < birthday!) {
 			return toastWarn({msg: 'Ngày sinh không hợp lệ!'});
 		}
-		
+
 		return funcCreateUser.mutate();
 	};
 
