@@ -13,19 +13,19 @@ function BaseLayout({children, title, isImport, isExport}: PropsBaseLayout) {
 	const [showFull, setShowFull] = useState(true);
 
 	return (
-		//<RequireAuth>
-		<ContextBaseLayout.Provider value={{showFull, setShowFull}}>
-			<div className={clsx(styles.container, {[styles.hidden]: !showFull})}>
-				<div className={clsx(styles.tab)}>
-					<MenuTab />
+		<RequireAuth>
+			<ContextBaseLayout.Provider value={{showFull, setShowFull}}>
+				<div className={clsx(styles.container, {[styles.hidden]: !showFull})}>
+					<div className={clsx(styles.tab)}>
+						<MenuTab />
+					</div>
+					<div className={styles.wrapper}>
+						<Header isImport={isImport} isExport={isExport} title={title} />
+						<div className={styles.main}>{children}</div>
+					</div>
 				</div>
-				<div className={styles.wrapper}>
-					<Header isImport={isImport} isExport={isExport} title={title} />
-					<div className={styles.main}>{children}</div>
-				</div>
-			</div>
-		</ContextBaseLayout.Provider>
-		// </RequireAuth>
+			</ContextBaseLayout.Provider>
+		</RequireAuth>
 	);
 }
 
