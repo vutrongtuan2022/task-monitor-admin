@@ -137,10 +137,11 @@ export const Menu: IMenuItem[] = [
 			},
 		],
 	},
+
 	{
 		title: 'Quản lý dự án',
 		path: PATH.Project,
-		pathActive: PATH.Project,
+		pathActive: '/project',
 		icon: DocumentText1,
 	},
 	{
