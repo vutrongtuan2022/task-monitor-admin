@@ -109,6 +109,9 @@ export function getTextDateRange(range: number | null) {
 		case null:
 			return 'Tất cả';
 
+		case TYPE_DATE.ALL:
+			return 'Tất cả';
+
 		default:
 			return 'Tất cả';
 	}

@@ -45,7 +45,7 @@ function MainPageProject({}: PropsMainPageProject) {
 	const queryClient = useQueryClient();
 
 	const [deleteProject, setDeleteProject] = useState<IProject | null>(null);
-	const [typeDate, setTypeDate] = useState<TYPE_DATE>(TYPE_DATE.TODAY);
+	const [typeDate, setTypeDate] = useState<TYPE_DATE>(TYPE_DATE.ALL);
 	const [date, setDate] = useState<{from: Date | null; to: Date | null} | null>(null);
 	const [sort, setSort] = useState<{
 		column: COLUMN_SORT_PROJECT | null;
@@ -55,7 +55,7 @@ function MainPageProject({}: PropsMainPageProject) {
 		type: null,
 	});
 
-	const {_page, _pageSize, _keyword, _status, _state, _userUuid, _managerUuid, from, to} = router.query;
+	const {_page, _pageSize, _keyword, _status, _state, _userUuid, _managerUuid} = router.query;
 
 	const listUser = useQuery([QUERY_KEY.dropdown_user], {
 		queryFn: () =>
@@ -88,7 +88,7 @@ function MainPageProject({}: PropsMainPageProject) {
 	});
 
 	const listProject = useQuery(
-		[QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _userUuid, _managerUuid, sort, from, to],
+		[QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _userUuid, _managerUuid, sort, date?.from, date?.to],
 		{
 			queryFn: () =>
 				httpRequest({
@@ -104,8 +104,8 @@ function MainPageProject({}: PropsMainPageProject) {
 							column: sort.column,
 							type: sort.type,
 						},
-						timeStart: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
-						timeEnd: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+						from: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+						to: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
 					}),
 				}),
 			select(data) {
@@ -165,8 +165,8 @@ function MainPageProject({}: PropsMainPageProject) {
 						column: sort.column,
 						type: sort.type,
 					},
-					timeStart: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
-					timeEnd: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+					from: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+					to: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
 				}),
 			});
 		},
@@ -406,7 +406,7 @@ function MainPageProject({}: PropsMainPageProject) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
 					total={listProject?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _status, _state, _userUuid, _managerUuid, from, to]}
+					dependencies={[_pageSize, _keyword, _status, _state, _userUuid, _managerUuid, date?.from, date?.to]}
 				/>
 			</WrapperScrollbar>
 			<Dialog
