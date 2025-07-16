@@ -235,6 +235,7 @@ function MainPageProject({}: PropsMainPageProject) {
 							setDate={setDate}
 							typeDate={typeDate}
 							setTypeDate={setTypeDate}
+							showOptionAll={true}
 						/>
 					</div>
 				</div>
