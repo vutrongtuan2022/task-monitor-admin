@@ -92,8 +92,8 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 									{
 										title: 'Tên nhà thầu',
 										render: (data: IDetailContractFund) => (
-											<Tippy content={data?.pnContract.contractor?.contractor.name}>
-												<p className={styles.name}>{data?.pnContract.contractor?.contractor.name || '---'}</p>
+											<Tippy content={data?.pnContract?.contractor?.contractor?.name}>
+												<p className={styles.name}>{data?.pnContract?.contractor?.contractor?.name || '---'}</p>
 											</Tippy>
 										),
 									},
