@@ -1,15 +1,15 @@
-import React, { Fragment, useState } from 'react';
-import { PropsProcedureTree } from './interfaces';
+import React, {Fragment, useState} from 'react';
+import {PropsProcedureTree} from './interfaces';
 import styles from './ProcedureTree.module.scss';
-import { IoIosAddCircle, IoIosRemoveCircle } from 'react-icons/io';
+import {IoIosAddCircle, IoIosRemoveCircle} from 'react-icons/io';
 import clsx from 'clsx';
 import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Button from '../Button';
 import IconCustom from '../IconCustom';
-import { Trash } from 'iconsax-react';
+import {Trash} from 'iconsax-react';
 
-function ProcedureTree({ }: PropsProcedureTree) {
+function ProcedureTree({}: PropsProcedureTree) {
 	interface TreeNode {
 		id: string;
 		level: string;
@@ -18,7 +18,7 @@ function ProcedureTree({ }: PropsProcedureTree) {
 		title: string;
 		children: TreeNode[];
 	}
-	const [treeData, setTreeData] = useState<TreeNode[]>([{ id: '1', level: 'A', task: 0, subtask: 0, title: 'Dự án 01', children: [] }]);
+	const [treeData, setTreeData] = useState<TreeNode[]>([{id: '1', level: 'A', task: 0, subtask: 0, title: 'Dự án 01', children: []}]);
 
 	const [open, setOpen] = useState<string[]>([]);
 
@@ -68,8 +68,6 @@ function ProcedureTree({ }: PropsProcedureTree) {
 	const toggleNode = (id: string) => {
 		setOpen((prev) => (prev.includes(id) ? prev.filter((nodeId) => nodeId !== id) : [...prev, id]));
 	};
-
-	console.log(treeData);
 
 	const renderTree = (nodes: TreeNode[]) => {
 		return (
